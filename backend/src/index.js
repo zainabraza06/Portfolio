@@ -15,7 +15,11 @@ import kaggleRoutes      from './routes/kaggle.js';
 const app = express();
 
 // ── CORS: localhost for dev; add deployed SPA origins via CORS_ORIGINS (comma-separated) on Render
-const defaultOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+const defaultOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://portfolio-delta-ashy-5dxvzebiar.vercel.app',
+];
 const extraOrigins = (process.env.CORS_ORIGINS ?? '')
   .split(',')
   .map((o) => o.trim())
