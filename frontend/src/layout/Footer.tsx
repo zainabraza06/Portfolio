@@ -9,7 +9,7 @@ const socialLinks = [
     ),
   },
   {
-    href: 'https://linkedin.com/in/zainab-raza-malik',
+    href: 'https://www.linkedin.com/in/zainab-raza-malik-9b9a42219/',
     label: 'LinkedIn',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

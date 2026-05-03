@@ -44,7 +44,7 @@ export const About = () => {
     email: "zainabraza1960@gmail.com",
     phone: "+92-309-8145039",
     location: "Islamabad, Pakistan",
-    linkedin: "https://linkedin.com/in/zainabraza06", // Assuming based on github handle
+    linkedin: "https://www.linkedin.com/in/zainab-raza-malik-9b9a42219/",
     github: "https://github.com/zainabraza06",
     summary: "Second-year BS AI student at NUST with strong foundations in machine learning, Python, and full-stack web development using the MERN stack, TypeScript, Next.js, and Tailwind CSS. Seeking internship opportunities to apply AI and web development skills in real-world projects and contribute to innovative solutions. Enthusiastic about learning, problem-solving, and developing practical applications.",
   };

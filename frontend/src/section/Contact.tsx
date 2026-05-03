@@ -20,7 +20,7 @@ const socials = [
       </svg>
     ),
     label: 'LinkedIn',
-    href: 'https://linkedin.com/in/zainab-raza-malik',
+    href: 'https://www.linkedin.com/in/zainab-raza-malik-9b9a42219/',
     value: 'Zainab Raza Malik',
   },
   {
