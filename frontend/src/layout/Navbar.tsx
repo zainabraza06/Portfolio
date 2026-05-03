@@ -10,9 +10,9 @@ const navLinks = [
   {
     label: 'Activity',
     subLinks: [
-      { href: '#certificates', label: 'Certificates' },
-      { href: '#hackathons', label: 'Hackathons' },
-      { href: '#kaggle', label: 'Kaggle' },
+      { href: '#certificates', label: 'Certificates', icon: '🏆' },
+      { href: '#hackathons', label: 'Hackathons', icon: '🚀' },
+      { href: '#kaggle', label: 'Kaggle', icon: '📊' },
     ]
   },
   { href: '#contact', label: 'Contact' },
@@ -93,25 +93,34 @@ export const Navbar = () => {
                   onMouseLeave={() => setActivityOpen(false)}
                 >
                   <button
-                    className={`nav-3d-link text-sm flex items-center gap-1 ${isActivityActive ? 'nav-3d-active' : ''}`}
+                    className={`nav-3d-link text-sm flex items-center gap-1 px-4 ${isActivityActive ? 'nav-3d-active' : ''}`}
                   >
                     {link.label}
-                    <svg className={`w-3 h-3 transition-transform ${activityOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                    <svg className={`w-3 h-3 transition-transform duration-300 ${activityOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
-                  <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 transition-all duration-200 ${activityOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}>
-                    <div className="nav-3d p-2 flex flex-col gap-1 backdrop-blur-xl">
-                      {link.subLinks.map(sub => (
-                        <a
-                          key={sub.href}
-                          href={sub.href}
-                          onClick={e => { e.preventDefault(); handleNavClick(sub.href); }}
-                          className={`nav-3d-link text-xs w-full text-left px-3 py-2 ${active === sub.href.slice(1) ? 'bg-[#20b2a6]/10 text-[#20b2a6]' : ''}`}
-                        >
-                          {sub.label}
-                        </a>
-                      ))}
+
+                  {/* Enhanced Dropdown */}
+                  <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-3 w-56 transition-all duration-300 ease-out ${activityOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-4 invisible'}`}>
+                    <div className="relative glass p-2 rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#20b2a6]/5 to-transparent pointer-events-none" />
+                      <div className="relative flex flex-col gap-1">
+                        {link.subLinks.map(sub => (
+                          <a
+                            key={sub.href}
+                            href={sub.href}
+                            onClick={e => { e.preventDefault(); handleNavClick(sub.href); }}
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-medium transition-all duration-200 group/item ${active === sub.href.slice(1) ? 'bg-[#20b2a6]/20 text-[#20b2a6]' : 'text-[#6b7fa3] hover:bg-white/5 hover:text-[#e8edf2]'}`}
+                          >
+                            <span className="text-lg transition-transform duration-300 group-hover/item:scale-125">{sub.icon}</span>
+                            <div className="flex flex-col">
+                              <span>{sub.label}</span>
+                              <span className="text-[9px] opacity-50 font-normal">View details</span>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -153,18 +162,23 @@ export const Navbar = () => {
           {navLinks.map(link => {
             if (link.subLinks) {
               return (
-                <div key={link.label} className="flex flex-col gap-1">
-                  <span className="text-[#6b7fa3] text-[10px] font-bold uppercase tracking-widest px-3 mb-1">Activity</span>
-                  {link.subLinks.map(sub => (
-                    <a
-                      key={sub.href}
-                      href={sub.href}
-                      onClick={e => { e.preventDefault(); handleNavClick(sub.href); }}
-                      className={`nav-3d-link w-full text-center ${active === sub.href.slice(1) ? 'nav-3d-active' : ''}`}
-                    >
-                      {sub.label}
-                    </a>
-                  ))}
+                <div key={link.label} className="flex flex-col gap-1 mt-2 mb-2">
+                  <span className="text-[#6b7fa3] text-[10px] font-bold uppercase tracking-widest px-3 mb-1 flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-[#20b2a6]" /> Activity
+                  </span>
+                  <div className="grid grid-cols-1 gap-1 pl-2">
+                    {link.subLinks.map(sub => (
+                      <a
+                        key={sub.href}
+                        href={sub.href}
+                        onClick={e => { e.preventDefault(); handleNavClick(sub.href); }}
+                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all ${active === sub.href.slice(1) ? 'bg-[#20b2a6]/20 text-[#20b2a6]' : 'text-[#6b7fa3] hover:text-[#e8edf2]'}`}
+                      >
+                        <span>{sub.icon}</span>
+                        <span>{sub.label}</span>
+                      </a>
+                    ))}
+                  </div>
                 </div>
               );
             }
