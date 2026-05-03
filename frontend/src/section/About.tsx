@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
+import { useApi } from '../hooks/useApi';
+import { fetchProjects, fetchExperience, fetchCertificates } from '../api/services';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { DynamicCV } from '../components/DynamicCV';
+import { skillGroups } from './Skills';
 
 const stats = [
   { value: 10, suffix: '+', label: 'Projects Completed' },
@@ -28,6 +33,21 @@ export const About = () => {
   useScrollRevealAll();
   const statsRef = useRef<HTMLDivElement>(null);
   const [statsInView, setStatsInView] = useState(false);
+
+  const { data: experiences } = useApi<any[]>(fetchExperience);
+  const { data: projects } = useApi<any[]>(fetchProjects);
+  const { data: certificates } = useApi<any[]>(fetchCertificates);
+
+  const personalInfo = {
+    name: "Zainab Raza Malik",
+    title: "BS Artificial Intelligence (2nd Year)",
+    email: "zainabraza1960@gmail.com",
+    phone: "+92-309-8145039",
+    location: "Islamabad, Pakistan",
+    linkedin: "https://linkedin.com/in/zainabraza06", // Assuming based on github handle
+    github: "https://github.com/zainabraza06",
+    summary: "Second-year BS AI student at NUST with strong foundations in machine learning, Python, and full-stack web development using the MERN stack, TypeScript, Next.js, and Tailwind CSS. Seeking internship opportunities to apply AI and web development skills in real-world projects and contribute to innovative solutions. Enthusiastic about learning, problem-solving, and developing practical applications.",
+  };
 
   useEffect(() => {
     const el = statsRef.current;
@@ -133,15 +153,42 @@ export const About = () => {
               <a
                 href="/CV.pdf"
                 download
-                className="btn-outline"
+                className="btn-outline flex items-center gap-2"
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="7 10 12 15 17 10" />
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
-                Resume
+                Original CV
               </a>
+              <PDFDownloadLink
+                document={
+                  <DynamicCV
+                    personalInfo={personalInfo}
+                    experiences={experiences ?? []}
+                    projects={projects ?? []}
+                    skills={skillGroups}
+                    certificates={certificates ?? []}
+                  />
+                }
+                fileName="Zainab_Raza_Malik_CV.pdf"
+                className="btn-outline flex items-center gap-2"
+              >
+                {/* @ts-ignore */}
+                {({ loading }) => (
+                  <>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                      <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    {loading ? 'Generating CV...' : 'Dynamic CV'}
+                  </>
+                )}
+              </PDFDownloadLink>
             </div>
           </div>
         </div>

@@ -11,7 +11,12 @@ export const getProjects = async (req, res) => {
 
 export const createProject = async (req, res) => {
   try {
-    const project = new Project(req.body);
+    const data = { ...req.body };
+    if (req.file) data.imageUrl = req.file.path;
+    if (typeof data.techStack === 'string') {
+      data.techStack = data.techStack.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    const project = new Project(data);
     const saved = await project.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -21,7 +26,12 @@ export const createProject = async (req, res) => {
 
 export const updateProject = async (req, res) => {
   try {
-    const updated = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const data = { ...req.body };
+    if (req.file) data.imageUrl = req.file.path;
+    if (typeof data.techStack === 'string') {
+      data.techStack = data.techStack.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    const updated = await Project.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });
     if (!updated) return res.status(404).json({ message: 'Project not found' });
     res.json(updated);
   } catch (err) {

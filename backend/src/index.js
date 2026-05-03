@@ -9,6 +9,8 @@ import experienceRoutes  from './routes/experience.js';
 import testimonialRoutes from './routes/testimonials.js';
 import contactRoutes     from './routes/contact.js';
 import certificateRoutes from './routes/certificates.js';
+import hackathonRoutes   from './routes/hackathons.js';
+import kaggleRoutes      from './routes/kaggle.js';
 
 const app = express();
 
@@ -23,6 +25,8 @@ app.use('/api/experience',   experienceRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/contact',      contactRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/hackathons',   hackathonRoutes);
+app.use('/api/kaggle',       kaggleRoutes);
 
 // ── Health check ────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date() }));

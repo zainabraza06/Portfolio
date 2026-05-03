@@ -9,8 +9,8 @@ export const changePassword = (currentPassword: string, newPassword: string) =>
 
 // ── Projects ──────────────────────────────────────────────────────
 export const fetchProjects = () => api.get('/projects').then(r => r.data);
-export const createProject = (data: object) => api.post('/projects', data).then(r => r.data);
-export const updateProject = (id: string, data: object) => api.put(`/projects/${id}`, data).then(r => r.data);
+export const createProject = (data: FormData | object) => api.post('/projects', data).then(r => r.data);
+export const updateProject = (id: string, data: FormData | object) => api.put(`/projects/${id}`, data).then(r => r.data);
 export const deleteProject = (id: string) => api.delete(`/projects/${id}`).then(r => r.data);
 export const syncProjects = () => api.post('/projects/sync').then(r => r.data);
 
@@ -36,6 +36,18 @@ export const deleteMessage = (id: string) => api.delete(`/contact/${id}`).then(r
 
 // ── Certificates ──────────────────────────────────────────────────
 export const fetchCertificates = () => api.get('/certificates').then(r => r.data);
-export const createCertificate = (data: object) => api.post('/certificates', data).then(r => r.data);
-export const updateCertificate = (id: string, data: object) => api.put(`/certificates/${id}`, data).then(r => r.data);
+export const createCertificate = (data: FormData | object) => api.post('/certificates', data).then(r => r.data);
+export const updateCertificate = (id: string, data: FormData | object) => api.put(`/certificates/${id}`, data).then(r => r.data);
 export const deleteCertificate = (id: string) => api.delete(`/certificates/${id}`).then(r => r.data);
+
+// ── Hackathons ────────────────────────────────────────────────────
+export const fetchHackathons = () => api.get('/hackathons').then(r => r.data);
+export const createHackathon = (data: FormData | object) => api.post('/hackathons', data).then(r => r.data);
+export const updateHackathon = (id: string, data: FormData | object) => api.put(`/hackathons/${id}`, data).then(r => r.data);
+export const deleteHackathon = (id: string) => api.delete(`/hackathons/${id}`).then(r => r.data);
+
+// ── Kaggle ────────────────────────────────────────────────────────
+export const fetchKaggle = () => api.get('/kaggle').then(r => r.data);
+export const createKaggle = (data: FormData | object) => api.post('/kaggle', data).then(r => r.data);
+export const updateKaggle = (id: string, data: FormData | object) => api.put(`/kaggle/${id}`, data).then(r => r.data);
+export const deleteKaggle = (id: string) => api.delete(`/kaggle/${id}`).then(r => r.data);

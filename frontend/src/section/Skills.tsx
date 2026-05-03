@@ -1,42 +1,42 @@
 import { useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 
-const skillGroups = [
+export const skillGroups = [
   {
-    category: 'Frontend',
-    icon: '🎨',
+    category: 'Programming Languages',
+    icon: '💻',
     color: '#20b2a6',
-    skills: ['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'HTML5 / CSS3', 'Redux', 'Framer Motion'],
+    skills: ['Python', 'JavaScript', 'TypeScript'],
   },
   {
-    category: 'Backend',
-    icon: '⚙️',
+    category: 'Web Development',
+    icon: '🌐',
     color: '#a78bfa',
-    skills: ['Node.js', 'Express.js', 'REST APIs', 'GraphQL', 'JWT Auth', 'Socket.io'],
+    skills: ['MERN Stack', 'Next.js', 'Tailwind CSS', 'Node.js', 'Express', 'React', 'MongoDB'],
   },
   {
-    category: 'Database',
-    icon: '🗄️',
-    color: '#f5a623',
-    skills: ['MongoDB', 'Mongoose', 'PostgreSQL', 'Redis', 'Firebase'],
-  },
-  {
-    category: 'ML / DL Research',
+    category: 'AI & Data',
     icon: '🧠',
-    color: '#22c55e',
-    skills: ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Pandas', 'NumPy', 'Computer Vision', 'NLP'],
+    color: '#f5a623',
+    skills: ['Machine Learning', 'Data Analysis', 'NumPy', 'Pandas', 'Scikit-learn'],
   },
   {
-    category: 'Tools & DevOps',
+    category: 'Tools & Platforms',
     icon: '🛠️',
+    color: '#22c55e',
+    skills: ['Git', 'GitHub', 'VS Code', 'Jupyter Notebook', 'Figma'],
+  },
+  {
+    category: 'Soft Skills',
+    icon: '🤝',
     color: '#fb923c',
-    skills: ['Git & GitHub', 'Docker', 'VS Code', 'Postman', 'Vercel', 'Linux'],
+    skills: ['Problem Solving', 'Critical Thinking', 'Team Collaboration', 'Communication', 'Time Management', 'Adaptability', 'Quick Learner', 'Innovation'],
   },
 ];
 
 export const Skills = () => {
-  useScrollRevealAll();
   const [visibleCount, setVisibleCount] = useState(6);
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [visibleCount]);
 
   return (
     <section id="skills" className="relative py-28 px-6">

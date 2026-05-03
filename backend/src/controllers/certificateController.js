@@ -11,7 +11,9 @@ export const getCertificates = async (req, res) => {
 
 export const createCertificate = async (req, res) => {
   try {
-    const cert = new Certificate(req.body);
+    const data = { ...req.body };
+    if (req.file) data.imageUrl = req.file.path;
+    const cert = new Certificate(data);
     const saved = await cert.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -21,7 +23,9 @@ export const createCertificate = async (req, res) => {
 
 export const updateCertificate = async (req, res) => {
   try {
-    const updated = await Certificate.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const data = { ...req.body };
+    if (req.file) data.imageUrl = req.file.path;
+    const updated = await Certificate.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });
     if (!updated) return res.status(404).json({ message: 'Certificate not found' });
     res.json(updated);
   } catch (err) {

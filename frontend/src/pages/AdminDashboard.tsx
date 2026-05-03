@@ -7,15 +7,19 @@ import {
   fetchAllTestimonials, approveTestimonial, deleteTestimonial,
   fetchMessages, markMessageRead, deleteMessage,
   fetchCertificates, createCertificate, updateCertificate, deleteCertificate, syncProjects,
+  fetchHackathons, createHackathon, updateHackathon, deleteHackathon,
+  fetchKaggle, createKaggle, updateKaggle, deleteKaggle,
   changePassword
 } from '../api/services';
 
-type Tab = 'projects' | 'certificates' | 'experience' | 'testimonials' | 'messages';
+type Tab = 'projects' | 'hackathons' | 'kaggle' | 'certificates' | 'experience' | 'testimonials' | 'messages';
 
 interface Item { _id: string; [key: string]: unknown; }
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'projects',     label: 'Projects',      icon: '🛠' },
+  { id: 'hackathons',   label: 'Hackathons',    icon: '🚀' },
+  { id: 'kaggle',       label: 'Kaggle',        icon: '📊' },
   { id: 'certificates', label: 'Certificates',  icon: '🏆' },
   { id: 'experience',   label: 'Experience',     icon: '📅' },
   { id: 'testimonials', label: 'Testimonials',   icon: '💬' },
@@ -23,12 +27,14 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
 ];
 
 const emptyProject = { title: '', description: '', techStack: '', liveUrl: '', githubUrl: '', imageUrl: '', featured: false, order: 0 };
-const emptyCert    = { title: '', issuer: '', date: '', linkedInUrl: '', imageUrl: '', order: 0 };
+const emptyCert    = { title: '', issuer: '', date: '', credentialUrl: '', linkedInUrl: '', imageUrl: '', order: 0 };
+const emptyHack    = { title: '', description: '', date: '', projectUrl: '', certificateUrl: '', imageUrl: '', order: 0 };
+const emptyKaggle  = { title: '', description: '', competitionUrl: '', rank: '', date: '', imageUrl: '', order: 0 };
 const emptyExp     = { company: '', role: '', duration: '', description: '', logo: '', type: 'work', order: 0 };
 
 // ── Generic Modal ────────────────────────────────────────────────
-function Modal({ title, onClose, onSave, children }: {
-  title: string; onClose: () => void; onSave: () => void; children: React.ReactNode;
+function Modal({ title, onClose, onSave, children, loading }: {
+  title: string; onClose: () => void; onSave: () => void; children: React.ReactNode; loading?: boolean;
 }) {
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
@@ -36,12 +42,14 @@ function Modal({ title, onClose, onSave, children }: {
         style={{ animation: 'fadeInUp 0.3s ease both' }}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-[#e8edf2] font-bold text-lg">{title}</h3>
-          <button onClick={onClose} className="text-[#6b7fa3] hover:text-[#e8edf2] transition-colors text-xl">✕</button>
+          <button onClick={onClose} disabled={loading} className="text-[#6b7fa3] hover:text-[#e8edf2] transition-colors text-xl">✕</button>
         </div>
         {children}
         <div className="flex gap-3 mt-6">
-          <button onClick={onClose} className="btn-outline flex-1 justify-center py-2 text-sm">Cancel</button>
-          <button onClick={onSave}  className="btn-primary flex-1 justify-center py-2 text-sm"><span>Save</span></button>
+          <button onClick={onClose} disabled={loading} className="btn-outline flex-1 justify-center py-2 text-sm">Cancel</button>
+          <button onClick={onSave} disabled={loading} className="btn-primary flex-1 justify-center py-2 text-sm">
+            <span>{loading ? 'Saving...' : 'Save'}</span>
+          </button>
         </div>
       </div>
     </div>,
@@ -59,33 +67,55 @@ function Field({ label, id, children }: { label: string; id: string; children: R
   );
 }
 
+const buildFormData = (form: Record<string, any>, file: File | null) => {
+  const fd = new FormData();
+  for (const key in form) {
+    if (form[key] !== undefined && form[key] !== null) {
+      fd.append(key, form[key].toString());
+    }
+  }
+  if (file) fd.append('image', file);
+  return fd;
+};
+
 // ── Projects Tab ─────────────────────────────────────────────────
 function ProjectsTab() {
   const [items, setItems] = useState<Item[]>([]);
   const [modal, setModal] = useState<'add' | 'edit' | null>(null);
   const [form, setForm]   = useState({ ...emptyProject });
+  const [file, setFile]   = useState<File | null>(null);
   const [editId, setEditId] = useState('');
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const load = async () => { setLoading(true); setItems(await fetchProjects()); setLoading(false); };
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
 
-  const openAdd  = () => { setForm({ ...emptyProject }); setModal('add'); };
+  const openAdd  = () => { setForm({ ...emptyProject }); setFile(null); setModal('add'); };
   const openEdit = (p: Item) => {
     setForm({ title: p.title as string, description: p.description as string,
       techStack: (p.techStack as string[]).join(', '), liveUrl: p.liveUrl as string,
       githubUrl: p.githubUrl as string, imageUrl: p.imageUrl as string,
       featured: p.featured as boolean, order: p.order as number });
+    setFile(null);
     setEditId(p._id); setModal('edit');
   };
 
   const save = async () => {
-    const payload = { ...form, techStack: form.techStack.split(',').map(s => s.trim()).filter(Boolean) };
-    if (modal === 'add') await createProject(payload);
-    else await updateProject(editId, payload);
-    setModal(null); load();
+    setSaving(true);
+    try {
+      const payload = buildFormData(form, file);
+      if (modal === 'add') await createProject(payload);
+      else await updateProject(editId, payload);
+      setModal(null);
+      load();
+    } catch (err) {
+      alert('Failed to save project.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const remove = async (id: string) => { if (confirm('Delete this project?')) { await deleteProject(id); load(); } };
@@ -111,7 +141,10 @@ function ProjectsTab() {
         <Field label="GitHub URL" id="p-gh"><input id="p-gh" className="form-input" value={form.githubUrl} onChange={e => set('githubUrl', e.target.value)} placeholder="https://github.com/..." /></Field>
         <Field label="Live URL" id="p-live"><input id="p-live" className="form-input" value={form.liveUrl} onChange={e => set('liveUrl', e.target.value)} placeholder="https://..." /></Field>
       </div>
-      <Field label="Image URL" id="p-img"><input id="p-img" className="form-input" value={form.imageUrl} onChange={e => set('imageUrl', e.target.value)} placeholder="https://..." /></Field>
+      <Field label="Image Upload" id="p-img">
+        <input type="file" id="p-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-[#6b7fa3] file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#20b2a6] file:text-white" />
+        {form.imageUrl && !file && <p className="text-xs text-[#20b2a6] mt-1 break-all">Current: {form.imageUrl}</p>}
+      </Field>
       <div className="flex items-center gap-3">
         <input id="p-feat" type="checkbox" checked={form.featured} onChange={e => set('featured', e.target.checked)} className="w-4 h-4 accent-[#20b2a6]" />
         <label htmlFor="p-feat" className="text-sm text-[#6b7fa3]">Mark as Featured</label>
@@ -156,8 +189,160 @@ function ProjectsTab() {
         </div>
       )}
       {modal && (
-        <Modal title={modal === 'add' ? 'Add Project' : 'Edit Project'} onClose={() => setModal(null)} onSave={save}>
+        <Modal title={modal === 'add' ? 'Add Project' : 'Edit Project'} onClose={() => setModal(null)} onSave={save} loading={saving}>
           <FormFields />
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ── Hackathons Tab ─────────────────────────────────────────────
+function HackathonsTab() {
+  const [items, setItems] = useState<Item[]>([]);
+  const [modal, setModal] = useState<'add' | 'edit' | null>(null);
+  const [form, setForm]   = useState({ ...emptyHack });
+  const [file, setFile]   = useState<File | null>(null);
+  const [editId, setEditId] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const load = async () => { setLoading(true); setItems(await fetchHackathons()); setLoading(false); };
+  useEffect(() => { load(); }, []);
+
+  const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
+  const openAdd  = () => { setForm({ ...emptyHack }); setFile(null); setModal('add'); };
+  const openEdit = (h: Item) => {
+    setForm({ title: h.title as string, description: h.description as string, date: h.date as string,
+      projectUrl: h.projectUrl as string, certificateUrl: h.certificateUrl as string, imageUrl: h.imageUrl as string, order: h.order as number });
+    setFile(null);
+    setEditId(h._id); setModal('edit');
+  };
+  const save = async () => {
+    setSaving(true);
+    try {
+      const payload = buildFormData(form, file);
+      if (modal === 'add') await createHackathon(payload);
+      else await updateHackathon(editId, payload);
+      setModal(null); load();
+    } catch (err) { alert('Failed to save.'); } finally { setSaving(false); }
+  };
+  const remove = async (id: string) => { if (confirm('Delete?')) { await deleteHackathon(id); load(); } };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-[#e8edf2] font-bold text-xl">Hackathons <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} entries</span></h2>
+        <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Hackathon</span></button>
+      </div>
+      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+        <div className="space-y-3">
+          {items.map(h => (
+            <div key={h._id} className="glass-card p-4 flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-[#e8edf2] font-semibold">{h.title as string}</h3>
+                <p className="text-[#20b2a6] text-sm">{h.date as string}</p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <button onClick={() => openEdit(h)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
+                <button onClick={() => remove(h._id)} className="py-1.5 px-3 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
+              </div>
+            </div>
+          ))}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No hackathons yet.</div>}
+        </div>
+      )}
+      {modal && (
+        <Modal title={modal === 'add' ? 'Add Hackathon' : 'Edit Hackathon'} onClose={() => setModal(null)} onSave={save} loading={saving}>
+          <div className="space-y-3">
+            <Field label="Title *" id="h-title"><input id="h-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} /></Field>
+            <Field label="Description" id="h-desc"><textarea id="h-desc" className="form-input resize-none" rows={3} value={form.description} onChange={e => set('description', e.target.value)} /></Field>
+            <Field label="Date" id="h-date"><input id="h-date" className="form-input" value={form.date} onChange={e => set('date', e.target.value)} /></Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Project URL" id="h-proj"><input id="h-proj" className="form-input" value={form.projectUrl} onChange={e => set('projectUrl', e.target.value)} /></Field>
+              <Field label="Certificate URL" id="h-cert"><input id="h-cert" className="form-input" value={form.certificateUrl} onChange={e => set('certificateUrl', e.target.value)} /></Field>
+            </div>
+            <Field label="Image Upload" id="h-img">
+              <input type="file" id="h-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-[#6b7fa3] file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#20b2a6] file:text-white" />
+            </Field>
+            <Field label="Order" id="h-ord"><input id="h-ord" type="number" className="form-input w-24" value={form.order} onChange={e => set('order', Number(e.target.value))} /></Field>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ── Kaggle Tab ───────────────────────────────────────────────
+function KaggleTab() {
+  const [items, setItems] = useState<Item[]>([]);
+  const [modal, setModal] = useState<'add' | 'edit' | null>(null);
+  const [form, setForm]   = useState({ ...emptyKaggle });
+  const [file, setFile]   = useState<File | null>(null);
+  const [editId, setEditId] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const load = async () => { setLoading(true); setItems(await fetchKaggle()); setLoading(false); };
+  useEffect(() => { load(); }, []);
+
+  const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
+  const openAdd  = () => { setForm({ ...emptyKaggle }); setFile(null); setModal('add'); };
+  const openEdit = (kItem: Item) => {
+    setForm({ title: kItem.title as string, description: kItem.description as string, date: kItem.date as string,
+      competitionUrl: kItem.competitionUrl as string, rank: kItem.rank as string, imageUrl: kItem.imageUrl as string, order: kItem.order as number });
+    setFile(null);
+    setEditId(kItem._id); setModal('edit');
+  };
+  const save = async () => {
+    setSaving(true);
+    try {
+      const payload = buildFormData(form, file);
+      if (modal === 'add') await createKaggle(payload);
+      else await updateKaggle(editId, payload);
+      setModal(null); load();
+    } catch (err) { alert('Failed to save.'); } finally { setSaving(false); }
+  };
+  const remove = async (id: string) => { if (confirm('Delete?')) { await deleteKaggle(id); load(); } };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-[#e8edf2] font-bold text-xl">Kaggle <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} entries</span></h2>
+        <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Kaggle</span></button>
+      </div>
+      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+        <div className="space-y-3">
+          {items.map(kItem => (
+            <div key={kItem._id} className="glass-card p-4 flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-[#e8edf2] font-semibold">{kItem.title as string}</h3>
+                <p className="text-[#20b2a6] text-sm">{kItem.date as string} {kItem.rank && `- Rank: ${kItem.rank}`}</p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <button onClick={() => openEdit(kItem)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
+                <button onClick={() => remove(kItem._id)} className="py-1.5 px-3 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
+              </div>
+            </div>
+          ))}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No kaggle competitions yet.</div>}
+        </div>
+      )}
+      {modal && (
+        <Modal title={modal === 'add' ? 'Add Kaggle' : 'Edit Kaggle'} onClose={() => setModal(null)} onSave={save} loading={saving}>
+          <div className="space-y-3">
+            <Field label="Title *" id="k-title"><input id="k-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} /></Field>
+            <Field label="Description" id="k-desc"><textarea id="k-desc" className="form-input resize-none" rows={3} value={form.description} onChange={e => set('description', e.target.value)} /></Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Rank / Medal" id="k-rank"><input id="k-rank" className="form-input" value={form.rank} onChange={e => set('rank', e.target.value)} /></Field>
+              <Field label="Date" id="k-date"><input id="k-date" className="form-input" value={form.date} onChange={e => set('date', e.target.value)} /></Field>
+            </div>
+            <Field label="Competition URL" id="k-url"><input id="k-url" className="form-input" value={form.competitionUrl} onChange={e => set('competitionUrl', e.target.value)} /></Field>
+            <Field label="Image Upload" id="k-img">
+              <input type="file" id="k-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-[#6b7fa3] file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#20b2a6] file:text-white" />
+            </Field>
+            <Field label="Order" id="k-ord"><input id="k-ord" type="number" className="form-input w-24" value={form.order} onChange={e => set('order', Number(e.target.value))} /></Field>
+          </div>
         </Modal>
       )}
     </div>
@@ -169,23 +354,30 @@ function CertificatesTab() {
   const [items, setItems] = useState<Item[]>([]);
   const [modal, setModal] = useState<'add' | 'edit' | null>(null);
   const [form, setForm]   = useState({ ...emptyCert });
+  const [file, setFile]   = useState<File | null>(null);
   const [editId, setEditId] = useState('');
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const load = async () => { setLoading(true); setItems(await fetchCertificates()); setLoading(false); };
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
-  const openAdd  = () => { setForm({ ...emptyCert }); setModal('add'); };
+  const openAdd  = () => { setForm({ ...emptyCert }); setFile(null); setModal('add'); };
   const openEdit = (c: Item) => {
     setForm({ title: c.title as string, issuer: c.issuer as string, date: c.date as string,
-      linkedInUrl: c.linkedInUrl as string, imageUrl: c.imageUrl as string, order: c.order as number });
+      linkedInUrl: c.linkedInUrl as string, credentialUrl: (c.credentialUrl as string) || '', imageUrl: c.imageUrl as string, order: c.order as number });
+    setFile(null);
     setEditId(c._id); setModal('edit');
   };
   const save = async () => {
-    if (modal === 'add') await createCertificate(form);
-    else await updateCertificate(editId, form);
-    setModal(null); load();
+    setSaving(true);
+    try {
+      const payload = buildFormData(form, file);
+      if (modal === 'add') await createCertificate(payload);
+      else await updateCertificate(editId, payload);
+      setModal(null); load();
+    } catch (err) { alert('Failed to save.'); } finally { setSaving(false); }
   };
   const remove = async (id: string) => { if (confirm('Delete?')) { await deleteCertificate(id); load(); } };
 
@@ -202,7 +394,7 @@ function CertificatesTab() {
               <div className="flex-1 min-w-0">
                 <h3 className="text-[#e8edf2] font-semibold">{c.title as string}</h3>
                 <p className="text-[#20b2a6] text-sm">{c.issuer as string} · {c.date as string}</p>
-                {c.linkedInUrl && <a href={c.linkedInUrl as string} target="_blank" rel="noreferrer" className="text-xs text-[#6b7fa3] hover:text-[#20b2a6] underline mt-1 block">View Post / Credential</a>}
+                {(c.credentialUrl || c.linkedInUrl) && <a href={(c.credentialUrl || c.linkedInUrl) as string} target="_blank" rel="noreferrer" className="text-xs text-[#6b7fa3] hover:text-[#20b2a6] underline mt-1 block">View Credential</a>}
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => openEdit(c)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
@@ -210,19 +402,24 @@ function CertificatesTab() {
               </div>
             </div>
           ))}
-          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No certificates yet. Add your LinkedIn achievements!</div>}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No certificates yet.</div>}
         </div>
       )}
       {modal && (
-        <Modal title={modal === 'add' ? 'Add Certificate' : 'Edit Certificate'} onClose={() => setModal(null)} onSave={save}>
+        <Modal title={modal === 'add' ? 'Add Certificate' : 'Edit Certificate'} onClose={() => setModal(null)} onSave={save} loading={saving}>
           <div className="space-y-3">
             <Field label="Title *" id="c-title"><input id="c-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. Meta Front-End Developer" /></Field>
             <div className="grid grid-cols-2 gap-3">
               <Field label="Issuer *" id="c-iss"><input id="c-iss" className="form-input" value={form.issuer} onChange={e => set('issuer', e.target.value)} placeholder="e.g. Coursera" /></Field>
               <Field label="Date" id="c-date"><input id="c-date" className="form-input" value={form.date} onChange={e => set('date', e.target.value)} placeholder="e.g. Aug 2024" /></Field>
             </div>
-            <Field label="LinkedIn Post / Credential URL" id="c-url"><input id="c-url" className="form-input" value={form.linkedInUrl} onChange={e => set('linkedInUrl', e.target.value)} placeholder="https://linkedin.com/..." /></Field>
-            <Field label="Image URL" id="c-img"><input id="c-img" className="form-input" value={form.imageUrl} onChange={e => set('imageUrl', e.target.value)} placeholder="https://..." /></Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Credential URL" id="c-cred"><input id="c-cred" className="form-input" value={form.credentialUrl} onChange={e => set('credentialUrl', e.target.value)} placeholder="https://..." /></Field>
+              <Field label="LinkedIn Post URL" id="c-url"><input id="c-url" className="form-input" value={form.linkedInUrl} onChange={e => set('linkedInUrl', e.target.value)} placeholder="https://linkedin.com/..." /></Field>
+            </div>
+            <Field label="Image Upload" id="c-img">
+              <input type="file" id="c-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-[#6b7fa3] file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#20b2a6] file:text-white" />
+            </Field>
             <Field label="Order" id="c-ord"><input id="c-ord" type="number" className="form-input w-24" value={form.order} onChange={e => set('order', Number(e.target.value))} /></Field>
           </div>
         </Modal>
@@ -507,7 +704,7 @@ export default function AdminDashboard() {
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 glass rounded-2xl p-1.5 w-fit">
+        <div className="flex gap-2 mb-8 glass rounded-2xl p-1.5 w-fit flex-wrap">
           {TABS.map(t => (
             <button
               key={t.id}
@@ -527,6 +724,8 @@ export default function AdminDashboard() {
         {/* Tab content */}
         <div style={{ animation: 'fadeInUp 0.3s ease both' }}>
           {tab === 'projects'     && <ProjectsTab />}
+          {tab === 'hackathons'   && <HackathonsTab />}
+          {tab === 'kaggle'       && <KaggleTab />}
           {tab === 'certificates' && <CertificatesTab />}
           {tab === 'experience'   && <ExperienceTab />}
           {tab === 'testimonials' && <TestimonialsTab />}

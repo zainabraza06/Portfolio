@@ -10,6 +10,8 @@ import { Skills } from './section/Skills';
 import { Projects } from './section/Projects';
 import { Experience } from './section/Experience';
 import { Certificates } from './section/Certificates';
+import { Hackathons } from './section/Hackathons';
+import { Kaggle } from './section/Kaggle';
 import { Testimonials } from './section/Testimonials';
 import { Contact } from './section/Contact';
 
@@ -34,6 +36,8 @@ function Portfolio() {
         <About />
         <Skills />
         <Projects />
+        <Hackathons />
+        <Kaggle />
         <Certificates />
         <Experience />
         <Testimonials />

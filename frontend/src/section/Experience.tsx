@@ -20,8 +20,8 @@ const typeConfig = {
 
 export const Experience = () => {
   const { data: experiences, loading, error } = useApi<Exp[]>(fetchExperience);
-  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [experiences]);
   const [visibleCount, setVisibleCount] = useState(6);
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [experiences, visibleCount]);
 
   return (
     <section id="experience" className="relative py-28 px-6">
@@ -73,7 +73,7 @@ export const Experience = () => {
             <div className="hidden md:block timeline-line" />
 
             <div className="space-y-10">
-              {(experiences ?? []).slice(0, visibleCount).map((exp, i) => {
+              {[...(experiences ?? [])].reverse().slice(0, visibleCount).map((exp, i) => {
                 const cfg = typeConfig[exp.type] ?? typeConfig.work;
                 const isLeft = i % 2 === 0;
 
@@ -83,10 +83,10 @@ export const Experience = () => {
                     className={`relative flex items-start gap-6 md:gap-0 reveal reveal-d${Math.min(i + 1, 6)}`}
                   >
                     {/* Desktop: left side */}
-                    <div className={`hidden md:block w-[calc(50%-2rem)] ${isLeft ? '' : 'order-last'}`}>
+                    <div className="hidden md:block w-[calc(50%-2rem)]">
                       {isLeft && (
-                        <div className="glass-card p-5 mr-6 text-right">
-                          <TimelineCard exp={exp} cfg={cfg} />
+                        <div className="glass-card p-5 mr-8">
+                          <TimelineCard exp={exp} cfg={cfg} isLeft={true} />
                         </div>
                       )}
                     </div>
@@ -97,10 +97,10 @@ export const Experience = () => {
                     </div>
 
                     {/* Desktop: right side */}
-                    <div className={`hidden md:block w-[calc(50%-2rem)] ${isLeft ? 'order-last' : ''}`}>
+                    <div className="hidden md:block w-[calc(50%-2rem)]">
                       {!isLeft && (
-                        <div className="glass-card p-5 ml-6">
-                          <TimelineCard exp={exp} cfg={cfg} />
+                        <div className="glass-card p-5 ml-8">
+                          <TimelineCard exp={exp} cfg={cfg} isLeft={false} />
                         </div>
                       )}
                     </div>
@@ -114,7 +114,7 @@ export const Experience = () => {
                         )}
                       </div>
                       <div className="glass-card p-4 flex-1 mb-2">
-                        <TimelineCard exp={exp} cfg={cfg} />
+                        <TimelineCard exp={exp} cfg={cfg} isLeft={false} />
                       </div>
                     </div>
                   </div>
@@ -139,29 +139,29 @@ export const Experience = () => {
   );
 };
 
-function TimelineCard({ exp, cfg }: { exp: Exp; cfg: { icon: string; color: string; label: string } }) {
+function TimelineCard({ exp, cfg, isLeft }: { exp: Exp; cfg: { icon: string; color: string; label: string }; isLeft?: boolean }) {
   return (
     <>
-      <div className="flex items-start gap-3 mb-3">
+      <div className={`flex items-start gap-3 mb-3 ${isLeft ? 'flex-row-reverse' : ''}`}>
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
           style={{ background: `${cfg.color}18`, border: `1px solid ${cfg.color}40` }}
         >
           {cfg.icon}
         </div>
-        <div className="flex-1 min-w-0">
+        <div className={`flex-1 min-w-0 flex flex-col ${isLeft ? 'items-end text-right' : 'items-start text-left'}`}>
           <span
-            className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+            className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-1"
             style={{ background: `${cfg.color}18`, color: cfg.color }}
           >
             {cfg.label}
           </span>
-          <h3 className="text-[#e8edf2] font-bold text-base mt-1 leading-tight">{exp.role}</h3>
+          <h3 className="text-[#e8edf2] font-bold text-base leading-tight">{exp.role}</h3>
           <p className="font-medium text-sm" style={{ color: cfg.color }}>{exp.company}</p>
         </div>
       </div>
-      <p className="text-xs text-[#6b7fa3] mb-2 font-mono">{exp.duration}</p>
-      <p className="text-[#6b7fa3] text-sm leading-relaxed">{exp.description}</p>
+      <p className={`text-xs text-[#6b7fa3] mb-2 font-mono ${isLeft ? 'text-right' : 'text-left'}`}>{exp.duration}</p>
+      <p className={`text-[#6b7fa3] text-sm leading-relaxed ${isLeft ? 'text-right' : 'text-left'}`}>{exp.description}</p>
     </>
   );
 }

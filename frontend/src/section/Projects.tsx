@@ -18,9 +18,9 @@ const FILTERS = ['All', 'Featured', 'MERN', 'Next.js', 'ML/DL'];
 
 export const Projects = () => {
   const { data: projects, loading, error } = useApi<Project[]>(fetchProjects);
-  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [projects]);
   const [filter, setFilter] = useState('All');
   const [visibleCount, setVisibleCount] = useState(6);
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [projects, visibleCount]);
 
   const filtered = (projects ?? []).filter(p => {
     if (filter === 'All') return true;
@@ -180,7 +180,7 @@ export const Projects = () => {
             </div>
             
             {filtered.length > 6 && (
-              <div className="flex justify-center mt-12 reveal">
+              <div className="flex justify-center mt-12">
                 <button
                   onClick={() => setVisibleCount(prev => prev >= filtered.length ? 6 : filtered.length)}
                   className="btn-outline px-8 py-3 text-sm font-medium hover:bg-[#20b2a6] hover:text-white transition-all duration-300"

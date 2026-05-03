@@ -74,13 +74,13 @@ export const Hero = () => {
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 pt-24 text-center">
         {/* Profile Picture */}
-        <div 
+        <div
           className="w-28 h-28 mx-auto mb-6 rounded-full overflow-hidden border-2 border-[#20b2a6]/50 shadow-[0_0_30px_rgba(32,178,166,0.3)]"
           style={{ animation: 'fadeInUp 0.6s ease both' }}
         >
-          <img 
-            src="/profilepic.jpeg" 
-            alt="Zainab Raza Malik" 
+          <img
+            src="/profilepic.jpeg"
+            alt="Zainab Raza Malik"
             className="w-full h-full object-cover"
           />
         </div>
@@ -112,10 +112,7 @@ export const Hero = () => {
           className="max-w-2xl mx-auto text-[#6b7fa3] text-lg leading-relaxed mb-10"
           style={{ animation: 'fadeInUp 0.7s 0.3s ease both' }}
         >
-          I build{' '}
-          <span className="text-[#e8edf2] font-medium">elegant full-stack applications</span>{' '}
-          with the MERN stack and Next.js, while exploring the frontiers of{' '}
-          <span className="text-[#e8edf2] font-medium">Machine Learning & Deep Learning</span> research.
+          I am a <span className="text-[#e8edf2] font-medium">BS AI Student at NUST</span>. I build elegant full-stack applications with the MERN stack and Next.js, while exploring the frontiers of Machine Learning & Deep Learning research.
         </p>
 
         {/* CTA buttons */}
@@ -129,7 +126,7 @@ export const Hero = () => {
           >
             <span>View My Work</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
+              <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>
           <button
@@ -137,8 +134,8 @@ export const Hero = () => {
             className="btn-outline"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22,6 12,13 2,6"/>
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
             </svg>
             Contact Me
           </button>
@@ -174,7 +171,7 @@ export const Hero = () => {
           className="group-hover:translate-y-1 transition-transform duration-300"
           width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
         >
-          <path d="M12 5v14M5 12l7 7 7-7"/>
+          <path d="M12 5v14M5 12l7 7 7-7" />
         </svg>
       </button>
     </section>

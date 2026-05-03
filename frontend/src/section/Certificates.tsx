@@ -14,8 +14,8 @@ interface Certificate {
 
 export const Certificates = () => {
   const { data: certificates, loading, error } = useApi<Certificate[]>(fetchCertificates);
-  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [certificates]);
   const [visibleCount, setVisibleCount] = useState(6);
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [certificates, visibleCount]);
 
   return (
     <section id="certificates" className="relative py-28 px-6">
@@ -111,7 +111,7 @@ export const Certificates = () => {
             </div>
             
             {(certificates ?? []).length > 6 && (
-              <div className="flex justify-center mt-12 reveal">
+              <div className="flex justify-center mt-12">
                 <button
                   onClick={() => setVisibleCount(prev => prev >= (certificates ?? []).length ? 6 : (certificates ?? []).length)}
                   className="btn-outline px-8 py-3 text-sm font-medium hover:bg-[#20b2a6] hover:text-white transition-all duration-300"

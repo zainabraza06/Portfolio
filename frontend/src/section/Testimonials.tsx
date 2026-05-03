@@ -25,10 +25,10 @@ const Stars = ({ rating }: { rating: number }) => (
 
 export const Testimonials = () => {
   const { data: testimonials, loading } = useApi<Testimonial[]>(fetchTestimonials);
-  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [testimonials]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [visibleCount, setVisibleCount] = useState(6);
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [testimonials, visibleCount]);
   const allItems = testimonials ?? [];
   const items = allItems.slice(0, visibleCount);
 
