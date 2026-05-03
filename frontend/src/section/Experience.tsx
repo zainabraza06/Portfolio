@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import { useApi } from '../hooks/useApi';
 import { fetchExperience } from '../api/services';
@@ -20,6 +21,7 @@ const typeConfig = {
 export const Experience = () => {
   const { data: experiences, loading, error } = useApi<Exp[]>(fetchExperience);
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [experiences]);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   return (
     <section id="experience" className="relative py-28 px-6">
@@ -71,7 +73,7 @@ export const Experience = () => {
             <div className="hidden md:block timeline-line" />
 
             <div className="space-y-10">
-              {(experiences ?? []).map((exp, i) => {
+              {(experiences ?? []).slice(0, visibleCount).map((exp, i) => {
                 const cfg = typeConfig[exp.type] ?? typeConfig.work;
                 const isLeft = i % 2 === 0;
 
@@ -119,6 +121,17 @@ export const Experience = () => {
                 );
               })}
             </div>
+            
+            {(experiences ?? []).length > 6 && (
+              <div className="flex justify-center mt-12 reveal">
+                <button
+                  onClick={() => setVisibleCount(prev => prev >= (experiences ?? []).length ? 6 : (experiences ?? []).length)}
+                  className="btn-outline px-8 py-3 text-sm font-medium hover:bg-[#20b2a6] hover:text-white transition-all duration-300"
+                >
+                  {visibleCount >= (experiences ?? []).length ? 'View Less' : 'View More'}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

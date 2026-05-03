@@ -28,7 +28,9 @@ export const Testimonials = () => {
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [testimonials]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const items = testimonials ?? [];
+  const [visibleCount, setVisibleCount] = useState(6);
+  const allItems = testimonials ?? [];
+  const items = allItems.slice(0, visibleCount);
 
   // Auto-scroll carousel
   useEffect(() => {
@@ -135,6 +137,20 @@ export const Testimonials = () => {
                 />
               ))}
             </div>
+            
+            {allItems.length > 6 && (
+              <div className="flex justify-center mt-12 reveal">
+                <button
+                  onClick={() => {
+                    setVisibleCount(prev => prev >= allItems.length ? 6 : allItems.length);
+                    setActive(0);
+                  }}
+                  className="btn-outline px-8 py-3 text-sm font-medium hover:bg-[#20b2a6] hover:text-white transition-all duration-300"
+                >
+                  {visibleCount >= allItems.length ? 'View Less' : 'View More'}
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>

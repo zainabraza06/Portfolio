@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 
 const skillGroups = [
@@ -35,6 +36,7 @@ const skillGroups = [
 
 export const Skills = () => {
   useScrollRevealAll();
+  const [visibleCount, setVisibleCount] = useState(6);
 
   return (
     <section id="skills" className="relative py-28 px-6">
@@ -57,7 +59,7 @@ export const Skills = () => {
 
         {/* Skill groups */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skillGroups.map((group, gi) => (
+          {skillGroups.slice(0, visibleCount).map((group, gi) => (
             <div
               key={group.category}
               className={`glass-card p-6 reveal reveal-d${Math.min(gi + 1, 6)}`}
@@ -107,6 +109,17 @@ export const Skills = () => {
             </p>
           </div>
         </div>
+
+        {skillGroups.length > 6 && (
+          <div className="flex justify-center mt-12 reveal">
+            <button
+              onClick={() => setVisibleCount(prev => prev >= skillGroups.length ? 6 : skillGroups.length)}
+              className="btn-outline px-8 py-3 text-sm font-medium hover:bg-[#20b2a6] hover:text-white transition-all duration-300"
+            >
+              {visibleCount >= skillGroups.length ? 'View Less' : 'View More'}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

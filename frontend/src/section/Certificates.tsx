@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import { useApi } from '../hooks/useApi';
 import { fetchCertificates } from '../api/services';
@@ -14,6 +15,7 @@ interface Certificate {
 export const Certificates = () => {
   const { data: certificates, loading, error } = useApi<Certificate[]>(fetchCertificates);
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [certificates]);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   return (
     <section id="certificates" className="relative py-28 px-6">
@@ -56,8 +58,9 @@ export const Certificates = () => {
 
         {/* Grid */}
         {!loading && !error && (certificates ?? []).length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(certificates ?? []).map((cert, i) => (
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {(certificates ?? []).slice(0, visibleCount).map((cert, i) => (
               <a
                 key={cert._id}
                 href={cert.linkedInUrl || '#'}
@@ -105,7 +108,19 @@ export const Certificates = () => {
                 </div>
               </a>
             ))}
-          </div>
+            </div>
+            
+            {(certificates ?? []).length > 6 && (
+              <div className="flex justify-center mt-12 reveal">
+                <button
+                  onClick={() => setVisibleCount(prev => prev >= (certificates ?? []).length ? 6 : (certificates ?? []).length)}
+                  className="btn-outline px-8 py-3 text-sm font-medium hover:bg-[#20b2a6] hover:text-white transition-all duration-300"
+                >
+                  {visibleCount >= (certificates ?? []).length ? 'View Less' : 'View More'}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>

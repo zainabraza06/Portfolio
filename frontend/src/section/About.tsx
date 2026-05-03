@@ -131,7 +131,7 @@ export const About = () => {
                 <span>Get In Touch</span>
               </button>
               <a
-                href="/resume.pdf"
+                href="/CV.pdf"
                 download
                 className="btn-outline"
               >
