@@ -14,8 +14,16 @@ import kaggleRoutes      from './routes/kaggle.js';
 
 const app = express();
 
+// ── CORS: localhost for dev; add deployed SPA origins via CORS_ORIGINS (comma-separated) on Render
+const defaultOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+const extraOrigins = (process.env.CORS_ORIGINS ?? '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+const allowedOrigins = [...defaultOrigins, ...extraOrigins];
+
 // ── Middleware ──────────────────────────────────────────────────────────────
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:3000'], credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 
 // ── Routes ──────────────────────────────────────────────────────────────────

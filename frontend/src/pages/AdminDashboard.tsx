@@ -172,7 +172,7 @@ function ProjectsTab() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="text-[#e8edf2] font-semibold truncate">{p.title as string}</h3>
-                  {p.featured && <span className="text-[10px] bg-[#f5a623]/20 text-[#f5a623] px-2 py-0.5 rounded-full">⭐ Featured</span>}
+                  {Boolean(p.featured) && <span className="text-[10px] bg-[#f5a623]/20 text-[#f5a623] px-2 py-0.5 rounded-full">⭐ Featured</span>}
                 </div>
                 <p className="text-[#6b7fa3] text-sm mt-1 line-clamp-2">{p.description as string}</p>
                 <div className="flex flex-wrap gap-1 mt-2">
@@ -317,7 +317,7 @@ function KaggleTab() {
             <div key={kItem._id} className="glass-card p-4 flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <h3 className="text-[#e8edf2] font-semibold">{kItem.title as string}</h3>
-                <p className="text-[#20b2a6] text-sm">{kItem.date as string} {kItem.rank && `- Rank: ${kItem.rank}`}</p>
+                <p className="text-[#20b2a6] text-sm">{`${kItem.date as string}${kItem.rank ? ` - Rank: ${kItem.rank}` : ''}`}</p>
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => openEdit(kItem)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
@@ -394,7 +394,16 @@ function CertificatesTab() {
               <div className="flex-1 min-w-0">
                 <h3 className="text-[#e8edf2] font-semibold">{c.title as string}</h3>
                 <p className="text-[#20b2a6] text-sm">{c.issuer as string} · {c.date as string}</p>
-                {(c.credentialUrl || c.linkedInUrl) && <a href={(c.credentialUrl || c.linkedInUrl) as string} target="_blank" rel="noreferrer" className="text-xs text-[#6b7fa3] hover:text-[#20b2a6] underline mt-1 block">View Credential</a>}
+                {Boolean(c.credentialUrl || c.linkedInUrl) && (
+                  <a
+                    href={String(c.credentialUrl || c.linkedInUrl)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-[#6b7fa3] hover:text-[#20b2a6] underline mt-1 block"
+                  >
+                    View Credential
+                  </a>
+                )}
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => openEdit(c)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>

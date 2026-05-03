@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+/** Production: set `VITE_API_BASE_URL` (e.g. https://portfolio-d5vs.onrender.com/api). Dev: omit to use `/api` + Vite proxy. */
+const baseURL =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim().replace(/\/+$/, '') || '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
 });
 
