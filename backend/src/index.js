@@ -18,7 +18,7 @@ const app = express();
 const defaultOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://portfolio-delta-ashy-5dxvzebiar.vercel.app',
+  'https://portfolio-zainab06.vercel.app',
 ];
 const extraOrigins = (process.env.CORS_ORIGINS ?? '')
   .split(',')
