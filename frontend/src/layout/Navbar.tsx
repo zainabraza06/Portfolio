@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const navLinks = [
@@ -23,12 +23,42 @@ export const Navbar = () => {
   const [active, setActive] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [activityOpen, setActivityOpen] = useState(false);
+  const activityRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const onClickOutside = (event: MouseEvent) => {
+      if (!activityRef.current) return;
+      if (!activityRef.current.contains(event.target as Node)) {
+        setActivityOpen(false);
+      }
+    };
+
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setActivityOpen(false);
+        setMenuOpen(false);
+      }
+    };
+
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setMenuOpen(false);
+    };
+
+    document.addEventListener('mousedown', onClickOutside);
+    document.addEventListener('keydown', onEscape);
+    window.addEventListener('resize', onResize);
+    return () => {
+      document.removeEventListener('mousedown', onClickOutside);
+      document.removeEventListener('keydown', onEscape);
+      window.removeEventListener('resize', onResize);
+    };
   }, []);
 
   useEffect(() => {
@@ -86,13 +116,16 @@ export const Navbar = () => {
           {navLinks.map(link => {
             if (link.subLinks) {
               return (
-                <div 
+                <div
                   key={link.label} 
                   className="relative group"
-                  onMouseEnter={() => setActivityOpen(true)}
-                  onMouseLeave={() => setActivityOpen(false)}
+                  ref={activityRef}
                 >
                   <button
+                    type="button"
+                    onClick={() => setActivityOpen((o) => !o)}
+                    aria-expanded={activityOpen}
+                    aria-haspopup="menu"
                     className={`nav-3d-link text-sm flex items-center gap-1 px-4 ${isActivityActive ? 'nav-3d-active' : ''}`}
                   >
                     {link.label}
@@ -102,7 +135,7 @@ export const Navbar = () => {
                   </button>
 
                   {/* Enhanced Dropdown */}
-                  <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-3 w-56 transition-all duration-300 ease-out ${activityOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-4 invisible'}`}>
+                  <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-3 w-56 transition-all duration-300 ease-out ${activityOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-4 invisible pointer-events-none'}`}>
                     <div className="relative glass p-2 rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-[#20b2a6]/5 to-transparent pointer-events-none" />
                       <div className="relative flex flex-col gap-1">
@@ -155,14 +188,14 @@ export const Navbar = () => {
       </div>
 
       <div
-        className={`absolute top-full mt-4 w-[calc(100%-2rem)] max-w-[400px] pointer-events-auto transition-all duration-300 origin-top ${menuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 pointer-events-none'
+        className={`absolute top-full mt-3 w-[calc(100%-2rem)] max-w-[420px] pointer-events-auto transition-all duration-300 origin-top ${menuOpen ? 'scale-y-100 opacity-100 translate-y-0' : 'scale-y-0 opacity-0 -translate-y-2 pointer-events-none'
           }`}
       >
-        <div className="nav-3d px-6 py-5 flex flex-col gap-2">
+        <div className="nav-3d px-4 py-4 sm:px-6 sm:py-5 flex flex-col gap-2 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-xl">
           {navLinks.map(link => {
             if (link.subLinks) {
               return (
-                <div key={link.label} className="flex flex-col gap-1 mt-2 mb-2">
+                <div key={link.label} className="flex flex-col gap-1 mt-2 mb-2 rounded-xl bg-white/[0.03] p-2">
                   <span className="text-[#6b7fa3] text-[10px] font-bold uppercase tracking-widest px-3 mb-1 flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full bg-[#20b2a6]" /> Activity
                   </span>
@@ -172,7 +205,7 @@ export const Navbar = () => {
                         key={sub.href}
                         href={sub.href}
                         onClick={e => { e.preventDefault(); handleNavClick(sub.href); }}
-                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all ${active === sub.href.slice(1) ? 'bg-[#20b2a6]/20 text-[#20b2a6]' : 'text-[#6b7fa3] hover:text-[#e8edf2]'}`}
+                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all ${active === sub.href.slice(1) ? 'bg-[#20b2a6]/20 text-[#20b2a6]' : 'text-[#6b7fa3] hover:bg-white/[0.04] hover:text-[#e8edf2]'}`}
                       >
                         <span>{sub.icon}</span>
                         <span>{sub.label}</span>
@@ -195,7 +228,7 @@ export const Navbar = () => {
           })}
           <button
             onClick={() => { setMenuOpen(false); navigate(isLoggedIn ? '/admin/dashboard' : '/admin'); }}
-            className="btn-outline justify-center text-xs py-2 mt-2"
+            className="btn-outline justify-center text-xs py-2 mt-3"
           >
             {isLoggedIn ? 'Dashboard' : 'Admin Login'}
           </button>
