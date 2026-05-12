@@ -105,9 +105,9 @@ export const Navbar = () => {
   const isActivityActive = ['certificates', 'hackathons', 'kaggle'].includes(active);
 
   return (
-    <header className="fixed top-6 left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
+    <header className="fixed top-6 left-0 right-0 z-50 flex w-full max-w-full justify-center overflow-x-clip pointer-events-none px-4">
       <div
-        className={`pointer-events-auto flex items-center justify-between px-3 py-2 transition-all duration-500 ${scrolled ? 'nav-3d w-full max-w-[800px]' : 'bg-transparent w-full max-w-6xl'
+        className={`pointer-events-auto flex w-full min-w-0 max-w-6xl items-center justify-between px-3 py-2 transition-[background-color,box-shadow,border-color,backdrop-filter,border-radius] duration-500 ease-out ${scrolled ? 'nav-3d' : 'bg-transparent'
           }`}
       >
         <a
@@ -201,12 +201,13 @@ export const Navbar = () => {
         </div>
       </div>
 
-      <div
-        ref={menuPanelRef}
-        className={`absolute top-full mt-3 w-[calc(100%-2rem)] max-w-[420px] pointer-events-auto transition-all duration-300 origin-top ${menuOpen ? 'scale-y-100 opacity-100 translate-y-0' : 'scale-y-0 opacity-0 -translate-y-2 pointer-events-none'
-          }`}
-      >
-        <div className="nav-3d px-4 py-4 sm:px-6 sm:py-5 flex flex-col gap-2 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-xl">
+      <div className="pointer-events-none absolute inset-x-0 top-full z-50 mt-3 flex justify-center px-2">
+        <div
+          ref={menuPanelRef}
+          className={`w-full max-w-[min(26.25rem,calc(100vw-2rem))] transition-[transform,opacity] duration-300 ease-out origin-top ${menuOpen ? 'pointer-events-auto scale-y-100 opacity-100 translate-y-0' : 'pointer-events-none scale-y-0 opacity-0 -translate-y-2'
+            }`}
+        >
+          <div className="nav-3d px-4 py-4 sm:px-6 sm:py-5 flex flex-col gap-2 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-xl">
           {navLinks.map(link => {
             if (link.subLinks) {
               return (
@@ -247,6 +248,7 @@ export const Navbar = () => {
           >
             {isLoggedIn ? 'Dashboard' : 'Admin Login'}
           </button>
+          </div>
         </div>
       </div>
 
