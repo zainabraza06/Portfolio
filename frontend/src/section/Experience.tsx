@@ -24,7 +24,7 @@ export const Experience = () => {
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [experiences, visibleCount]);
 
   return (
-    <section id="experience" className="relative py-28 px-6">
+    <section id="experience" className="relative py-20 sm:py-28 px-4 sm:px-6">
       <div
         className="orb w-[400px] h-[400px] top-[10%] right-[-150px] opacity-20"
         style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.3) 0%, transparent 70%)' }}

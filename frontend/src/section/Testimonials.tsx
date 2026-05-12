@@ -50,9 +50,9 @@ export const Testimonials = () => {
   }, [active, items.length]);
 
   return (
-    <section id="testimonials" className="relative py-28 px-6">
+    <section id="testimonials" className="relative py-20 sm:py-28 px-4 sm:px-6">
       <div
-        className="orb w-[400px] h-[400px] bottom-0 right-[-150px] opacity-25"
+        className="orb w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] bottom-0 right-[-150px] opacity-25"
         style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.2) 0%, transparent 70%)' }}
       />
       <div className="max-w-6xl mx-auto">
@@ -68,9 +68,9 @@ export const Testimonials = () => {
         </div>
 
         {loading && (
-          <div className="flex gap-6 overflow-hidden">
+          <div className="flex gap-4 sm:gap-6 overflow-hidden">
             {[1,2,3].map(i => (
-              <div key={i} className="glass-card p-6 min-w-[320px] h-52 animate-pulse flex-shrink-0">
+              <div key={i} className="glass-card p-6 min-w-[280px] sm:min-w-[320px] h-52 animate-pulse flex-shrink-0">
                 <div className="h-3 bg-white/5 rounded w-3/4 mb-3" />
                 <div className="h-3 bg-white/5 rounded w-full mb-2" />
                 <div className="h-3 bg-white/5 rounded w-5/6" />
@@ -91,13 +91,13 @@ export const Testimonials = () => {
             {/* Carousel */}
             <div
               ref={scrollRef}
-              className="flex gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4 reveal"
+              className="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4 reveal"
             >
               {items.map((t, i) => (
                 <div
                   key={t._id}
                   onClick={() => setActive(i)}
-                  className={`glass-card p-6 min-w-[320px] max-w-[380px] flex-shrink-0 snap-center cursor-pointer transition-all duration-500 ${
+                  className={`glass-card p-6 min-w-[280px] sm:min-w-[320px] max-w-[340px] sm:max-w-[380px] flex-shrink-0 snap-center cursor-pointer transition-all duration-500 ${
                     active === i
                       ? 'border-[#20b2a6]/50 shadow-lg shadow-[#20b2a6]/10 scale-[1.02]'
                       : 'opacity-70 hover:opacity-90'

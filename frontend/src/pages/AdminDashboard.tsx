@@ -45,9 +45,9 @@ function Modal({ title, onClose, onSave, children, loading }: {
           <button onClick={onClose} disabled={loading} className="text-[#6b7fa3] hover:text-[#e8edf2] transition-colors text-xl">✕</button>
         </div>
         {children}
-        <div className="flex gap-3 mt-6">
-          <button onClick={onClose} disabled={loading} className="btn-outline flex-1 justify-center py-2 text-sm">Cancel</button>
-          <button onClick={onSave} disabled={loading} className="btn-primary flex-1 justify-center py-2 text-sm">
+        <div className="flex flex-col sm:flex-row gap-3 mt-6">
+          <button onClick={onClose} disabled={loading} className="btn-outline w-full sm:flex-1 justify-center py-2 text-sm">Cancel</button>
+          <button onClick={onSave} disabled={loading} className="btn-primary w-full sm:flex-1 justify-center py-2 text-sm">
             <span>{loading ? 'Saving...' : 'Save'}</span>
           </button>
         </div>
@@ -137,7 +137,7 @@ function ProjectsTab() {
       <Field label="Title *" id="p-title"><input id="p-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder="Project title" /></Field>
       <Field label="Description *" id="p-desc"><textarea id="p-desc" className="form-input resize-none" rows={3} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Project description" /></Field>
       <Field label="Tech Stack (comma separated)" id="p-tech"><input id="p-tech" className="form-input" value={form.techStack} onChange={e => set('techStack', e.target.value)} placeholder="React, Node.js, MongoDB" /></Field>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Field label="GitHub URL" id="p-gh"><input id="p-gh" className="form-input" value={form.githubUrl} onChange={e => set('githubUrl', e.target.value)} placeholder="https://github.com/..." /></Field>
         <Field label="Live URL" id="p-live"><input id="p-live" className="form-input" value={form.liveUrl} onChange={e => set('liveUrl', e.target.value)} placeholder="https://..." /></Field>
       </div>
@@ -258,7 +258,7 @@ function HackathonsTab() {
             <Field label="Title *" id="h-title"><input id="h-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} /></Field>
             <Field label="Description" id="h-desc"><textarea id="h-desc" className="form-input resize-none" rows={3} value={form.description} onChange={e => set('description', e.target.value)} /></Field>
             <Field label="Date" id="h-date"><input id="h-date" className="form-input" value={form.date} onChange={e => set('date', e.target.value)} /></Field>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Project URL" id="h-proj"><input id="h-proj" className="form-input" value={form.projectUrl} onChange={e => set('projectUrl', e.target.value)} /></Field>
               <Field label="Certificate URL" id="h-cert"><input id="h-cert" className="form-input" value={form.certificateUrl} onChange={e => set('certificateUrl', e.target.value)} /></Field>
             </div>
@@ -333,7 +333,7 @@ function KaggleTab() {
           <div className="space-y-3">
             <Field label="Title *" id="k-title"><input id="k-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} /></Field>
             <Field label="Description" id="k-desc"><textarea id="k-desc" className="form-input resize-none" rows={3} value={form.description} onChange={e => set('description', e.target.value)} /></Field>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Rank / Medal" id="k-rank"><input id="k-rank" className="form-input" value={form.rank} onChange={e => set('rank', e.target.value)} /></Field>
               <Field label="Date" id="k-date"><input id="k-date" className="form-input" value={form.date} onChange={e => set('date', e.target.value)} /></Field>
             </div>
@@ -418,11 +418,11 @@ function CertificatesTab() {
         <Modal title={modal === 'add' ? 'Add Certificate' : 'Edit Certificate'} onClose={() => setModal(null)} onSave={save} loading={saving}>
           <div className="space-y-3">
             <Field label="Title *" id="c-title"><input id="c-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. Meta Front-End Developer" /></Field>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Issuer *" id="c-iss"><input id="c-iss" className="form-input" value={form.issuer} onChange={e => set('issuer', e.target.value)} placeholder="e.g. Coursera" /></Field>
               <Field label="Date" id="c-date"><input id="c-date" className="form-input" value={form.date} onChange={e => set('date', e.target.value)} placeholder="e.g. Aug 2024" /></Field>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Credential URL" id="c-cred"><input id="c-cred" className="form-input" value={form.credentialUrl} onChange={e => set('credentialUrl', e.target.value)} placeholder="https://..." /></Field>
               <Field label="LinkedIn Post URL" id="c-url"><input id="c-url" className="form-input" value={form.linkedInUrl} onChange={e => set('linkedInUrl', e.target.value)} placeholder="https://linkedin.com/..." /></Field>
             </div>
@@ -497,11 +497,11 @@ function ExperienceTab() {
       {modal && (
         <Modal title={modal === 'add' ? 'Add Experience' : 'Edit Experience'} onClose={() => setModal(null)} onSave={save}>
           <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Role *" id="e-role"><input id="e-role" className="form-input" value={form.role} onChange={ev => set('role', ev.target.value)} placeholder="Software Engineer" /></Field>
               <Field label="Company *" id="e-comp"><input id="e-comp" className="form-input" value={form.company} onChange={ev => set('company', ev.target.value)} placeholder="Acme Inc." /></Field>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Duration *" id="e-dur"><input id="e-dur" className="form-input" value={form.duration} onChange={ev => set('duration', ev.target.value)} placeholder="2022 – Present" /></Field>
               <Field label="Type" id="e-type">
                 <select id="e-type" className="form-input" value={form.type} onChange={ev => set('type', ev.target.value)}>

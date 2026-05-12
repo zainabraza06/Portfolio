@@ -18,7 +18,7 @@ export const Certificates = () => {
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [certificates, visibleCount]);
 
   return (
-    <section id="certificates" className="relative py-28 px-6">
+    <section id="certificates" className="relative py-20 sm:py-28 px-4 sm:px-6">
       <div
         className="orb w-[500px] h-[500px] top-[10%] left-[-200px] opacity-20"
         style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.3) 0%, transparent 70%)' }}

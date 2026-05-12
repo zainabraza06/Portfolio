@@ -19,7 +19,7 @@ export const Kaggle = () => {
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [kaggle, visibleCount]);
 
   return (
-    <section id="kaggle" className="relative py-28 px-6">
+    <section id="kaggle" className="relative py-20 sm:py-28 px-4 sm:px-6">
       <div
         className="orb w-[400px] h-[400px] top-[40%] left-[-150px] opacity-20"
         style={{ background: 'radial-gradient(circle, rgba(32,190,255,0.3) 0%, transparent 70%)' }}

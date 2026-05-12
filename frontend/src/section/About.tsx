@@ -40,7 +40,7 @@ export const About = () => {
   }, []);
 
   return (
-    <section id="about" className="relative py-28 px-6">
+    <section id="about" className="relative py-20 sm:py-28 px-4 sm:px-6">
       <div className="orb w-[400px] h-[400px] top-0 left-[-150px] opacity-30"
         style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.2) 0%, transparent 70%)' }} />
 
@@ -59,7 +59,7 @@ export const About = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left – Avatar */}
           <div className="reveal-left flex justify-center">
-            <div className="relative w-72 h-80">
+            <div className="relative w-64 h-72 sm:w-72 sm:h-80">
               {/* Rotating ring */}
               <div className="absolute inset-[-16px] rounded-[2rem] border-2 border-dashed border-[#20b2a6]/30 animate-spin-slow" />
               {/* Glow */}
@@ -67,7 +67,7 @@ export const About = () => {
                 style={{ boxShadow: '0 0 60px rgba(32,178,166,0.2), 0 0 120px rgba(32,178,166,0.08)' }} />
               
               {/* Status Badge */}
-              <div className="absolute -top-4 -left-6 z-10 inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 text-xs font-medium animate-float"
+              <div className="absolute -top-3 sm:-top-4 -left-2 sm:-left-6 z-10 inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 text-xs font-medium animate-float"
                    style={{ animationDelay: '1s' }}>
                 <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
                 <span className="text-[#e8edf2]">Available for opportunities</span>
@@ -81,7 +81,7 @@ export const About = () => {
                 />
               </div>
               {/* Floating badge */}
-              <div className="absolute -bottom-4 -right-4 glass rounded-xl px-3 py-2 flex items-center gap-2 animate-float">
+              <div className="absolute -bottom-4 -right-2 sm:-right-4 glass rounded-xl px-3 py-2 flex items-center gap-2 animate-float">
                 <span className="text-lg">🎓</span>
                 <div>
                   <p className="text-xs font-semibold text-[#e8edf2]">BS AI Student</p>
@@ -115,25 +115,25 @@ export const About = () => {
                 { icon: '💡', label: 'Interests', val: 'MERN Stack · Next.js · ML/DL · Research' },
                 { icon: '🌐', label: 'Languages', val: 'English · Urdu' },
               ].map(f => (
-                <div key={f.label} className="flex items-center gap-3">
+                <div key={f.label} className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
                   <span className="text-lg w-7">{f.icon}</span>
-                  <span className="text-[#6b7fa3] text-sm w-20 shrink-0">{f.label}:</span>
-                  <span className="text-[#e8edf2] text-sm font-medium">{f.val}</span>
+                  <span className="text-[#6b7fa3] text-sm sm:w-20 sm:shrink-0">{f.label}:</span>
+                  <span className="text-[#e8edf2] text-sm font-medium break-words">{f.val}</span>
                 </div>
               ))}
             </div>
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <button
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="btn-primary"
+                className="btn-primary w-full sm:w-auto justify-center"
               >
                 <span>Get In Touch</span>
               </button>
               <a
                 href="/CV.pdf"
                 download
-                className="btn-outline flex items-center gap-2"
+                className="btn-outline w-full sm:w-auto justify-center flex items-center gap-2"
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

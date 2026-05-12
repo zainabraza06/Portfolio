@@ -32,7 +32,7 @@ const socialLinks = [
 export const Footer = () => (
   <footer className="relative border-t border-white/5 mt-16">
     <div className="absolute inset-0 bg-gradient-to-t from-[#080d12] to-transparent pointer-events-none" />
-    <div className="relative max-w-6xl mx-auto px-6 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
+    <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div className="text-center sm:text-left">
         <p className="font-semibold text-lg">
           Zainab<span className="text-[#20b2a6]">.</span>

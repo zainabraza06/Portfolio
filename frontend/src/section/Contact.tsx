@@ -61,7 +61,7 @@ export const Contact = () => {
   };
 
   return (
-    <section id="contact" className="relative py-28 px-6">
+    <section id="contact" className="relative py-20 sm:py-28 px-4 sm:px-6">
       <div
         className="orb w-[400px] h-[400px] top-0 left-[-150px] opacity-25"
         style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.2) 0%, transparent 70%)' }}

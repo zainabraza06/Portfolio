@@ -19,7 +19,7 @@ export const Hackathons = () => {
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [hackathons, visibleCount]);
 
   return (
-    <section id="hackathons" className="relative py-28 px-6">
+    <section id="hackathons" className="relative py-20 sm:py-28 px-4 sm:px-6">
       <div
         className="orb w-[500px] h-[500px] top-[10%] right-[-200px] opacity-20"
         style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.3) 0%, transparent 70%)' }}

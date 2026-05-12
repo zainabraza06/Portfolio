@@ -50,15 +50,15 @@ export const Hero = () => {
 
       {/* Parallax orbs */}
       <div
-        className="parallax-orb orb w-[500px] h-[500px] top-[-100px] left-[-100px] transition-transform duration-300 ease-out"
+        className="parallax-orb orb w-[320px] h-[320px] sm:w-[500px] sm:h-[500px] top-[-120px] sm:top-[-100px] left-[-120px] sm:left-[-100px] transition-transform duration-300 ease-out"
         style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.18) 0%, transparent 70%)' }}
       />
       <div
-        className="parallax-orb orb w-[400px] h-[400px] bottom-[-80px] right-[-60px] transition-transform duration-300 ease-out"
+        className="parallax-orb orb w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] bottom-[-120px] sm:bottom-[-80px] right-[-100px] sm:right-[-60px] transition-transform duration-300 ease-out"
         style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%)' }}
       />
       <div
-        className="parallax-orb orb w-[300px] h-[300px] top-[30%] right-[5%] animate-float2 transition-transform duration-500 ease-out"
+        className="parallax-orb orb w-[220px] h-[220px] sm:w-[300px] sm:h-[300px] top-[30%] right-[5%] animate-float2 transition-transform duration-500 ease-out"
         style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.1) 0%, transparent 70%)' }}
       />
 
@@ -72,7 +72,7 @@ export const Hero = () => {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto px-6 pt-24 text-center">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-24 text-center">
         {/* Profile Picture */}
         <div
           className="w-28 h-28 mx-auto mb-6 rounded-full overflow-hidden border-2 border-[#20b2a6]/50 shadow-[0_0_30px_rgba(32,178,166,0.3)]"
@@ -122,7 +122,7 @@ export const Hero = () => {
         >
           <button
             onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-            className="btn-primary"
+            className="btn-primary w-full sm:w-auto justify-center"
           >
             <span>View My Work</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -131,7 +131,7 @@ export const Hero = () => {
           </button>
           <button
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="btn-outline"
+            className="btn-outline w-full sm:w-auto justify-center"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
