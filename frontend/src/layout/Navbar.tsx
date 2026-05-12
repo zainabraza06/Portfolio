@@ -24,6 +24,8 @@ export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activityOpen, setActivityOpen] = useState(false);
   const activityRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,10 +35,19 @@ export const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    const onClickOutside = (event: MouseEvent) => {
-      if (!activityRef.current) return;
-      if (!activityRef.current.contains(event.target as Node)) {
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (activityRef.current && !activityRef.current.contains(target)) {
         setActivityOpen(false);
+      }
+      if (
+        menuOpen &&
+        menuButtonRef.current &&
+        menuPanelRef.current &&
+        !menuButtonRef.current.contains(target) &&
+        !menuPanelRef.current.contains(target)
+      ) {
+        setMenuOpen(false);
       }
     };
 
@@ -51,15 +62,15 @@ export const Navbar = () => {
       if (window.innerWidth >= 1024) setMenuOpen(false);
     };
 
-    document.addEventListener('mousedown', onClickOutside);
+    document.addEventListener('pointerdown', onPointerDown);
     document.addEventListener('keydown', onEscape);
     window.addEventListener('resize', onResize);
     return () => {
-      document.removeEventListener('mousedown', onClickOutside);
+      document.removeEventListener('pointerdown', onPointerDown);
       document.removeEventListener('keydown', onEscape);
       window.removeEventListener('resize', onResize);
     };
-  }, []);
+  }, [menuOpen]);
 
   useEffect(() => {
     const sections = navLinks.flatMap(l => l.subLinks ? l.subLinks.map(s => s.href.slice(1)) : [l.href?.slice(1)].filter(Boolean));
@@ -126,7 +137,7 @@ export const Navbar = () => {
                     onClick={() => setActivityOpen((o) => !o)}
                     aria-expanded={activityOpen}
                     aria-haspopup="menu"
-                    className={`nav-3d-link text-sm flex items-center gap-1 px-4 ${isActivityActive ? 'nav-3d-active' : ''}`}
+                    className={`nav-3d-link cursor-pointer text-sm flex items-center gap-1 px-4 ${isActivityActive ? 'nav-3d-active' : ''}`}
                   >
                     {link.label}
                     <svg className={`w-3 h-3 transition-transform duration-300 ${activityOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
@@ -174,9 +185,12 @@ export const Navbar = () => {
 
         <div className="flex items-center gap-2">
           <button
+            ref={menuButtonRef}
+            type="button"
             onClick={() => setMenuOpen(o => !o)}
-            className="lg:hidden p-2.5 rounded-full bg-[#1e2d3d] text-[#e8edf2] transition-all duration-200"
+            className="lg:hidden cursor-pointer p-2.5 rounded-full bg-[#1e2d3d] text-[#e8edf2] transition-all duration-200"
             aria-label="Toggle menu"
+            aria-expanded={menuOpen}
           >
             <div className="w-4 h-3.5 flex flex-col justify-between">
               <span className={`block h-[2px] bg-current transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[6px]' : ''}`} />
@@ -188,6 +202,7 @@ export const Navbar = () => {
       </div>
 
       <div
+        ref={menuPanelRef}
         className={`absolute top-full mt-3 w-[calc(100%-2rem)] max-w-[420px] pointer-events-auto transition-all duration-300 origin-top ${menuOpen ? 'scale-y-100 opacity-100 translate-y-0' : 'scale-y-0 opacity-0 -translate-y-2 pointer-events-none'
           }`}
       >
