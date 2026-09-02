@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import { FeedbackProvider, useToast, useConfirm } from '../components/Feedback';
 import {
   fetchProjects, createProject, updateProject, deleteProject,
   fetchExperience, createExperience, updateExperience, deleteExperience,
@@ -80,6 +81,8 @@ const buildFormData = (form: Record<string, any>, file: File | null) => {
 
 // ── Projects Tab ─────────────────────────────────────────────────
 function ProjectsTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
   const [items, setItems] = useState<Item[]>([]);
   const [modal, setModal] = useState<'add' | 'edit' | null>(null);
   const [form, setForm]   = useState({ ...emptyProject });
@@ -111,23 +114,30 @@ function ProjectsTab() {
       else await updateProject(editId, payload);
       setModal(null);
       load();
+      toast('Project saved.');
     } catch (err) {
-      alert('Failed to save project.');
+      toast('Failed to save project.', 'error');
     } finally {
       setSaving(false);
     }
   };
 
-  const remove = async (id: string) => { if (confirm('Delete this project?')) { await deleteProject(id); load(); } };
+  const remove = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete project?', message: 'This removes it from your portfolio permanently.' });
+    if (!ok) return;
+    await deleteProject(id);
+    load();
+    toast('Project deleted.');
+  };
 
   const handleSync = async () => {
     setLoading(true);
     try {
       const res = await syncProjects();
-      alert(res.message);
+      toast(res.message);
       load();
     } catch (err: any) {
-      alert('Sync failed: ' + err.message);
+      toast('Sync failed: ' + err.message, 'error');
       setLoading(false);
     }
   };
@@ -199,6 +209,8 @@ function ProjectsTab() {
 
 // ── Hackathons Tab ─────────────────────────────────────────────
 function HackathonsTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
   const [items, setItems] = useState<Item[]>([]);
   const [modal, setModal] = useState<'add' | 'edit' | null>(null);
   const [form, setForm]   = useState({ ...emptyHack });
@@ -224,10 +236,16 @@ function HackathonsTab() {
       const payload = buildFormData(form, file);
       if (modal === 'add') await createHackathon(payload);
       else await updateHackathon(editId, payload);
-      setModal(null); load();
-    } catch (err) { alert('Failed to save.'); } finally { setSaving(false); }
+      setModal(null); load(); toast('Saved.');
+    } catch (err) { toast('Failed to save.', 'error'); } finally { setSaving(false); }
   };
-  const remove = async (id: string) => { if (confirm('Delete?')) { await deleteHackathon(id); load(); } };
+  const remove = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete hackathon?', message: 'This removes the hackathon entry permanently.' });
+    if (!ok) return;
+    await deleteHackathon(id);
+    load();
+    toast('Hackathon deleted.');
+  };
 
   return (
     <div>
@@ -275,6 +293,8 @@ function HackathonsTab() {
 
 // ── Kaggle Tab ───────────────────────────────────────────────
 function KaggleTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
   const [items, setItems] = useState<Item[]>([]);
   const [modal, setModal] = useState<'add' | 'edit' | null>(null);
   const [form, setForm]   = useState({ ...emptyKaggle });
@@ -300,10 +320,16 @@ function KaggleTab() {
       const payload = buildFormData(form, file);
       if (modal === 'add') await createKaggle(payload);
       else await updateKaggle(editId, payload);
-      setModal(null); load();
-    } catch (err) { alert('Failed to save.'); } finally { setSaving(false); }
+      setModal(null); load(); toast('Saved.');
+    } catch (err) { toast('Failed to save.', 'error'); } finally { setSaving(false); }
   };
-  const remove = async (id: string) => { if (confirm('Delete?')) { await deleteKaggle(id); load(); } };
+  const remove = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete entry?', message: 'This removes the Kaggle entry permanently.' });
+    if (!ok) return;
+    await deleteKaggle(id);
+    load();
+    toast('Entry deleted.');
+  };
 
   return (
     <div>
@@ -351,6 +377,8 @@ function KaggleTab() {
 
 // ── Certificates Tab ─────────────────────────────────────────────
 function CertificatesTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
   const [items, setItems] = useState<Item[]>([]);
   const [modal, setModal] = useState<'add' | 'edit' | null>(null);
   const [form, setForm]   = useState({ ...emptyCert });
@@ -376,10 +404,16 @@ function CertificatesTab() {
       const payload = buildFormData(form, file);
       if (modal === 'add') await createCertificate(payload);
       else await updateCertificate(editId, payload);
-      setModal(null); load();
-    } catch (err) { alert('Failed to save.'); } finally { setSaving(false); }
+      setModal(null); load(); toast('Saved.');
+    } catch (err) { toast('Failed to save.', 'error'); } finally { setSaving(false); }
   };
-  const remove = async (id: string) => { if (confirm('Delete?')) { await deleteCertificate(id); load(); } };
+  const remove = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete certificate?', message: 'This removes the certificate permanently.' });
+    if (!ok) return;
+    await deleteCertificate(id);
+    load();
+    toast('Certificate deleted.');
+  };
 
   return (
     <div>
@@ -439,6 +473,8 @@ function CertificatesTab() {
 
 // ── Experience Tab ───────────────────────────────────────────────
 function ExperienceTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
   const [items, setItems] = useState<Item[]>([]);
   const [modal, setModal] = useState<'add' | 'edit' | null>(null);
   const [form, setForm]   = useState({ ...emptyExp });
@@ -458,9 +494,15 @@ function ExperienceTab() {
   const save = async () => {
     if (modal === 'add') await createExperience(form);
     else await updateExperience(editId, form);
-    setModal(null); load();
+    setModal(null); load(); toast('Saved.');
   };
-  const remove = async (id: string) => { if (confirm('Delete?')) { await deleteExperience(id); load(); } };
+  const remove = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete entry?', message: 'This removes the experience entry permanently.' });
+    if (!ok) return;
+    await deleteExperience(id);
+    load();
+    toast('Entry deleted.');
+  };
 
   const typeColors: Record<string, string> = { work: '#20b2a6', education: '#a78bfa' };
 
@@ -520,6 +562,8 @@ function ExperienceTab() {
 
 // ── Testimonials Tab ─────────────────────────────────────────────
 function TestimonialsTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -527,7 +571,13 @@ function TestimonialsTab() {
   useEffect(() => { load(); }, []);
 
   const approve = async (id: string) => { await approveTestimonial(id); load(); };
-  const remove  = async (id: string) => { if (confirm('Delete?')) { await deleteTestimonial(id); load(); } };
+  const remove  = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete testimonial?', message: 'The person who wrote it will not be notified.' });
+    if (!ok) return;
+    await deleteTestimonial(id);
+    load();
+    toast('Testimonial deleted.');
+  };
 
   return (
     <div>
@@ -563,6 +613,8 @@ function TestimonialsTab() {
 
 // ── Messages Tab ─────────────────────────────────────────────────
 function MessagesTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -571,7 +623,13 @@ function MessagesTab() {
   useEffect(() => { load(); }, []);
 
   const markRead = async (id: string) => { await markMessageRead(id); load(); };
-  const remove   = async (id: string) => { if (confirm('Delete?')) { await deleteMessage(id); load(); } };
+  const remove   = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete message?', message: 'This removes the message from your inbox for good.' });
+    if (!ok) return;
+    await deleteMessage(id);
+    load();
+    toast('Message deleted.');
+  };
 
   const unread = items.filter(m => !m.read).length;
 
@@ -690,7 +748,8 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080d12]">
+    <FeedbackProvider>
+      <div className="min-h-screen bg-[#080d12]">
       {/* Top bar */}
       <header className="glass border-b border-white/5 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -741,6 +800,7 @@ export default function AdminDashboard() {
           {tab === 'messages'     && <MessagesTab />}
         </div>
       </div>
-    </div>
+      </div>
+    </FeedbackProvider>
   );
 }
