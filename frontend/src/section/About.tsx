@@ -80,14 +80,6 @@ export const About = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              {/* Floating badge */}
-              <div className="absolute -bottom-4 -right-2 sm:-right-4 glass rounded-xl px-3 py-2 flex items-center gap-2 animate-float">
-                <span className="text-lg">🎓</span>
-                <div>
-                  <p className="text-xs font-semibold text-[#e8edf2]">BS AI Student</p>
-                  <p className="text-[10px] text-[#6b7fa3]">@ NUST</p>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -97,23 +89,24 @@ export const About = () => {
               Hello! I'm <span className="gradient-text">Zainab Raza Malik</span>
             </h3>
             <p className="text-[#6b7fa3] leading-relaxed">
-              I'm a{' '}
-              <span className="text-[#e8edf2] font-medium">BS Artificial Intelligence student at NUST (SEECS)</span>,
-              focused on Machine Learning &amp; Deep Learning research — computer vision, speech and NLP,
-              and time-series models for real-world prediction problems.
+              My focus is{' '}
+              <span className="text-[#e8edf2] font-medium">Generative AI and Deep Learning</span> — LLMs,
+              RAG pipelines and agentic systems, alongside computer vision, speech and NLP, and
+              time-series models for problems like predictive maintenance and fall detection.
             </p>
             <p className="text-[#6b7fa3] leading-relaxed">
-              I also build the software those models live in, as a full-stack developer working with the{' '}
-              <span className="text-[#e8edf2] font-medium">MERN stack and Next.js</span> — so a research
-              idea can ship as a product, not just a notebook.
+              I also build the software those models live in — full-stack on the{' '}
+              <span className="text-[#e8edf2] font-medium">MERN stack and Next.js</span>, and mobile with{' '}
+              <span className="text-[#e8edf2] font-medium">Flutter</span> — so a research idea can ship as
+              a product, not just a notebook.
             </p>
 
             {/* Key facts */}
             <div className="space-y-3 pt-2">
               {[
                 { icon: '📍', label: 'Location', val: 'Pakistan' },
-                { icon: '🎓', label: 'Degree', val: 'BS Artificial Intelligence @ NUST' },
-                { icon: '💡', label: 'Interests', val: 'Machine Learning · Deep Learning · Computer Vision · NLP · MERN Stack' },
+                { icon: '🎓', label: 'Degree', val: 'BS Artificial Intelligence @ NUST (SEECS)' },
+                { icon: '💡', label: 'Interests', val: 'LLMs & Agentic AI · Computer Vision · NLP · MERN · Flutter' },
                 { icon: '🌐', label: 'Languages', val: 'English · Urdu' },
               ].map(f => (
                 <div key={f.label} className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">

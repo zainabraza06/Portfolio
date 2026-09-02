@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useTypewriter } from '../hooks/useTypewriter';
 
 const roles = [
-  'BS Artificial Intelligence Student',
-  'Machine Learning Engineer',
+  'BS Artificial Intelligence @ NUST',
+  'Gen AI & LLM Engineer',
   'Deep Learning Researcher',
-  'MERN Stack Developer',
+  'MERN + Flutter Developer',
 ];
 
 export const Hero = () => {
@@ -73,18 +73,6 @@ export const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-24 text-center">
-        {/* Profile Picture */}
-        <div
-          className="w-28 h-28 mx-auto mb-6 rounded-full overflow-hidden border-2 border-[#20b2a6]/50 shadow-[0_0_30px_rgba(32,178,166,0.3)]"
-          style={{ animation: 'fadeInUp 0.6s ease both' }}
-        >
-          <img
-            src="/profilepic.jpeg"
-            alt="Zainab Raza Malik"
-            className="w-full h-full object-cover"
-          />
-        </div>
-
         {/* Main heading */}
         <h1
           className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] mb-6"
@@ -112,7 +100,7 @@ export const Hero = () => {
           className="max-w-2xl mx-auto text-[#6b7fa3] text-lg leading-relaxed mb-10"
           style={{ animation: 'fadeInUp 0.7s 0.3s ease both' }}
         >
-          I am a <span className="text-[#e8edf2] font-medium">BS Artificial Intelligence student at NUST (SEECS)</span>. I work on Machine Learning &amp; Deep Learning research — computer vision, speech and time-series — and turn those models into full-stack products with the MERN stack and Next.js.
+          I turn <span className="text-[#e8edf2] font-medium">machine learning research</span> into software people can actually use — LLMs and agentic systems, computer vision and speech — shipped as full-stack MERN and Flutter apps.
         </p>
 
         {/* CTA buttons */}
