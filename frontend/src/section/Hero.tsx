@@ -31,9 +31,6 @@ export const Hero = () => {
     return () => window.removeEventListener('mousemove', handleMove);
   }, []);
 
-  const scrollToAbout = () =>
-    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-
   return (
     <section
       id="hero"
@@ -130,22 +127,6 @@ export const Hero = () => {
         </div>
 
       </div>
-
-      {/* Scroll indicator */}
-      <button
-        onClick={scrollToAbout}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[#6b7fa3] hover:text-[#20b2a6] transition-colors duration-300 group"
-        style={{ animation: 'fadeInUp 0.7s 0.7s ease both' }}
-        aria-label="Scroll down"
-      >
-        <span className="text-xs tracking-widest uppercase">Scroll</span>
-        <svg
-          className="group-hover:translate-y-1 transition-transform duration-300"
-          width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-        >
-          <path d="M12 5v14M5 12l7 7 7-7" />
-        </svg>
-      </button>
     </section>
   );
 };
