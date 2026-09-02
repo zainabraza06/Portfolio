@@ -38,7 +38,7 @@ export const Footer = () => (
           Zainab<span className="text-[#20b2a6]">.</span>
         </p>
         <p className="text-sm text-[#6b7fa3] mt-1">
-          AI & Machine Learning · Deep Learning · MERN Stack
+          Gen AI & LLMs · Deep Learning · MERN & Flutter
         </p>
       </div>
       <div className="flex items-center gap-3">
