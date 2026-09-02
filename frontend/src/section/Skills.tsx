@@ -3,6 +3,24 @@ import { useScrollRevealAll } from '../hooks/useScrollReveal';
 
 export const skillGroups = [
   {
+    category: 'AI & Machine Learning',
+    icon: '🧠',
+    color: '#f5a623',
+    skills: ['Machine Learning', 'Deep Learning', 'Neural Networks', 'Model Evaluation', 'Feature Engineering', 'Scikit-learn'],
+  },
+  {
+    category: 'Deep Learning & Research',
+    icon: '🤖',
+    color: '#a78bfa',
+    skills: ['PyTorch', 'TensorFlow', 'Keras', 'Computer Vision', 'NLP & Speech', 'Time-Series Forecasting'],
+  },
+  {
+    category: 'Data & Analysis',
+    icon: '📊',
+    color: '#38bdf8',
+    skills: ['Data Analysis', 'NumPy', 'Pandas', 'Matplotlib', 'Data Preprocessing'],
+  },
+  {
     category: 'Programming Languages',
     icon: '💻',
     color: '#20b2a6',
@@ -11,20 +29,14 @@ export const skillGroups = [
   {
     category: 'Web Development',
     icon: '🌐',
-    color: '#a78bfa',
+    color: '#f472b6',
     skills: ['MERN Stack', 'Next.js', 'Tailwind CSS', 'Node.js', 'Express', 'React', 'MongoDB'],
-  },
-  {
-    category: 'AI & Data',
-    icon: '🧠',
-    color: '#f5a623',
-    skills: ['Machine Learning', 'Data Analysis', 'NumPy', 'Pandas', 'Scikit-learn'],
   },
   {
     category: 'Tools & Platforms',
     icon: '🛠️',
     color: '#22c55e',
-    skills: ['Git', 'GitHub', 'VS Code', 'Jupyter Notebook', 'Figma'],
+    skills: ['Git', 'GitHub', 'Jupyter Notebook', 'Google Colab', 'Kaggle', 'VS Code', 'Figma'],
   },
   {
     category: 'Soft Skills',
@@ -53,7 +65,7 @@ export const Skills = () => {
             Skills &amp; <span className="gradient-text">Technologies</span>
           </h2>
           <p className="text-[#6b7fa3] max-w-xl mx-auto">
-            A curated set of tools I use to build full-stack products and conduct ML/DL research.
+            A curated set of tools I use to train models, run ML/DL research, and ship the products around them.
           </p>
         </div>
 
@@ -105,7 +117,7 @@ export const Skills = () => {
             </div>
             <p className="text-[#e8edf2] font-semibold">Always Learning</p>
             <p className="text-[#6b7fa3] text-sm">
-              Continuously expanding skill set — currently exploring LLM fine-tuning & RAG pipelines.
+              Continuously expanding skill set — currently exploring LLM fine-tuning, RAG pipelines &amp; transformer architectures.
             </p>
           </div>
         </div>
