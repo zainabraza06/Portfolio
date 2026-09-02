@@ -41,12 +41,19 @@ export const Testimonials = () => {
     return () => clearInterval(timer);
   }, [items.length]);
 
-  // Scroll to active card
+  // Scroll the carousel itself to the active card. scrollIntoView would
+  // scroll the page too, yanking the viewer down here on load.
+  const firstRun = useRef(true);
   useEffect(() => {
     const container = scrollRef.current;
     if (!container || items.length === 0) return;
-    const card = container.children[active] as HTMLElement;
-    if (card) card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    const card = container.children[active] as HTMLElement | undefined;
+    if (!card) return;
+    container.scrollTo({
+      left: card.offsetLeft - (container.clientWidth - card.clientWidth) / 2,
+      behavior: firstRun.current ? 'auto' : 'smooth',
+    });
+    firstRun.current = false;
   }, [active, items.length]);
 
   return (
