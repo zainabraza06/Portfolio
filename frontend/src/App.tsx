@@ -14,6 +14,7 @@ import { Hackathons } from './section/Hackathons';
 import { Kaggle } from './section/Kaggle';
 import { Testimonials } from './section/Testimonials';
 import { Contact } from './section/Contact';
+import { AiGuide } from './components/AiGuide';
 
 // Admin Pages
 import AdminLogin from './pages/AdminLogin';
@@ -44,6 +45,7 @@ function Portfolio() {
         <Contact />
       </main>
       <Footer />
+      <AiGuide />
     </>
   );
 }
