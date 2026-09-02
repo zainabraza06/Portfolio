@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  fetchProjects, fetchCertificates, fetchHackathons, fetchKaggle, fetchTestimonials,
+} from '../api/services';
 
 /**
  * A small guide that follows the reader down the page and narrates whichever
  * section they are in. Lines are written ahead of time — no model call — so it
- * can never invent a claim about Zainab.
+ * can never invent a claim about Zainab. Counts and names for the collections
+ * come from the API, so adding a project in the admin panel updates what the
+ * guide says without touching this file.
  */
 
 interface Line {
@@ -31,7 +36,7 @@ const LINES: Line[] = [
   {
     id: 'projects',
     label: 'Projects',
-    text: "These are things she's actually built — a hospital management platform, a pandemic simulator, gesture-controlled web apps, and an AI fashion stylist.",
+    text: "These are things she's actually built — full-stack products and AI systems alike.",
   },
   {
     id: 'hackathons',
@@ -46,7 +51,7 @@ const LINES: Line[] = [
   {
     id: 'certificates',
     label: 'Certificates',
-    text: 'Certifications from DeepLearning.AI and Stanford, Microsoft, Meta and IBM — the coursework behind the projects.',
+    text: 'The coursework behind the projects.',
   },
   {
     id: 'experience',
@@ -69,6 +74,61 @@ const VOICE_KEY = 'portfolio_guide_voice';
 const AUTO_COLLAPSE_MS = 9000;
 const TYPE_MS = 18;
 
+interface Titled { title?: string; name?: string; issuer?: string }
+
+/** "Healix – Hospital Management System" → "Healix" */
+const shortTitle = (raw: string) =>
+  raw.split(/[–—:(-]/)[0].trim() || raw.trim();
+
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+const listOf = (values: string[], limit = 3) => {
+  const unique = [...new Set(values.filter(Boolean))];
+  const head = unique.slice(0, limit);
+  if (head.length === 0) return '';
+  if (head.length === 1) return head[0];
+  return `${head.slice(0, -1).join(', ')} and ${head[head.length - 1]}`;
+};
+
+/** Rewrites the collection lines from live data; anything that fails keeps its written line. */
+const withLiveCounts = (
+  data: { projects: Titled[]; certificates: Titled[]; hackathons: Titled[]; kaggle: Titled[]; testimonials: Titled[] }
+): Record<string, string> => {
+  const out: Record<string, string> = {};
+
+  if (data.projects.length > 0) {
+    const names = listOf(data.projects.map(p => shortTitle(p.title ?? '')));
+    const rest = data.projects.length - Math.min(3, data.projects.length);
+    out.projects =
+      `She has ${plural(data.projects.length, 'project', 'projects')} here — ${names}` +
+      (rest > 0 ? `, and ${rest} more.` : '.') +
+      ' Filter them by ML, Python, MERN or Next.js.';
+  }
+
+  if (data.certificates.length > 0) {
+    const issuers = listOf(data.certificates.map(c => c.issuer ?? ''));
+    out.certificates =
+      `She holds ${plural(data.certificates.length, 'certification', 'certifications')}` +
+      (issuers ? ` — from ${issuers}, among others.` : ' — the coursework behind the projects.');
+  }
+
+  if (data.hackathons.length > 0) {
+    out.hackathons =
+      `She's competed in ${plural(data.hackathons.length, 'hackathon', 'hackathons')} — the same engineering, compressed into a weekend.`;
+  }
+
+  if (data.kaggle.length > 0) {
+    out.kaggle = `Her Kaggle work — ${plural(data.kaggle.length, 'entry', 'entries')} of competitions, notebooks and rankings.`;
+  }
+
+  if (data.testimonials.length > 0) {
+    out.testimonials =
+      `${plural(data.testimonials.length, 'person', 'people')} who worked alongside Zainab, in their own words.`;
+  }
+
+  return out;
+};
+
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
   window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
@@ -85,9 +145,29 @@ export const AiGuide = () => {
     }
   });
 
+  const [live, setLive] = useState<Record<string, string>>({});
+
   // Set when the reader closes the bubble: stay quiet until they ask again.
   const silenced = useRef(false);
-  const line = LINES[activeIndex];
+  const base = LINES[activeIndex];
+  const line = { ...base, text: live[base.id] ?? base.text };
+
+  // Counts come from the same API the sections read, so the guide stays
+  // right as entries are added or removed in the admin panel.
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      fetchProjects().catch(() => []),
+      fetchCertificates().catch(() => []),
+      fetchHackathons().catch(() => []),
+      fetchKaggle().catch(() => []),
+      fetchTestimonials().catch(() => []),
+    ]).then(([projects, certificates, hackathons, kaggle, testimonials]) => {
+      if (cancelled) return;
+      setLive(withLiveCounts({ projects, certificates, hackathons, kaggle, testimonials }));
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   // ── Which section is the reader in ───────────────────────────────────
   useEffect(() => {
@@ -132,14 +212,14 @@ export const AiGuide = () => {
       if (i >= line.text.length) window.clearInterval(timer);
     }, TYPE_MS);
     return () => window.clearInterval(timer);
-  }, [line, open]);
+  }, [line.text, open]);
 
   // ── Collapse after a while so it never sits in the way ───────────────
   useEffect(() => {
     if (!open) return;
     const timer = window.setTimeout(() => setOpen(false), AUTO_COLLAPSE_MS + line.text.length * TYPE_MS);
     return () => window.clearTimeout(timer);
-  }, [line, open]);
+  }, [line.text, open]);
 
   // ── Optional speech ──────────────────────────────────────────────────
   useEffect(() => {
@@ -155,7 +235,7 @@ export const AiGuide = () => {
     utterance.pitch = 1;
     synth.speak(utterance);
     return () => synth.cancel();
-  }, [line, voice, open]);
+  }, [line.text, voice, open]);
 
   useEffect(() => () => window.speechSynthesis?.cancel(), []);
 
