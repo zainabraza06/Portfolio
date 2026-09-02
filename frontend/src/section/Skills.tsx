@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 
 export const skillGroups = [
@@ -36,7 +35,7 @@ export const skillGroups = [
     category: 'Web & Mobile Development',
     icon: '🌐',
     color: '#f472b6',
-    skills: ['MERN Stack', 'Next.js', 'Flutter', 'React Native', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB'],
+    skills: ['MERN Stack', 'Next.js', 'Flutter', 'Tailwind CSS', 'Node.js', 'Express', 'React', 'MongoDB'],
   },
   {
     category: 'Tools & Platforms',
@@ -53,8 +52,7 @@ export const skillGroups = [
 ];
 
 export const Skills = () => {
-  const [visibleCount, setVisibleCount] = useState(6);
-  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [visibleCount]);
+  useScrollRevealAll();
 
   return (
     <section id="skills" className="relative py-20 sm:py-28 px-4 sm:px-6">
@@ -77,7 +75,7 @@ export const Skills = () => {
 
         {/* Skill groups */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skillGroups.slice(0, visibleCount).map((group, gi) => (
+          {skillGroups.map((group, gi) => (
             <div
               key={group.category}
               className={`glass-card p-6 reveal reveal-d${Math.min(gi + 1, 6)}`}
@@ -127,17 +125,6 @@ export const Skills = () => {
             </p>
           </div>
         </div>
-
-        {skillGroups.length > 6 && (
-          <div className="flex justify-center mt-12 reveal">
-            <button
-              onClick={() => setVisibleCount(prev => prev >= skillGroups.length ? 6 : skillGroups.length)}
-              className="btn-outline px-8 py-3 text-sm font-medium hover:bg-[#20b2a6] hover:text-white transition-all duration-300"
-            >
-              {visibleCount >= skillGroups.length ? 'View Less' : 'View More'}
-            </button>
-          </div>
-        )}
       </div>
     </section>
   );
