@@ -14,7 +14,7 @@ interface Project {
   featured: boolean;
 }
 
-const FILTERS = ['All', 'Featured', 'MERN', 'Next.js', 'ML/DL'];
+const FILTERS = ['All', 'Featured', 'ML', 'Python', 'MERN', 'Next.js'];
 
 export const Projects = () => {
   const { data: projects, loading, error } = useApi<Project[]>(fetchProjects);
@@ -42,7 +42,7 @@ export const Projects = () => {
             Featured <span className="gradient-text">Projects</span>
           </h2>
           <p className="text-[#6b7fa3] max-w-xl mx-auto">
-            A selection of projects showcasing full-stack development and ML/DL research work.
+            A selection of projects spanning AI/ML research and the full-stack systems built around it.
           </p>
         </div>
 
