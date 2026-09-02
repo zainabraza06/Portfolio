@@ -9,10 +9,16 @@ export const skillGroups = [
     skills: ['Machine Learning', 'Deep Learning', 'Neural Networks', 'Model Evaluation', 'Feature Engineering', 'Scikit-learn'],
   },
   {
+    category: 'Generative AI & LLMs',
+    icon: '✨',
+    color: '#c084fc',
+    skills: ['LLMs', 'RAG Pipelines', 'Agentic AI', 'Generative AI', 'Transformers', 'Prompt Engineering'],
+  },
+  {
     category: 'Deep Learning & Research',
     icon: '🤖',
     color: '#a78bfa',
-    skills: ['PyTorch', 'TensorFlow', 'Keras', 'Computer Vision', 'NLP & Speech', 'Time-Series Forecasting'],
+    skills: ['PyTorch', 'TensorFlow', 'Keras', 'Computer Vision', 'NLP & Speech', 'Multimodal Fusion', 'Time-Series Forecasting'],
   },
   {
     category: 'Data & Analysis',
@@ -24,13 +30,13 @@ export const skillGroups = [
     category: 'Programming Languages',
     icon: '💻',
     color: '#20b2a6',
-    skills: ['Python', 'JavaScript', 'TypeScript'],
+    skills: ['Python', 'JavaScript', 'TypeScript', 'Dart'],
   },
   {
-    category: 'Web Development',
+    category: 'Web & Mobile Development',
     icon: '🌐',
     color: '#f472b6',
-    skills: ['MERN Stack', 'Next.js', 'Tailwind CSS', 'Node.js', 'Express', 'React', 'MongoDB'],
+    skills: ['MERN Stack', 'Next.js', 'Flutter', 'React Native', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB'],
   },
   {
     category: 'Tools & Platforms',
@@ -65,7 +71,7 @@ export const Skills = () => {
             Skills &amp; <span className="gradient-text">Technologies</span>
           </h2>
           <p className="text-[#6b7fa3] max-w-xl mx-auto">
-            A curated set of tools I use to train models, run ML/DL research, and ship the products around them.
+            A curated set of tools I use to build AI systems, run ML/DL research, and ship the products around them.
           </p>
         </div>
 
