@@ -78,10 +78,10 @@ const seed = async () => {
       duration: 'February 2026 – Present',
       // Newlines render as bullets in the experience timeline.
       description: [
-        'Currently developing thrust-specific fuel consumption (TSFC) prediction models for turbofan engines, following the remaining-useful-life work below.',
-        'Designed GAUGE-Net, a dual-path causal-attention architecture deployed without structural modification across all four NASA C-MAPSS turbofan subsets (FD001–FD004) — prior state-of-the-art models require subset-specific architecture changes for the harder multi-regime subsets, weakening their generalization claims.',
-        'Introduced a geometry-aware feature channel — Riemannian and Wasserstein distance from a learned healthy-reference state — as direct model input; a 5-stage component ablation confirmed it as the single largest driver of accuracy gains.',
-        'Versus the strongest published baseline (STARNet): NASA Score improved 16.2% (FD002) and 11.3% (FD004) and RMSE 12.0% and 15.9% on the two hardest multi-regime subsets — the lowest published Score on both — with near-parity on FD001 and a documented regression on FD003, at 745,984 parameters and sub-12 ms inference.',
+        'Currently building thrust-specific fuel consumption (TSFC) prediction models for turbofan engines.',
+        'Designed GAUGE-Net, a dual-path causal-attention architecture that runs unmodified across all four NASA C-MAPSS subsets (FD001–FD004), where prior state-of-the-art needs subset-specific changes.',
+        'Added a geometry-aware feature channel (Riemannian + Wasserstein distance from a learned healthy state); a 5-stage ablation confirmed it as the largest single driver of accuracy.',
+        'Beat STARNet by 16.2% / 11.3% NASA Score and 12.0% / 15.9% RMSE on FD002 / FD004 — lowest published Score on both — at 745,984 parameters and sub-12 ms inference.',
       ].join('\n'),
       type: 'work',
       order: 1,
@@ -91,9 +91,9 @@ const seed = async () => {
       role: 'AI Intern — EdTech',
       duration: 'June 2025 – August 2025',
       description: [
-        'Built a multimodal fusion pipeline combining a frozen Whisper speech encoder with MediaPipe skeletal landmarks via bidirectional cross-attention, classifying paired phoneme–gesture productions for early-literacy instruction.',
-        'Benchmarked 4 audio backbones (MFCC, wav2vec 2.0, HuBERT, Whisper) and 5 video encoder architectures in isolation to select the final configuration, on a self-collected classroom dataset of 413 samples across 120 participants.',
-        "Reached 92.3% ± 1.63% accuracy across 5 random seeds — a 9.7-percentage-point gain over the audio-only baseline, confirmed by McNemar's test (p = 0.046) and non-overlapping seed-level accuracy distributions.",
+        'Built a multimodal fusion pipeline: a frozen Whisper speech encoder and MediaPipe skeletal landmarks joined by bidirectional cross-attention, classifying phoneme–gesture pairs for early-literacy teaching.',
+        'Benchmarked 4 audio backbones (MFCC, wav2vec 2.0, HuBERT, Whisper) and 5 video encoders on a self-collected classroom set of 413 samples from 120 participants.',
+        "92.3% ± 1.63% accuracy over 5 seeds — 9.7 points above the audio-only baseline (McNemar's test, p = 0.046).",
       ].join('\n'),
       type: 'work',
       order: 2,
