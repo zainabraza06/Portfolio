@@ -37,7 +37,7 @@ export const Experience = () => {
             Experience &amp; <span className="gradient-text">Education</span>
           </h2>
           <p className="text-[#6b7fa3] max-w-xl mx-auto">
-            My academic and professional milestones on the way to becoming a full-stack developer and ML researcher.
+            My academic and professional milestones on the way to becoming an AI engineer and ML researcher.
           </p>
         </div>
 
