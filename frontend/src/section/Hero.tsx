@@ -105,7 +105,7 @@ export const Hero = () => {
 
         {/* CTA buttons */}
         <div
-          className="flex flex-wrap items-center justify-center gap-4 mb-16"
+          className="flex flex-wrap items-center justify-center gap-4"
           style={{ animation: 'fadeInUp 0.7s 0.4s ease both' }}
         >
           <button
@@ -129,22 +129,6 @@ export const Hero = () => {
           </button>
         </div>
 
-        {/* Stats */}
-        <div
-          className="grid grid-cols-3 gap-4 max-w-sm mx-auto"
-          style={{ animation: 'fadeInUp 0.7s 0.5s ease both' }}
-        >
-          {[
-            { label: 'AI & Web Projects', value: '10+' },
-            { label: 'Technologies', value: '15+' },
-            { label: 'Research Areas', value: '3+' },
-          ].map(s => (
-            <div key={s.label} className="glass-card p-4 text-center">
-              <p className="text-2xl font-bold gradient-text">{s.value}</p>
-              <p className="text-xs text-[#6b7fa3] mt-0.5">{s.label}</p>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Scroll indicator */}
