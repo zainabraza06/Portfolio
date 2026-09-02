@@ -140,6 +140,8 @@ export const Experience = () => {
 };
 
 function TimelineCard({ exp, cfg, isLeft }: { exp: Exp; cfg: { icon: string; color: string; label: string }; isLeft?: boolean }) {
+  const bullets = exp.description.split('\n').map(l => l.trim()).filter(Boolean);
+
   return (
     <>
       <div className={`flex items-start gap-3 mb-3 ${isLeft ? 'flex-row-reverse' : ''}`}>
@@ -161,7 +163,24 @@ function TimelineCard({ exp, cfg, isLeft }: { exp: Exp; cfg: { icon: string; col
         </div>
       </div>
       <p className={`text-xs text-[#6b7fa3] mb-2 font-mono ${isLeft ? 'text-right' : 'text-left'}`}>{exp.duration}</p>
-      <p className={`text-[#6b7fa3] text-sm leading-relaxed ${isLeft ? 'text-right' : 'text-left'}`}>{exp.description}</p>
+      {bullets.length > 1 ? (
+        <ul className="space-y-2">
+          {bullets.map((line, i) => (
+            <li
+              key={i}
+              className={`flex gap-2 text-[#6b7fa3] text-sm leading-relaxed ${isLeft ? 'flex-row-reverse text-right' : 'text-left'}`}
+            >
+              <span
+                className="w-1 h-1 rounded-full flex-shrink-0 mt-[0.5em]"
+                style={{ background: cfg.color }}
+              />
+              <span className="flex-1">{line}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className={`text-[#6b7fa3] text-sm leading-relaxed ${isLeft ? 'text-right' : 'text-left'}`}>{exp.description}</p>
+      )}
     </>
   );
 }

@@ -74,17 +74,27 @@ const seed = async () => {
   await Experience.insertMany([
     {
       company: 'NESCOM',
-      role: 'AI Intern',
-      duration: 'Current',
-      description: 'Working on Turbo Engine Remaining Useful Life (RUL) prediction. Applying machine learning techniques for predictive maintenance. Handling time-series data and model optimization.',
+      role: 'AI / ML Intern',
+      duration: 'February 2026 – Present',
+      // Newlines render as bullets in the experience timeline.
+      description: [
+        'Currently developing thrust-specific fuel consumption (TSFC) prediction models for turbofan engines, following the remaining-useful-life work below.',
+        'Designed GAUGE-Net, a dual-path causal-attention architecture deployed without structural modification across all four NASA C-MAPSS turbofan subsets (FD001–FD004) — prior state-of-the-art models require subset-specific architecture changes for the harder multi-regime subsets, weakening their generalization claims.',
+        'Introduced a geometry-aware feature channel — Riemannian and Wasserstein distance from a learned healthy-reference state — as direct model input; a 5-stage component ablation confirmed it as the single largest driver of accuracy gains.',
+        'Versus the strongest published baseline (STARNet): NASA Score improved 16.2% (FD002) and 11.3% (FD004) and RMSE 12.0% and 15.9% on the two hardest multi-regime subsets — the lowest published Score on both — with near-parity on FD001 and a documented regression on FD003, at 745,984 parameters and sub-12 ms inference.',
+      ].join('\n'),
       type: 'work',
       order: 1,
     },
     {
       company: 'Murrabi',
-      role: 'AI Intern',
-      duration: '16 June 2025 - 16 August 2025',
-      description: 'Developed Jolly Phoneme Classification model using Whisper + BiLSTM. Achieved 0.97 F1 score and 96% test accuracy. Gained hands-on experience in audio processing, model training, and evaluation.',
+      role: 'AI Intern — EdTech',
+      duration: 'June 2025 – August 2025',
+      description: [
+        'Built a multimodal fusion pipeline combining a frozen Whisper speech encoder with MediaPipe skeletal landmarks via bidirectional cross-attention, classifying paired phoneme–gesture productions for early-literacy instruction.',
+        'Benchmarked 4 audio backbones (MFCC, wav2vec 2.0, HuBERT, Whisper) and 5 video encoder architectures in isolation to select the final configuration, on a self-collected classroom dataset of 413 samples across 120 participants.',
+        "Reached 92.3% ± 1.63% accuracy across 5 random seeds — a 9.7-percentage-point gain over the audio-only baseline, confirmed by McNemar's test (p = 0.046) and non-overlapping seed-level accuracy distributions.",
+      ].join('\n'),
       type: 'work',
       order: 2,
     },
