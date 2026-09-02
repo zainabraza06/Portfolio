@@ -73,23 +73,42 @@ export const Navbar = () => {
   }, [menuOpen]);
 
   useEffect(() => {
-    const sections = navLinks.flatMap(l => l.subLinks ? l.subLinks.map(s => s.href.slice(1)) : [l.href?.slice(1)].filter(Boolean));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            const id = e.target.id;
-            setActive(id);
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '-10% 0px -70% 0px' }
+    const sectionIds = navLinks.flatMap(l =>
+      l.subLinks ? l.subLinks.map(s => s.href.slice(1)) : l.href ? [l.href.slice(1)] : []
     );
-    sections.forEach(id => {
-      const el = document.getElementById(id as string);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
+
+    // Whichever section has crossed the line below the navbar wins. An
+    // IntersectionObserver measured ratios against each section's own
+    // height, which tall sections could never reach inside a thin band.
+    const pickActive = () => {
+      const line = window.innerHeight * 0.3;
+      const tops = sectionIds
+        .map(id => ({ id, el: document.getElementById(id) }))
+        .filter((s): s is { id: string; el: HTMLElement } => s.el !== null)
+        .map(s => ({ id: s.id, top: s.el.getBoundingClientRect().top }))
+        .sort((a, b) => a.top - b.top);
+
+      if (tops.length === 0) return;
+
+      // At the very bottom the last section may never cross the line.
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom) {
+        setActive(tops[tops.length - 1].id);
+        return;
+      }
+
+      const passed = tops.filter(s => s.top <= line);
+      setActive(passed.length > 0 ? passed[passed.length - 1].id : tops[0].id);
+    };
+
+    pickActive();
+    window.addEventListener('scroll', pickActive, { passive: true });
+    window.addEventListener('resize', pickActive);
+    return () => {
+      window.removeEventListener('scroll', pickActive);
+      window.removeEventListener('resize', pickActive);
+    };
   }, []);
 
   const handleNavClick = (href: string) => {
