@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useTypewriter } from '../hooks/useTypewriter';
 
 const roles = [
+  'BS Artificial Intelligence Student',
+  'Machine Learning Engineer',
+  'Deep Learning Researcher',
   'MERN Stack Developer',
-  'Next.js Engineer',
-  'ML / DL Researcher',
-  'Full-Stack Architect',
 ];
 
 export const Hero = () => {
@@ -112,7 +112,7 @@ export const Hero = () => {
           className="max-w-2xl mx-auto text-[#6b7fa3] text-lg leading-relaxed mb-10"
           style={{ animation: 'fadeInUp 0.7s 0.3s ease both' }}
         >
-          I am a <span className="text-[#e8edf2] font-medium">BS AI Student at NUST</span>. I build elegant full-stack applications with the MERN stack and Next.js, while exploring the frontiers of Machine Learning & Deep Learning research.
+          I am a <span className="text-[#e8edf2] font-medium">BS Artificial Intelligence student at NUST (SEECS)</span>. I work on Machine Learning &amp; Deep Learning research — computer vision, speech and time-series — and turn those models into full-stack products with the MERN stack and Next.js.
         </p>
 
         {/* CTA buttons */}
@@ -147,7 +147,7 @@ export const Hero = () => {
           style={{ animation: 'fadeInUp 0.7s 0.5s ease both' }}
         >
           {[
-            { label: 'Projects', value: '10+' },
+            { label: 'AI & Web Projects', value: '10+' },
             { label: 'Technologies', value: '15+' },
             { label: 'Research Areas', value: '3+' },
           ].map(s => (

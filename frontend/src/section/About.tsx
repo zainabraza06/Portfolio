@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 
 const stats = [
-  { value: 10, suffix: '+', label: 'Projects Completed' },
+  { value: 10, suffix: '+', label: 'AI & Web Projects' },
   { value: 2, suffix: '+', label: 'Years of Coding' },
   { value: 15, suffix: '+', label: 'Technologies' },
-  { value: 3, suffix: '+', label: 'Research Areas' },
+  { value: 3, suffix: '+', label: 'AI Research Areas' },
 ];
 
 function CountUp({ target, suffix = '', inView }: { target: number; suffix?: string; inView: boolean }) {
@@ -49,10 +49,10 @@ export const About = () => {
         <div className="text-center mb-16 reveal">
           <div className="section-tag">✦ About Me</div>
           <h2 className="section-title">
-            Crafting <span className="gradient-text">Digital Experiences</span>
+            Building <span className="gradient-text">Intelligent Systems</span>
           </h2>
           <p className="text-[#6b7fa3] max-w-2xl mx-auto">
-            A passionate developer and researcher blending elegant code with intelligent systems.
+            An AI student and researcher who turns machine learning ideas into products people can use.
           </p>
         </div>
 
@@ -97,14 +97,15 @@ export const About = () => {
               Hello! I'm <span className="gradient-text">Zainab Raza Malik</span>
             </h3>
             <p className="text-[#6b7fa3] leading-relaxed">
-              I'm a Computer Science student and full-stack developer specializing in the{' '}
-              <span className="text-[#e8edf2] font-medium">MERN stack with Next.js</span>. I love building
-              scalable web applications that combine beautiful interfaces with powerful backends.
+              I'm a{' '}
+              <span className="text-[#e8edf2] font-medium">BS Artificial Intelligence student at NUST (SEECS)</span>,
+              focused on Machine Learning &amp; Deep Learning research — computer vision, speech and NLP,
+              and time-series models for real-world prediction problems.
             </p>
             <p className="text-[#6b7fa3] leading-relaxed">
-              Beyond web development, I actively engage in{' '}
-              <span className="text-[#e8edf2] font-medium">Machine Learning & Deep Learning research</span>,
-              exploring computer vision, NLP, and intelligent data-driven systems.
+              I also build the software those models live in, as a full-stack developer working with the{' '}
+              <span className="text-[#e8edf2] font-medium">MERN stack and Next.js</span> — so a research
+              idea can ship as a product, not just a notebook.
             </p>
 
             {/* Key facts */}
@@ -112,7 +113,7 @@ export const About = () => {
               {[
                 { icon: '📍', label: 'Location', val: 'Pakistan' },
                 { icon: '🎓', label: 'Degree', val: 'BS Artificial Intelligence @ NUST' },
-                { icon: '💡', label: 'Interests', val: 'MERN Stack · Next.js · ML/DL · Research' },
+                { icon: '💡', label: 'Interests', val: 'Machine Learning · Deep Learning · Computer Vision · NLP · MERN Stack' },
                 { icon: '🌐', label: 'Languages', val: 'English · Urdu' },
               ].map(f => (
                 <div key={f.label} className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
