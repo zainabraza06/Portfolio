@@ -42,8 +42,8 @@ function Modal({ title, onClose, onSave, children, loading }: {
       <div className="glass-card w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}
         style={{ animation: 'fadeInUp 0.3s ease both' }}>
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-[#e8edf2] font-bold text-lg">{title}</h3>
-          <button onClick={onClose} disabled={loading} className="text-[#6b7fa3] hover:text-[#e8edf2] transition-colors text-xl">✕</button>
+          <h3 className="text-text font-bold text-lg">{title}</h3>
+          <button onClick={onClose} disabled={loading} className="text-muted hover:text-text transition-colors text-xl">✕</button>
         </div>
         {children}
         <div className="flex flex-col sm:flex-row gap-3 mt-6">
@@ -62,7 +62,7 @@ function Modal({ title, onClose, onSave, children, loading }: {
 function Field({ label, id, children }: { label: string; id: string; children: React.ReactNode }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-xs font-semibold text-[#6b7fa3] mb-1.5 uppercase tracking-wide">{label}</label>
+      <label htmlFor={id} className="block text-xs font-semibold text-muted mb-1.5 uppercase tracking-wide">{label}</label>
       {children}
     </div>
   );
@@ -156,12 +156,12 @@ function ProjectsTab() {
         <Field label="Live URL" id="p-live"><input id="p-live" className="form-input" value={form.liveUrl} onChange={e => set('liveUrl', e.target.value)} placeholder="https://..." /></Field>
       </div>
       <Field label="Image Upload" id="p-img">
-        <input type="file" id="p-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-[#6b7fa3] file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#20b2a6] file:text-white" />
-        {form.imageUrl && !file && <p className="text-xs text-[#20b2a6] mt-1 break-all">Current: {form.imageUrl}</p>}
+        <input type="file" id="p-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-muted file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-accent file:text-accent-ink" />
+        {form.imageUrl && !file && <p className="text-xs text-accent mt-1 break-all">Current: {form.imageUrl}</p>}
       </Field>
       <div className="flex items-center gap-3">
-        <input id="p-feat" type="checkbox" checked={form.featured} onChange={e => set('featured', e.target.checked)} className="w-4 h-4 accent-[#20b2a6]" />
-        <label htmlFor="p-feat" className="text-sm text-[#6b7fa3]">Mark as Featured</label>
+        <input id="p-feat" type="checkbox" checked={form.featured} onChange={e => set('featured', e.target.checked)} className="w-4 h-4 accent-[#9B8CFF]" />
+        <label htmlFor="p-feat" className="text-sm text-muted">Mark as Featured</label>
         <input id="p-order" type="number" className="form-input w-20 ml-auto" value={form.order} onChange={e => set('order', Number(e.target.value))} placeholder="Order" />
       </div>
     </div>
@@ -170,36 +170,36 @@ function ProjectsTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-[#e8edf2] font-bold text-xl">Projects <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} total</span></h2>
+        <h2 className="text-text font-bold text-xl">Projects <span className="text-muted font-normal text-sm ml-2">{items.length} total</span></h2>
         <div className="flex gap-3">
-          <button onClick={handleSync} disabled={loading} className="btn-outline py-2 px-4 text-sm bg-[#1e2d3d] flex items-center gap-2">
+          <button onClick={handleSync} disabled={loading} className="btn-outline py-2 px-4 text-sm flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
             Sync GitHub
           </button>
           <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Project</span></button>
         </div>
       </div>
-      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+      {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
           {items.map(p => (
             <div key={p._id} className="glass-card p-4 flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-[#e8edf2] font-semibold truncate">{p.title as string}</h3>
-                  {Boolean(p.featured) && <span className="text-[10px] bg-[#f5a623]/20 text-[#f5a623] px-2 py-0.5 rounded-full">⭐ Featured</span>}
+                  <h3 className="text-text font-semibold truncate">{p.title as string}</h3>
+                  {Boolean(p.featured) && <span className="text-[10px] bg-warn/20 text-warn px-2 py-0.5 rounded-full">⭐ Featured</span>}
                 </div>
-                <p className="text-[#6b7fa3] text-sm mt-1 line-clamp-2">{p.description as string}</p>
+                <p className="text-muted text-sm mt-1 line-clamp-2">{p.description as string}</p>
                 <div className="flex flex-wrap gap-1 mt-2">
                   {(p.techStack as string[]).slice(0,4).map(t => <span key={t} className="skill-tag text-[10px] px-2 py-0.5">{t}</span>)}
                 </div>
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => openEdit(p)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
-                <button onClick={() => remove(p._id)} className="py-1.5 px-3 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
+                <button onClick={() => remove(p._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
             </div>
           ))}
-          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No projects yet. Add your first one!</div>}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No projects yet. Add your first one!</div>}
         </div>
       )}
       {modal && (
@@ -254,24 +254,24 @@ function HackathonsTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-[#e8edf2] font-bold text-xl">Hackathons <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} entries</span></h2>
+        <h2 className="text-text font-bold text-xl">Hackathons <span className="text-muted font-normal text-sm ml-2">{items.length} entries</span></h2>
         <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Hackathon</span></button>
       </div>
-      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+      {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
           {items.map(h => (
             <div key={h._id} className="glass-card p-4 flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <h3 className="text-[#e8edf2] font-semibold">{h.title as string}</h3>
-                <p className="text-[#20b2a6] text-sm">{h.date as string}</p>
+                <h3 className="text-text font-semibold">{h.title as string}</h3>
+                <p className="text-accent text-sm">{h.date as string}</p>
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => openEdit(h)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
-                <button onClick={() => remove(h._id)} className="py-1.5 px-3 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
+                <button onClick={() => remove(h._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
             </div>
           ))}
-          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No hackathons yet.</div>}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No hackathons yet.</div>}
         </div>
       )}
       {modal && (
@@ -285,7 +285,7 @@ function HackathonsTab() {
               <Field label="Certificate URL" id="h-cert"><input id="h-cert" className="form-input" value={form.certificateUrl} onChange={e => set('certificateUrl', e.target.value)} /></Field>
             </div>
             <Field label="Image Upload" id="h-img">
-              <input type="file" id="h-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-[#6b7fa3] file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#20b2a6] file:text-white" />
+              <input type="file" id="h-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-muted file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-accent file:text-accent-ink" />
             </Field>
             <Field label="Order" id="h-ord"><input id="h-ord" type="number" className="form-input w-24" value={form.order} onChange={e => set('order', Number(e.target.value))} /></Field>
           </div>
@@ -338,24 +338,24 @@ function KaggleTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-[#e8edf2] font-bold text-xl">Kaggle <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} entries</span></h2>
+        <h2 className="text-text font-bold text-xl">Kaggle <span className="text-muted font-normal text-sm ml-2">{items.length} entries</span></h2>
         <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Kaggle</span></button>
       </div>
-      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+      {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
           {items.map(kItem => (
             <div key={kItem._id} className="glass-card p-4 flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <h3 className="text-[#e8edf2] font-semibold">{kItem.title as string}</h3>
-                <p className="text-[#20b2a6] text-sm">{`${kItem.date as string}${kItem.rank ? ` - Rank: ${kItem.rank}` : ''}`}</p>
+                <h3 className="text-text font-semibold">{kItem.title as string}</h3>
+                <p className="text-accent text-sm">{`${kItem.date as string}${kItem.rank ? ` - Rank: ${kItem.rank}` : ''}`}</p>
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => openEdit(kItem)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
-                <button onClick={() => remove(kItem._id)} className="py-1.5 px-3 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
+                <button onClick={() => remove(kItem._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
             </div>
           ))}
-          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No kaggle competitions yet.</div>}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No kaggle competitions yet.</div>}
         </div>
       )}
       {modal && (
@@ -369,7 +369,7 @@ function KaggleTab() {
             </div>
             <Field label="Competition URL" id="k-url"><input id="k-url" className="form-input" value={form.competitionUrl} onChange={e => set('competitionUrl', e.target.value)} /></Field>
             <Field label="Image Upload" id="k-img">
-              <input type="file" id="k-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-[#6b7fa3] file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#20b2a6] file:text-white" />
+              <input type="file" id="k-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-muted file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-accent file:text-accent-ink" />
             </Field>
             <Field label="Order" id="k-ord"><input id="k-ord" type="number" className="form-input w-24" value={form.order} onChange={e => set('order', Number(e.target.value))} /></Field>
           </div>
@@ -422,22 +422,22 @@ function CertificatesTab() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-[#e8edf2] font-bold text-xl">Certificates <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} entries</span></h2>
+        <h2 className="text-text font-bold text-xl">Certificates <span className="text-muted font-normal text-sm ml-2">{items.length} entries</span></h2>
         <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Certificate</span></button>
       </div>
-      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+      {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
           {items.map(c => (
             <div key={c._id} className="glass-card p-4 flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <h3 className="text-[#e8edf2] font-semibold">{c.title as string}</h3>
-                <p className="text-[#20b2a6] text-sm">{c.issuer as string} · {c.date as string}</p>
+                <h3 className="text-text font-semibold">{c.title as string}</h3>
+                <p className="text-accent text-sm">{c.issuer as string} · {c.date as string}</p>
                 {Boolean(c.credentialUrl || c.linkedInUrl) && (
                   <a
                     href={String(c.credentialUrl || c.linkedInUrl)}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-[#6b7fa3] hover:text-[#20b2a6] underline mt-1 block"
+                    className="text-xs text-muted hover:text-accent underline mt-1 block"
                   >
                     View Credential
                   </a>
@@ -445,11 +445,11 @@ function CertificatesTab() {
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => openEdit(c)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
-                <button onClick={() => remove(c._id)} className="py-1.5 px-3 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
+                <button onClick={() => remove(c._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
             </div>
           ))}
-          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No certificates yet.</div>}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No certificates yet.</div>}
         </div>
       )}
       {modal && (
@@ -465,7 +465,7 @@ function CertificatesTab() {
               <Field label="LinkedIn Post URL" id="c-url"><input id="c-url" className="form-input" value={form.linkedInUrl} onChange={e => set('linkedInUrl', e.target.value)} placeholder="https://linkedin.com/..." /></Field>
             </div>
             <Field label="Image Upload" id="c-img">
-              <input type="file" id="c-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-[#6b7fa3] file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#20b2a6] file:text-white" />
+              <input type="file" id="c-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-muted file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-accent file:text-accent-ink" />
             </Field>
             <Field label="Order" id="c-ord"><input id="c-ord" type="number" className="form-input w-24" value={form.order} onChange={e => set('order', Number(e.target.value))} /></Field>
           </div>
@@ -508,15 +508,15 @@ function ExperienceTab() {
     toast('Entry deleted.');
   };
 
-  const typeColors: Record<string, string> = { work: '#20b2a6', education: '#a78bfa' };
+  const typeColors: Record<string, string> = { work: '#9B8CFF', education: '#94949C' };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-[#e8edf2] font-bold text-xl">Experience <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} entries</span></h2>
+        <h2 className="text-text font-bold text-xl">Experience <span className="text-muted font-normal text-sm ml-2">{items.length} entries</span></h2>
         <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Entry</span></button>
       </div>
-      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+      {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
           {items.map(e => (
             <div key={e._id} className="glass-card p-4 flex items-start justify-between gap-4">
@@ -526,18 +526,18 @@ function ExperienceTab() {
                     style={{ background: `${typeColors[e.type as string]}18`, color: typeColors[e.type as string] }}>
                     {e.type as string}
                   </span>
-                  <span className="text-[#6b7fa3] text-xs font-mono">{e.duration as string}</span>
+                  <span className="text-muted text-xs font-mono">{e.duration as string}</span>
                 </div>
-                <h3 className="text-[#e8edf2] font-semibold">{e.role as string}</h3>
-                <p className="text-[#20b2a6] text-sm">{e.company as string}</p>
+                <h3 className="text-text font-semibold">{e.role as string}</h3>
+                <p className="text-accent text-sm">{e.company as string}</p>
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => openEdit(e)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
-                <button onClick={() => remove(e._id)} className="py-1.5 px-3 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
+                <button onClick={() => remove(e._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
             </div>
           ))}
-          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No entries yet.</div>}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No entries yet.</div>}
         </div>
       )}
       {modal && (
@@ -585,30 +585,30 @@ function TestimonialsTab() {
 
   return (
     <div>
-      <h2 className="text-[#e8edf2] font-bold text-xl mb-6">Testimonials <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} total</span></h2>
-      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+      <h2 className="text-text font-bold text-xl mb-6">Testimonials <span className="text-muted font-normal text-sm ml-2">{items.length} total</span></h2>
+      {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
           {items.map(t => (
             <div key={t._id} className={`glass-card p-4 flex items-start justify-between gap-4 ${!t.approved ? 'opacity-70' : ''}`}>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${t.approved ? 'bg-[#22c55e]/20 text-[#22c55e]' : 'bg-[#f5a623]/20 text-[#f5a623]'}`}>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${t.approved ? 'bg-ok/20 text-ok' : 'bg-warn/20 text-warn'}`}>
                     {t.approved ? '✓ Approved' : '⏳ Pending'}
                   </span>
                   <div className="flex gap-0.5">
                     {[1,2,3,4,5].map(i => <span key={i} className={i <= (t.rating as number) ? 'star-filled text-xs' : 'star-empty text-xs'}>★</span>)}
                   </div>
                 </div>
-                <p className="text-[#6b7fa3] text-sm italic line-clamp-2">"{t.text as string}"</p>
-                <p className="text-[#e8edf2] text-sm font-medium mt-1">{t.name as string} · {t.role as string} @ {t.company as string}</p>
+                <p className="text-muted text-sm italic line-clamp-2">"{t.text as string}"</p>
+                <p className="text-text text-sm font-medium mt-1">{t.name as string} · {t.role as string} @ {t.company as string}</p>
               </div>
               <div className="flex gap-2 shrink-0">
                 {!t.approved && <button onClick={() => approve(t._id)} className="btn-primary py-1.5 px-3 text-xs"><span>Approve</span></button>}
-                <button onClick={() => remove(t._id)} className="py-1.5 px-3 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
+                <button onClick={() => remove(t._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
             </div>
           ))}
-          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No testimonials yet.</div>}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No testimonials yet.</div>}
         </div>
       )}
     </div>
@@ -639,43 +639,43 @@ function MessagesTab() {
 
   return (
     <div>
-      <h2 className="text-[#e8edf2] font-bold text-xl mb-6">
+      <h2 className="text-text font-bold text-xl mb-6">
         Messages{' '}
-        <span className="text-[#6b7fa3] font-normal text-sm ml-2">{items.length} total</span>
-        {unread > 0 && <span className="ml-2 bg-[#20b2a6] text-white text-xs px-2 py-0.5 rounded-full">{unread} unread</span>}
+        <span className="text-muted font-normal text-sm ml-2">{items.length} total</span>
+        {unread > 0 && <span className="ml-2 bg-accent text-accent-ink text-xs px-2 py-0.5 rounded-full">{unread} unread</span>}
       </h2>
-      {loading ? <p className="text-[#6b7fa3]">Loading…</p> : (
+      {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
           {items.map(m => (
-            <div key={m._id} className={`glass-card overflow-hidden ${!m.read ? 'border-[#20b2a6]/40' : ''}`}>
+            <div key={m._id} className={`glass-card overflow-hidden ${!m.read ? 'border-accent/40' : ''}`}>
               <div
                 className="p-4 flex items-start justify-between gap-4 cursor-pointer"
                 onClick={() => { setExpanded(e => e === m._id ? null : m._id as string); if (!m.read) markRead(m._id); }}
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    {!m.read && <span className="w-2 h-2 rounded-full bg-[#20b2a6] flex-shrink-0" />}
-                    <span className="text-[#e8edf2] font-semibold text-sm">{m.name as string}</span>
-                    <span className="text-[#6b7fa3] text-xs">{m.email as string}</span>
+                    {!m.read && <span className="w-2 h-2 rounded-full bg-accent flex-shrink-0" />}
+                    <span className="text-text font-semibold text-sm">{m.name as string}</span>
+                    <span className="text-muted text-xs">{m.email as string}</span>
                   </div>
-                  <p className="text-[#20b2a6] text-sm font-medium">{m.subject as string}</p>
-                  <p className="text-[#6b7fa3] text-xs mt-0.5">{new Date(m.createdAt as string).toLocaleDateString()}</p>
+                  <p className="text-accent text-sm font-medium">{m.subject as string}</p>
+                  <p className="text-muted text-xs mt-0.5">{new Date(m.createdAt as string).toLocaleDateString()}</p>
                 </div>
                 <div className="flex gap-2 shrink-0">
-                  <button onClick={e => { e.stopPropagation(); remove(m._id); }} className="py-1 px-2.5 text-xs rounded-full border border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/10 transition-all">Delete</button>
-                  <span className="text-[#6b7fa3] text-xs self-center">{expanded === m._id ? '▲' : '▼'}</span>
+                  <button onClick={e => { e.stopPropagation(); remove(m._id); }} className="py-1 px-2.5 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
+                  <span className="text-muted text-xs self-center">{expanded === m._id ? '▲' : '▼'}</span>
                 </div>
               </div>
               {expanded === m._id && (
                 <div className="px-4 pb-4 border-t border-white/5 pt-3">
-                  <p className="text-[#6b7fa3] text-sm leading-relaxed">{m.message as string}</p>
+                  <p className="text-muted text-sm leading-relaxed">{m.message as string}</p>
                   <a href={`mailto:${m.email as string}?subject=Re: ${m.subject as string}`}
                     className="btn-outline inline-flex mt-3 py-1.5 px-4 text-xs">Reply via Email</a>
                 </div>
               )}
             </div>
           ))}
-          {items.length === 0 && <div className="glass-card p-8 text-center text-[#6b7fa3]">No messages yet.</div>}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No messages yet.</div>}
         </div>
       )}
     </div>
@@ -728,7 +728,7 @@ export default function AdminDashboard() {
       <Modal title="Change Password" onClose={() => setShowPasswordModal(false)} onSave={handleSubmit}>
         <div className="space-y-4">
           {success ? (
-            <div className="p-4 bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] rounded-xl text-center">
+            <div className="p-4 bg-ok/10 border border-ok/30 text-ok rounded-xl text-center">
               ✅ Password updated successfully!
             </div>
           ) : (
@@ -742,8 +742,8 @@ export default function AdminDashboard() {
               <Field label="Confirm New Password" id="pwd-conf">
                 <input id="pwd-conf" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="form-input" />
               </Field>
-              {error && <p className="text-[#ef4444] text-sm bg-[#ef4444]/10 p-2 rounded">{error}</p>}
-              {loading && <p className="text-[#6b7fa3] text-sm">Updating password...</p>}
+              {error && <p className="text-bad text-sm bg-bad/10 p-2 rounded">{error}</p>}
+              {loading && <p className="text-muted text-sm">Updating password...</p>}
             </>
           )}
         </div>
@@ -753,19 +753,19 @@ export default function AdminDashboard() {
 
   return (
     <FeedbackProvider>
-      <div className="min-h-screen bg-[#080d12]">
+      <div className="min-h-screen bg-ink">
       {/* Top bar */}
       <header className="glass border-b border-white/5 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#20b2a6] to-[#178f85] flex items-center justify-center text-white font-bold text-xs">ZR</div>
+            <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center text-accent-ink font-bold text-xs">ZR</div>
             <div>
-              <p className="text-[#e8edf2] font-semibold text-sm">Admin Dashboard</p>
-              <p className="text-[#6b7fa3] text-xs">{user.email}</p>
+              <p className="text-text font-semibold text-sm">Admin Dashboard</p>
+              <p className="text-muted text-xs">{user.email}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/')} className="text-sm text-[#6b7fa3] hover:text-[#20b2a6] transition-colors hidden sm:block">← Portfolio</button>
+            <button onClick={() => navigate('/')} className="text-sm text-muted hover:text-accent transition-colors hidden sm:block">← Portfolio</button>
             <button onClick={() => setShowPasswordModal(true)} className="btn-outline py-1.5 px-4 text-xs">Change Password</button>
             <button onClick={logout} className="btn-primary py-1.5 px-4 text-xs"><span>Logout</span></button>
           </div>
@@ -783,8 +783,8 @@ export default function AdminDashboard() {
               onClick={() => setTab(t.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                 tab === t.id
-                  ? 'bg-[#20b2a6] text-white shadow-lg'
-                  : 'text-[#6b7fa3] hover:text-[#e8edf2] hover:bg-white/5'
+                  ? 'bg-accent text-accent-ink'
+                  : 'text-muted hover:text-text hover:bg-white/5'
               }`}
             >
               <span>{t.icon}</span>
