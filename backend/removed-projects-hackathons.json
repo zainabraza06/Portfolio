@@ -1,0 +1,36 @@
+[
+  {
+    "_id": "6a989c05f773d5dc9982f9c1",
+    "title": "Resistome",
+    "description": "Antibiotic-resistance decision support from bacterial genome assemblies. Predicts likely-to-work / likely-to-fail / no-call for five antibiotics against Klebsiella pneumoniae, with calibrated confidence, evidence tiers, and an explicit no-call when the evidence is insufficient. Research prototype — confirm with lab testing.",
+    "techStack": [
+      "Python"
+    ],
+    "liveUrl": "https://resistome.zeeshan-abbas.tech/",
+    "githubUrl": "https://github.com/zainabraza06/Resistome",
+    "githubId": "1305325049",
+    "imageUrl": "",
+    "featured": true,
+    "order": 5,
+    "createdAt": "2026-09-02T21:58:29.797Z",
+    "updatedAt": "2026-09-07T19:21:18.303Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a989c08f773d5dc9982f9d0",
+    "title": "InsightFlow",
+    "description": "\"An autonomous agentic decision intelligence platform that ingests multi-source data, resolves contradictions via parallel multi-agent debate, validates constraints, and triggers real-world email, Slack, and Sheets actions.\"",
+    "techStack": [
+      "Python"
+    ],
+    "liveUrl": "https://insight-flow-zainab.vercel.app/",
+    "githubUrl": "https://github.com/zainabraza06/InsightFlow",
+    "githubId": "1239680151",
+    "imageUrl": "",
+    "featured": false,
+    "order": 0,
+    "createdAt": "2026-09-02T21:58:32.134Z",
+    "updatedAt": "2026-09-07T19:15:06.126Z",
+    "__v": 0
+  }
+]

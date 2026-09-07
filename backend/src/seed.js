@@ -29,9 +29,21 @@ const seed = async () => {
   // ── Experience & Education ─────────────────────────────
   await Experience.insertMany([
     {
+      company: 'Zyra',
+      role: 'AI Automation Developer',
+      duration: 'August 2026',
+      description: [
+        'Built a customer support AI agent on the MERN stack handling support and order management for client businesses — channel-aware across WhatsApp, Instagram and the client website via MCP (Model Context Protocol).',
+        "Integrated a customer reward and loyalty system into a client's production MERN e-commerce codebase.",
+        'Ran a comparative analysis of client websites to inform the automation and integration approach.',
+      ].join('\n'),
+      type: 'work',
+      order: 0,
+    },
+    {
       company: 'NESCOM',
       role: 'AI / ML Intern',
-      duration: 'February 2026 – Present',
+      duration: 'February 2026 – August 2026',
       // Newlines render as bullets in the experience timeline.
       description: [
         'Currently building thrust-specific fuel consumption (TSFC) prediction models for turbofan engines.',
