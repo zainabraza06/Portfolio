@@ -26,7 +26,7 @@ const LINES: Line[] = [
   {
     id: 'about',
     label: 'About',
-    text: 'Her focus: generative AI and deep learning, plus computer vision, speech and time-series work.',
+    text: 'Her focus: generative AI, RAG and agentic systems — and the full-stack development that ships them, on MERN, Next.js and Flutter.',
   },
   {
     id: 'skills',
