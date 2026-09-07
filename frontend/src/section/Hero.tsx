@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useMagnetic } from '../hooks/useMagnetic';
 
 /**
  * A drifting field of data points that thickens around the cursor. Deliberately
@@ -129,9 +128,6 @@ const META = [
 ];
 
 export const Hero = () => {
-  const primaryRef = useMagnetic<HTMLButtonElement>();
-  const secondaryRef = useMagnetic<HTMLButtonElement>();
-
   const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
@@ -187,13 +183,13 @@ export const Hero = () => {
             className="lg:col-span-4 flex flex-wrap gap-3"
             style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.6s both' }}
           >
-            <button ref={primaryRef} onClick={() => go('projects')} className="btn-primary">
+            <button onClick={() => go('projects')} className="btn-primary">
               View my work
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
             </button>
-            <button ref={secondaryRef} onClick={() => go('contact')} className="btn-outline">
+            <button onClick={() => go('contact')} className="btn-outline">
               Let's connect
             </button>
           </div>

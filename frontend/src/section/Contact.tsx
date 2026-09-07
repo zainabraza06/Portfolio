@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import { submitContact } from '../api/services';
-import { useMagnetic } from '../hooks/useMagnetic';
 
 export const EMAIL = 'zainabraza1960@gmail.com';
 
@@ -15,7 +14,6 @@ export const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [msg, setMsg] = useState('');
-  const sendRef = useMagnetic<HTMLButtonElement>(0.2, 60);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
@@ -125,7 +123,6 @@ export const Contact = () => {
             )}
 
             <button
-              ref={sendRef}
               type="submit"
               disabled={status === 'loading'}
               className="btn-primary mt-7 disabled:opacity-60"

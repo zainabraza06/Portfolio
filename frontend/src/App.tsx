@@ -56,7 +56,7 @@ function Portfolio() {
 
 function App() {
   return (
-    <div className="min-h-screen bg-[#080d12] text-[#e8edf2] selection:bg-[#20b2a6]/30 font-sans">
+    <div className="min-h-screen bg-ink text-text font-sans">
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Portfolio />} />

@@ -172,8 +172,8 @@ const seed = async () => {
     },
     {
       title: 'Early Care Monitoring — Activity & Fall Detection',
-      context: 'Final year project',
-      period: 'Ongoing',
+      context: '4th semester ML project',
+      period: '',
       status: 'ongoing',
       order: 4,
       summary: 'Human activity recognition and fall detection from wearable and gait data, aimed at monitoring people who live alone.',
