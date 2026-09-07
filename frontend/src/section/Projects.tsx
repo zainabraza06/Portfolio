@@ -167,11 +167,10 @@ export const Projects = () => {
 
         <div className="grid lg:grid-cols-12 gap-8 mb-6 reveal">
           <h2 className="display-xl lg:col-span-7 max-w-[14ch]">
-            Things I've <span className="accent-italic text-accent">actually</span> built.
+            Things I've <span className="accent-italic text-accent">built</span>.
           </h2>
           <p className="lede lg:col-span-5 self-end max-w-md">
-            Research that shipped, and products that had to survive real users — not
-            screenshots of tutorials.
+            Research and products, built end to end.
           </p>
         </div>
 

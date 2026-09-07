@@ -46,18 +46,9 @@ function CountUp({ target, suffix = '', decimals = 0 }: { target: number; suffix
 }
 
 const NOTES = [
-  {
-    k: 'Currently learning',
-    v: 'LLM fine-tuning, retrieval-augmented generation and agentic architectures.',
-  },
-  {
-    k: 'Building toward',
-    v: 'AI that survives contact with the real world — deployed, measured, and useful to someone who is not an engineer.',
-  },
-  {
-    k: 'Happiest working on',
-    v: 'Messy multimodal data, model evaluation that is actually honest, and interfaces that make a model legible.',
-  },
+  { k: 'Currently learning', v: 'LLM fine-tuning, RAG and agentic architectures.' },
+  { k: 'Building toward', v: 'Deployed AI — measured on real data, not benchmarks alone.' },
+  { k: 'Interested in', v: 'Multimodal data, honest evaluation, and interfaces that make a model legible.' },
 ];
 
 export const About = () => {
@@ -109,24 +100,21 @@ export const About = () => {
 
           {/* Story */}
           <div className="lg:col-span-8 reveal-right">
-            <h2 className="display-xl max-w-[18ch]">
-              I build models, then I build the{' '}
-              <span className="accent-italic text-accent">things around them</span>.
+            <h2 className="display-xl max-w-[16ch]">
+              I build models, and the{' '}
+              <span className="accent-italic text-accent">software around them</span>.
             </h2>
 
             <div className="mt-8 sm:mt-10 space-y-6 max-w-2xl">
               <p className="lede">
-                I'm a <span className="mark">BS Artificial Intelligence student at NUST, SEECS</span>,
-                and most of what I know came from building things that had to work for someone else —
-                an engine that needed a life estimate, a classroom that needed a speech model,
-                a hospital that needed a working front desk.
+                I'm a <span className="mark">BS Artificial Intelligence student at NUST, SEECS</span>.
+                Most of what I know came from building systems that had to work for someone
+                else — a turbofan engine, a classroom, a hospital front desk.
               </p>
               <p className="text-muted">
-                My research sits in deep learning: causal-attention architectures for time-series
-                prediction, multimodal fusion of speech and skeletal landmarks, and the evaluation
-                work that decides whether a result is real. Alongside that I write full-stack
-                software — MERN and Next.js on the web, Flutter on mobile — because a model
-                nobody can reach is a model nobody uses.
+                My research is in deep learning: causal-attention architectures for time-series
+                prediction, and multimodal fusion of speech and skeletal landmarks. Alongside it
+                I write full-stack software — MERN and Next.js on the web, Flutter on mobile.
               </p>
             </div>
 

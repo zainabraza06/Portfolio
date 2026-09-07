@@ -62,7 +62,7 @@ const PointField = () => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r + near * 1.3, 0, Math.PI * 2);
         ctx.fillStyle = near > 0.05
-          ? `rgba(212, 244, 78, ${0.16 + near * 0.6})`
+          ? `rgba(155, 140, 255, ${0.18 + near * 0.62})`
           : 'rgba(190, 190, 200, 0.16)';
         ctx.fill();
 
@@ -70,7 +70,7 @@ const PointField = () => {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(pointer.x, pointer.y);
-          ctx.strokeStyle = `rgba(212, 244, 78, ${(near - 0.25) * 0.28})`;
+          ctx.strokeStyle = `rgba(155, 140, 255, ${(near - 0.25) * 0.3})`;
           ctx.lineWidth = 0.6;
           ctx.stroke();
         }
@@ -178,9 +178,9 @@ export const Hero = () => {
             className="lede lg:col-span-5 max-w-xl"
             style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.5s both' }}
           >
-            I'm Zainab — an artificial intelligence student at NUST who trains models
-            for <span className="mark">engines, speech and vision</span>, then builds the
-            software that puts them in someone's hands.
+            AI student at NUST. I build deep learning systems for{' '}
+            <span className="mark">engines, speech and vision</span> — and the software
+            that delivers them.
           </p>
 
           <div

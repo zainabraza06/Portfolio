@@ -25,28 +25,25 @@ export const Featured = () => {
               <span className="accent-italic">-Net</span>
             </h2>
             <p className="mt-6 text-[1.15rem] leading-relaxed text-paper-ink/80 max-w-xl">
-              One architecture that predicts how much life a turbofan engine has left —
-              and holds up on <span className="font-medium text-paper-ink">all four</span> NASA
-              C-MAPSS subsets without being rebuilt for each one.
+              A remaining-useful-life model for turbofan engines that runs unmodified on{' '}
+              <span className="font-medium text-paper-ink">all four</span> NASA C-MAPSS subsets.
             </p>
           </div>
 
           <div className="lg:col-span-5 space-y-5 text-[15px] leading-relaxed text-paper-ink/75 lg:pt-4">
             <p>
-              Published state-of-the-art models quietly change their architecture for the
-              harder multi-regime subsets, which weakens any claim that they generalise.
-              GAUGE-Net is deployed unmodified across FD001 to FD004 — a dual-path
-              causal-attention design that has to earn its accuracy the same way everywhere.
+              Prior state-of-the-art models change architecture for the harder multi-regime
+              subsets, which weakens their generalisation claims. GAUGE-Net is a dual-path
+              causal-attention design deployed unchanged across FD001–FD004.
             </p>
             <p>
-              Its novel piece is a geometry-aware feature channel: Riemannian and Wasserstein
-              distance from a learned healthy-reference state, fed straight in as model input.
-              A five-stage component ablation confirmed that channel as the single largest
-              driver of the accuracy gains.
+              Its contribution is a geometry-aware feature channel — Riemannian and
+              Wasserstein distance from a learned healthy-reference state — used as direct
+              model input. A five-stage ablation confirmed it as the largest driver of the
+              accuracy gains.
             </p>
             <p className="text-paper-ink/60">
-              It records a regression on FD003's NASA Score and near-parity on FD001. Both are
-              in the results, because a paper that only reports its wins is not a result.
+              Results include near-parity on FD001 and a regression on FD003's NASA Score.
             </p>
           </div>
         </div>

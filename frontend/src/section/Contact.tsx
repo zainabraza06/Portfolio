@@ -84,7 +84,6 @@ export const Contact = () => {
 
             <p className="mt-8 text-sm text-muted leading-relaxed max-w-sm">
               Open to AI/ML internships, research collaborations and full-stack work.
-              I reply to everything that isn't a bot.
             </p>
           </div>
 
@@ -112,7 +111,7 @@ export const Contact = () => {
             <div className="mt-5">
               <label htmlFor="contact-message" className="field-label">Message *</label>
               <textarea id="contact-message" name="message" required rows={6} value={form.message}
-                onChange={handleChange} placeholder="Tell me what you're working on." className="form-input resize-none" />
+                onChange={handleChange} placeholder="A few lines about the role or project." className="form-input resize-none" />
             </div>
 
             {status !== 'idle' && status !== 'loading' && (

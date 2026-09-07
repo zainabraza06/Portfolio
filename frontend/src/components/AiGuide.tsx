@@ -21,32 +21,32 @@ const LINES: Line[] = [
   {
     id: 'hero',
     label: 'Welcome',
-    text: "Hi — I'm Zainab's AI guide. She's a BS Artificial Intelligence student at NUST, SEECS. Scroll on and I'll tell you what you're looking at.",
+    text: "I'm Zainab's guide to this page. She's a BS Artificial Intelligence student at NUST, SEECS.",
   },
   {
     id: 'about',
     label: 'About',
-    text: 'Her focus is generative AI and deep learning — LLMs, RAG pipelines and agentic systems — plus computer vision, speech and time-series work.',
+    text: 'Her focus: generative AI and deep learning, plus computer vision, speech and time-series work.',
   },
   {
     id: 'skills',
     label: 'Skills',
-    text: 'PyTorch, TensorFlow and Keras for the models; MERN, Next.js and Flutter for shipping them. She writes Python, TypeScript and Dart.',
+    text: 'PyTorch and TensorFlow for the models; MERN, Next.js and Flutter for shipping them.',
   },
   {
     id: 'projects',
     label: 'Projects',
-    text: "These are things she's actually built — full-stack products and AI systems alike.",
+    text: "Selected work — AI systems and full-stack products.",
   },
   {
     id: 'hackathons',
     label: 'Hackathons',
-    text: 'Hackathons she has competed in — the same engineering, compressed into a weekend.',
+    text: 'Hackathons she has competed in.',
   },
   {
     id: 'kaggle',
     label: 'Kaggle',
-    text: 'Her Kaggle work: competition entries, notebooks and rankings.',
+    text: 'Kaggle competitions, notebooks and rankings.',
   },
   {
     id: 'certificates',
@@ -56,22 +56,22 @@ const LINES: Line[] = [
   {
     id: 'featured',
     label: 'Featured',
-    text: 'This one is her flagship: GAUGE-Net, an architecture that predicts turbofan engine life across all four NASA C-MAPSS subsets without being rebuilt for each.',
+    text: 'Her flagship: GAUGE-Net, a turbofan life-prediction model that runs unmodified on all four NASA C-MAPSS subsets.',
   },
   {
     id: 'experience',
     label: 'Experience',
-    text: 'At NESCOM she designed GAUGE-Net for turbofan engine life prediction and now works on fuel-consumption models. At Murrabi she built a Whisper and MediaPipe multimodal classifier.',
+    text: 'NESCOM: turbofan life and fuel-consumption prediction. Murrabi: a Whisper and MediaPipe multimodal classifier.',
   },
   {
     id: 'testimonials',
     label: 'Testimonials',
-    text: "What people who've worked alongside Zainab have to say.",
+    text: "What people who have worked with Zainab say.",
   },
   {
     id: 'contact',
     label: 'Contact',
-    text: 'This is the part that matters — send her a message here and it lands straight in her inbox.',
+    text: 'Send a message here and it lands in her inbox.',
   },
 ];
 
@@ -107,7 +107,7 @@ const withLiveCounts = (
     out.projects =
       `She has ${plural(data.projects.length, 'project', 'projects')} here — ${names}` +
       (rest > 0 ? `, and ${rest} more.` : '.') +
-      ' Filter them by ML, Python, MERN or Next.js.';
+      '';
   }
 
   if (data.certificates.length > 0) {
@@ -119,16 +119,16 @@ const withLiveCounts = (
 
   if (data.hackathons.length > 0) {
     out.hackathons =
-      `She's competed in ${plural(data.hackathons.length, 'hackathon', 'hackathons')} — the same engineering, compressed into a weekend.`;
+      `She's competed in ${plural(data.hackathons.length, 'hackathon', 'hackathons')}.`;
   }
 
   if (data.kaggle.length > 0) {
-    out.kaggle = `Her Kaggle work — ${plural(data.kaggle.length, 'entry', 'entries')} of competitions, notebooks and rankings.`;
+    out.kaggle = `${plural(data.kaggle.length, 'Kaggle entry', 'Kaggle entries')} — competitions, notebooks and rankings.`;
   }
 
   if (data.testimonials.length > 0) {
     out.testimonials =
-      `${plural(data.testimonials.length, 'person', 'people')} who worked alongside Zainab, in their own words.`;
+      `${plural(data.testimonials.length, 'person', 'people')} who have worked with Zainab.`;
   }
 
   return out;

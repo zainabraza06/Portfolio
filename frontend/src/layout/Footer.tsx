@@ -9,7 +9,7 @@ export const Footer = () => (
             Zainab Raza Malik<span className="text-accent">.</span>
           </p>
           <p className="mt-1.5 text-sm text-muted">
-            AI student at NUST · building intelligent things for the real world
+            BS Artificial Intelligence, NUST SEECS · Pakistan
           </p>
         </div>
 

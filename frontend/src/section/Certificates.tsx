@@ -33,7 +33,7 @@ export const Certificates = () => {
             Certifications, <span className="accent-italic text-accent">hackathons</span>, Kaggle.
           </h2>
           <p className="lede lg:col-span-6 self-end max-w-md">
-            The coursework, the weekends, and the leaderboards behind the projects above.
+            Coursework, competitions and leaderboard entries.
           </p>
         </div>
 
