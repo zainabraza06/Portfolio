@@ -18,11 +18,6 @@ export const Testimonials = () => {
 
   const items = data ?? [];
 
-  // Nothing approved yet? Say nothing rather than showing an empty shell.
-  if (!loading && items.length === 0) {
-    return <section id="testimonials" aria-hidden="true" className="h-px" />;
-  }
-
   return (
     <section id="testimonials" className="section border-t border-line">
       <div className="shell">
@@ -33,6 +28,16 @@ export const Testimonials = () => {
 
         {loading ? (
           <div className="py-16 label">Loading…</div>
+        ) : items.length === 0 ? (
+          <div className="max-w-xl">
+            <p className="lede">
+              No public notes here yet — references from colleagues and supervisors
+              are available on request.
+            </p>
+            <a href="#contact" className="link-underline text-sm font-medium mt-5 inline-block">
+              Ask for references ↗
+            </a>
+          </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-x-14 gap-y-12">
             {items.map((t, i) => (

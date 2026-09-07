@@ -124,7 +124,7 @@ const META = [
   { k: 'Studying', v: 'BS Artificial Intelligence, NUST SEECS' },
   { k: 'Focus', v: 'Generative AI · Deep Learning' },
   { k: 'Based in', v: 'Pakistan' },
-  { k: 'Status', v: 'Open to roles' },
+  { k: 'Status', v: 'Open to AI/ML roles' },
 ];
 
 export const Hero = () => {
