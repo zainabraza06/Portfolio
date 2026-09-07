@@ -58,7 +58,7 @@ const seed = async () => {
       company: 'NUST, SEECS',
       role: 'BS Artificial Intelligence',
       duration: '2024 – Present',
-      description: 'CGPA: 3.94',
+      description: 'CGPA: 3.91',
       type: 'education',
       order: 3,
     },

@@ -46,9 +46,9 @@ function CountUp({ target, suffix = '', decimals = 0 }: { target: number; suffix
 }
 
 const NOTES = [
-  { k: 'Currently learning', v: 'LLM fine-tuning, RAG and agentic architectures.' },
-  { k: 'Building toward', v: 'Deployed AI — measured on real data, not benchmarks alone.' },
-  { k: 'Interested in', v: 'Multimodal data, honest evaluation, and interfaces that make a model legible.' },
+  { k: 'Currently building', v: 'Agentic AI systems, RAG pipelines and LLM-powered tools.' },
+  { k: 'Working with', v: 'Python, PyTorch and LangGraph · MERN, Next.js and Flutter.' },
+  { k: 'Focused on', v: 'Generative AI, applied ML, and shipping models as products.' },
 ];
 
 export const About = () => {
@@ -64,7 +64,7 @@ export const About = () => {
     { value: projects?.length ?? 0, suffix: '', label: 'Projects shipped' },
     { value: techCount, suffix: '', label: 'Technologies' },
     { value: certificates?.length ?? 0, suffix: '', label: 'Certifications' },
-    { value: 3.94, suffix: '', decimals: 2, label: 'CGPA at NUST' },
+    { value: 3.91, suffix: '', decimals: 2, label: 'CGPA at NUST' },
   ];
 
   return (
