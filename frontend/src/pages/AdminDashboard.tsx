@@ -10,15 +10,17 @@ import {
   fetchCertificates, createCertificate, updateCertificate, deleteCertificate, syncProjects,
   fetchHackathons, createHackathon, updateHackathon, deleteHackathon,
   fetchKaggle, createKaggle, updateKaggle, deleteKaggle,
+  fetchResearch, createResearch, updateResearch, deleteResearch,
   changePassword
 } from '../api/services';
 
-type Tab = 'projects' | 'hackathons' | 'kaggle' | 'certificates' | 'experience' | 'testimonials' | 'messages';
+type Tab = 'projects' | 'research' | 'hackathons' | 'kaggle' | 'certificates' | 'experience' | 'testimonials' | 'messages';
 
 interface Item { _id: string; [key: string]: unknown; }
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'projects',     label: 'Projects',      icon: '🛠' },
+  { id: 'research',     label: 'Research',      icon: '🔬' },
   { id: 'hackathons',   label: 'Hackathons',    icon: '🚀' },
   { id: 'kaggle',       label: 'Kaggle',        icon: '📊' },
   { id: 'certificates', label: 'Certificates',  icon: '🏆' },
@@ -32,6 +34,7 @@ const emptyCert    = { title: '', issuer: '', date: '', credentialUrl: '', linke
 const emptyHack    = { title: '', description: '', date: '', projectUrl: '', certificateUrl: '', imageUrl: '', order: 0 };
 const emptyKaggle  = { title: '', description: '', competitionUrl: '', rank: '', date: '', imageUrl: '', order: 0 };
 const emptyExp     = { company: '', role: '', duration: '', description: '', logo: '', type: 'work', order: 0 };
+const emptyResearch = { title: '', context: '', period: '', status: 'ongoing', summary: '', method: '', results: '', tags: '', link: '', featured: false, order: 0 };
 
 // ── Generic Modal ────────────────────────────────────────────────
 function Modal({ title, onClose, onSave, children, loading }: {
@@ -211,7 +214,113 @@ function ProjectsTab() {
   );
 }
 
-// ── Hackathons Tab ─────────────────────────────────────────────
+function ResearchTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
+  const [items, setItems] = useState<Item[]>([]);
+  const [modal, setModal] = useState<'add' | 'edit' | null>(null);
+  const [form, setForm] = useState({ ...emptyResearch });
+  const [editId, setEditId] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const load = async () => { setLoading(true); setItems(await fetchResearch()); setLoading(false); };
+  useEffect(() => { load(); }, []);
+
+  const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
+  const openAdd = () => { setForm({ ...emptyResearch }); setModal('add'); };
+  const openEdit = (r: Item) => {
+    setForm({
+      title: r.title as string, context: (r.context as string) ?? '', period: (r.period as string) ?? '',
+      status: (r.status as string) ?? 'ongoing', summary: (r.summary as string) ?? '',
+      method: (r.method as string) ?? '', results: (r.results as string) ?? '',
+      tags: ((r.tags as string[]) ?? []).join(', '), link: (r.link as string) ?? '',
+      featured: Boolean(r.featured), order: (r.order as number) ?? 0,
+    });
+    setEditId(r._id); setModal('edit');
+  };
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      if (modal === 'add') await createResearch(form);
+      else await updateResearch(editId, form);
+      setModal(null); load(); toast('Research saved.');
+    } catch (err) { toast('Failed to save.', 'error'); } finally { setSaving(false); }
+  };
+
+  const remove = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete research entry?', message: 'This removes it from the site permanently.' });
+    if (!ok) return;
+    await deleteResearch(id);
+    load();
+    toast('Research entry deleted.');
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-text font-bold text-xl">Research <span className="text-muted font-normal text-sm ml-2">{items.length} entries</span></h2>
+        <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Research</span></button>
+      </div>
+
+      {loading ? <p className="text-muted">Loading...</p> : (
+        <div className="space-y-3">
+          {items.map(r => (
+            <div key={r._id} className="glass-card p-4 flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-text font-semibold">{r.title as string}</p>
+                  {r.featured ? <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent text-accent-ink">Featured</span> : null}
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border border-line text-muted">{r.status as string}</span>
+                </div>
+                <p className="text-accent text-sm">{[r.context, r.period].filter(Boolean).join(' - ')}</p>
+                <p className="text-muted text-sm line-clamp-2 mt-1">{r.summary as string}</p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <button onClick={() => openEdit(r)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
+                <button onClick={() => remove(r._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
+              </div>
+            </div>
+          ))}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No research entries yet.</div>}
+        </div>
+      )}
+
+      {modal && (
+        <Modal title={modal === 'add' ? 'Add Research' : 'Edit Research'} onClose={() => setModal(null)} onSave={save} loading={saving}>
+          <div className="space-y-3">
+            <Field label="Title *" id="r-title"><input id="r-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder="Multimodal Phoneme-Gesture Classification" /></Field>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label="Context" id="r-ctx"><input id="r-ctx" className="form-input" value={form.context} onChange={e => set('context', e.target.value)} placeholder="NESCOM, Murrabi, NUST" /></Field>
+              <Field label="Period" id="r-period"><input id="r-period" className="form-input" value={form.period} onChange={e => set('period', e.target.value)} placeholder="2025" /></Field>
+            </div>
+            <Field label="Status" id="r-status">
+              <select id="r-status" className="form-input" value={form.status} onChange={e => set('status', e.target.value)}>
+                <option value="ongoing">In progress</option>
+                <option value="complete">Complete</option>
+              </select>
+            </Field>
+            <Field label="Summary *" id="r-sum"><textarea id="r-sum" className="form-input resize-none" rows={3} value={form.summary} onChange={e => set('summary', e.target.value)} placeholder="One or two sentences on what the work is." /></Field>
+            <Field label="Method" id="r-method"><textarea id="r-method" className="form-input resize-none" rows={3} value={form.method} onChange={e => set('method', e.target.value)} placeholder="Architecture, data, benchmarks." /></Field>
+            <Field label="Results (one per line)" id="r-results"><textarea id="r-results" className="form-input resize-none" rows={4} value={form.results} onChange={e => set('results', e.target.value)} placeholder="One result per line" /></Field>
+            <Field label="Tags (comma separated)" id="r-tags"><input id="r-tags" className="form-input" value={form.tags} onChange={e => set('tags', e.target.value)} placeholder="Multimodal, Whisper, Cross-attention" /></Field>
+            <Field label="Link" id="r-link"><input id="r-link" className="form-input" value={form.link} onChange={e => set('link', e.target.value)} placeholder="https://" /></Field>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+              <label htmlFor="r-feat" className="flex items-center gap-2 text-sm text-muted">
+                <input id="r-feat" type="checkbox" checked={form.featured} onChange={e => set('featured', e.target.checked)} className="w-4 h-4 accent-[#5B4BC4]" />
+                Links to the featured spread
+              </label>
+              <Field label="Order" id="r-order"><input id="r-order" type="number" className="form-input" value={form.order} onChange={e => set('order', Number(e.target.value))} /></Field>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// -- Hackathons Tab ---──────────────────────────────────────────
 function HackathonsTab() {
   const toast = useToast();
   const askConfirm = useConfirm();
@@ -796,6 +905,7 @@ export default function AdminDashboard() {
         {/* Tab content */}
         <div style={{ animation: 'fadeInUp 0.3s ease both' }}>
           {tab === 'projects'     && <ProjectsTab />}
+          {tab === 'research'     && <ResearchTab />}
           {tab === 'hackathons'   && <HackathonsTab />}
           {tab === 'kaggle'       && <KaggleTab />}
           {tab === 'certificates' && <CertificatesTab />}
