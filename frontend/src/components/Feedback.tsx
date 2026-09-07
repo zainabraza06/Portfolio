@@ -37,7 +37,7 @@ export const useConfirm = (): ConfirmFn => {
 const TOAST_MS = 4000;
 
 const toneStyles: Record<Tone, { accent: string; icon: string }> = {
-  success: { accent: '#D4F44E', icon: '✓' },
+  success: { accent: '#9B8CFF', icon: '✓' },
   error: { accent: '#E8756B', icon: '!' },
 };
 

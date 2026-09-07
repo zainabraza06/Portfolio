@@ -29,9 +29,10 @@
   --color-faint:      #63636B;
 
   /* One accent */
-  --color-accent:     #D4F44E;
-  --color-accent-2:   #B9DC33;
-  --color-accent-ink: #10130A;   /* text on accent */
+  --color-accent:      #9B8CFF;  /* 7.0:1 on ink */
+  --color-accent-2:    #8878F0;  /* hover */
+  --color-accent-ink:  #0C0A16;  /* text on accent fills */
+  --color-accent-deep: #5B4BC4;  /* accent on the paper section */
 
   /* Signals */
   --color-ok:         #7FD98F;
@@ -403,6 +404,9 @@
   }
 
   .on-paper .label { color: var(--color-paper-mute); }
+  .on-paper .text-accent,
+  .on-paper .label-accent,
+  .on-paper .accent-italic { color: var(--color-accent-deep); }
   .on-paper .lede { color: var(--color-paper-mute); }
   .on-paper .hairline { background: color-mix(in srgb, var(--color-paper-ink) 14%, transparent); }
   .on-paper .section-head { border-color: color-mix(in srgb, var(--color-paper-ink) 14%, transparent); }
