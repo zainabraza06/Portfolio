@@ -1,156 +1,160 @@
 import { useEffect, useRef, useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
+import { useApi } from '../hooks/useApi';
+import { fetchProjects, fetchCertificates } from '../api/services';
+import { skillGroups } from './Skills';
 
-const stats = [
-  { value: 10, suffix: '+', label: 'AI & Web Projects' },
-  { value: 2, suffix: '+', label: 'Years of Coding' },
-  { value: 15, suffix: '+', label: 'Technologies' },
-  { value: 3, suffix: '+', label: 'AI Research Areas' },
-];
-
-function CountUp({ target, suffix = '', inView }: { target: number; suffix?: string; inView: boolean }) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!inView) return;
-    let start = 0;
-    const step = Math.ceil(target / 40);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(start);
-    }, 30);
-    return () => clearInterval(timer);
-  }, [inView, target]);
-  return <>{count}{suffix}</>;
-}
-
-export const About = () => {
-  useScrollRevealAll();
-  const statsRef = useRef<HTMLDivElement>(null);
-  const [statsInView, setStatsInView] = useState(false);
+function CountUp({ target, suffix = '', decimals = 0 }: { target: number; suffix?: string; decimals?: number }) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const el = statsRef.current;
+    const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { setStatsInView(true); obs.disconnect(); }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setValue(target);
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+
+      const duration = 1100;
+      const start = performance.now();
+      const tick = (now: number) => {
+        const t = Math.min(1, (now - start) / duration);
+        // easeOutExpo
+        const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+        setValue(target * eased);
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
     }, { threshold: 0.4 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target]);
 
   return (
-    <section id="about" className="relative py-20 sm:py-28 px-4 sm:px-6">
-      <div className="orb w-[400px] h-[400px] top-0 left-[-150px] opacity-30"
-        style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.2) 0%, transparent 70%)' }} />
+    <span ref={ref}>
+      {value.toFixed(decimals)}
+      {suffix}
+    </span>
+  );
+}
 
-      <div className="max-w-6xl mx-auto">
-        {/* Heading */}
-        <div className="text-center mb-16 reveal">
-          <div className="section-tag">✦ About Me</div>
-          <h2 className="section-title">
-            Building <span className="gradient-text">Intelligent Systems</span>
-          </h2>
-          <p className="text-[#6b7fa3] max-w-2xl mx-auto">
-            An AI student and researcher who turns machine learning ideas into products people can use.
-          </p>
+const NOTES = [
+  {
+    k: 'Currently learning',
+    v: 'LLM fine-tuning, retrieval-augmented generation and agentic architectures.',
+  },
+  {
+    k: 'Building toward',
+    v: 'AI that survives contact with the real world — deployed, measured, and useful to someone who is not an engineer.',
+  },
+  {
+    k: 'Happiest working on',
+    v: 'Messy multimodal data, model evaluation that is actually honest, and interfaces that make a model legible.',
+  },
+];
+
+export const About = () => {
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', []);
+  const { data: projects } = useApi<unknown[]>(fetchProjects);
+  const { data: certificates } = useApi<unknown[]>(fetchCertificates);
+
+  const techCount = skillGroups
+    .filter(g => g.category !== 'Soft Skills')
+    .reduce((sum, g) => sum + g.skills.length, 0);
+
+  const stats = [
+    { value: projects?.length ?? 0, suffix: '', label: 'Projects shipped' },
+    { value: techCount, suffix: '', label: 'Technologies' },
+    { value: certificates?.length ?? 0, suffix: '', label: 'Certifications' },
+    { value: 3.94, suffix: '', decimals: 2, label: 'CGPA at NUST' },
+  ];
+
+  return (
+    <section id="about" className="section">
+      <div className="shell">
+        <div className="section-head reveal">
+          <span className="label label-accent">01</span>
+          <span className="label">About</span>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Left – Avatar */}
-          <div className="reveal-left flex justify-center">
-            <div className="relative w-64 h-72 sm:w-72 sm:h-80">
-              {/* Rotating ring */}
-              <div className="absolute inset-[-16px] rounded-[2rem] border-2 border-dashed border-[#20b2a6]/30 animate-spin-slow" />
-              {/* Glow */}
-              <div className="absolute inset-0 rounded-2xl"
-                style={{ boxShadow: '0 0 60px rgba(32,178,166,0.2), 0 0 120px rgba(32,178,166,0.08)' }} />
-              
-              {/* Status Badge */}
-              <div className="absolute -top-3 sm:-top-4 -left-2 sm:-left-6 z-10 inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 text-xs font-medium animate-float"
-                   style={{ animationDelay: '1s' }}>
-                <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
-                <span className="text-[#e8edf2]">Available for opportunities</span>
-              </div>
-              {/* Actual Photo */}
-              <div className="relative w-full h-full glass-card rounded-2xl overflow-hidden flex items-center justify-center">
-                <img 
-                  src="/profilepic.jpeg" 
-                  alt="Zainab Raza Malik" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
+          {/* Portrait */}
+          <div className="lg:col-span-4 reveal-left">
+            <div className="lg:sticky lg:top-28">
+              <figure className="relative">
+                <div className="overflow-hidden rounded-[var(--radius-md)] border border-line bg-ink-2">
+                  <img
+                    src="/profilepic.jpeg"
+                    alt="Zainab Raza Malik"
+                    loading="lazy"
+                    width={640}
+                    height={800}
+                    className="w-full aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-[filter] duration-700"
+                  />
+                </div>
+                <figcaption className="flex items-center gap-2 mt-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                  <span className="label text-[10px]">Islamabad · Open to internships</span>
+                </figcaption>
+              </figure>
             </div>
           </div>
 
-          {/* Right – Bio */}
-          <div className="reveal-right space-y-5">
-            <h3 className="text-2xl font-bold text-[#e8edf2] font-serif">
-              Hello! I'm <span className="gradient-text">Zainab Raza Malik</span>
-            </h3>
-            <p className="text-[#6b7fa3] leading-relaxed">
-              My focus is{' '}
-              <span className="text-[#e8edf2] font-medium">Generative AI and Deep Learning</span> — LLMs,
-              RAG pipelines and agentic systems, alongside computer vision, speech and NLP, and
-              time-series models for problems like predictive maintenance and fall detection.
-            </p>
-            <p className="text-[#6b7fa3] leading-relaxed">
-              I also build the software those models live in — full-stack on the{' '}
-              <span className="text-[#e8edf2] font-medium">MERN stack and Next.js</span>, and mobile with{' '}
-              <span className="text-[#e8edf2] font-medium">Flutter</span> — so a research idea can ship as
-              a product, not just a notebook.
-            </p>
+          {/* Story */}
+          <div className="lg:col-span-8 reveal-right">
+            <h2 className="display-xl max-w-[18ch]">
+              I build models, then I build the{' '}
+              <span className="accent-italic text-accent">things around them</span>.
+            </h2>
 
-            {/* Key facts */}
-            <div className="space-y-3 pt-2">
-              {[
-                { icon: '📍', label: 'Location', val: 'Pakistan' },
-                { icon: '🎓', label: 'Degree', val: 'BS Artificial Intelligence @ NUST (SEECS)' },
-                { icon: '💡', label: 'Interests', val: 'LLMs & Agentic AI · Computer Vision · NLP · MERN · Flutter' },
-                { icon: '🌐', label: 'Languages', val: 'English · Urdu' },
-              ].map(f => (
-                <div key={f.label} className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
-                  <span className="text-lg w-7">{f.icon}</span>
-                  <span className="text-[#6b7fa3] text-sm sm:w-20 sm:shrink-0">{f.label}:</span>
-                  <span className="text-[#e8edf2] text-sm font-medium break-words">{f.val}</span>
+            <div className="mt-8 sm:mt-10 space-y-6 max-w-2xl">
+              <p className="lede">
+                I'm a <span className="mark">BS Artificial Intelligence student at NUST, SEECS</span>,
+                and most of what I know came from building things that had to work for someone else —
+                an engine that needed a life estimate, a classroom that needed a speech model,
+                a hospital that needed a working front desk.
+              </p>
+              <p className="text-muted">
+                My research sits in deep learning: causal-attention architectures for time-series
+                prediction, multimodal fusion of speech and skeletal landmarks, and the evaluation
+                work that decides whether a result is real. Alongside that I write full-stack
+                software — MERN and Next.js on the web, Flutter on mobile — because a model
+                nobody can reach is a model nobody uses.
+              </p>
+            </div>
+
+            <dl className="mt-12 border-t border-line">
+              {NOTES.map(note => (
+                <div key={note.k} className="grid sm:grid-cols-12 gap-2 sm:gap-6 py-5 border-b border-line">
+                  <dt className="label text-[10px] sm:col-span-4 sm:pt-1">{note.k}</dt>
+                  <dd className="sm:col-span-8 text-[15px] text-muted leading-relaxed">{note.v}</dd>
                 </div>
               ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <button
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="btn-primary w-full sm:w-auto justify-center"
-              >
-                <span>Get In Touch</span>
-              </button>
-              <a
-                href="/CV.pdf"
-                download
-                className="btn-outline w-full sm:w-auto justify-center flex items-center gap-2"
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Download CV
-              </a>
-            </div>
+            </dl>
           </div>
         </div>
 
         {/* Stats */}
-        <div ref={statsRef} className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20">
+        <div className="mt-16 sm:mt-24 grid grid-cols-2 lg:grid-cols-4 border-t border-line">
           {stats.map((s, i) => (
             <div
               key={s.label}
-              className={`glass-card p-6 text-center reveal reveal-d${i + 1}`}
+              className={`py-8 lg:py-10 ${i % 2 === 1 ? 'pl-6 border-l border-line' : ''} ${
+                i > 1 ? '' : 'border-b border-line lg:border-b-0'
+              } ${i === 2 ? 'lg:border-l lg:border-line lg:pl-6' : ''} ${i === 3 ? 'lg:pl-6' : ''}`}
             >
-              <p className="text-4xl font-bold gradient-text font-mono">
-                <CountUp target={s.value} suffix={s.suffix} inView={statsInView} />
+              <p className="stat-value text-text">
+                <CountUp target={s.value} suffix={s.suffix} decimals={s.decimals ?? 0} />
+                {s.decimals === undefined && s.value > 0 && <span className="text-accent">+</span>}
               </p>
-              <p className="text-sm text-[#6b7fa3] mt-2">{s.label}</p>
+              <p className="label text-[10px] mt-3">{s.label}</p>
             </div>
           ))}
         </div>
