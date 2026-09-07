@@ -107,14 +107,15 @@ export const About = () => {
 
             <div className="mt-8 sm:mt-10 space-y-6 max-w-2xl">
               <p className="lede">
-                I'm a <span className="mark">BS Artificial Intelligence student at NUST, SEECS</span>.
-                Most of what I know came from building systems that had to work for someone
-                else — a turbofan engine, a classroom, a hospital front desk.
+                I'm a <span className="mark">BS Artificial Intelligence student at NUST, SEECS</span>,
+                building AI/ML solutions end to end — generative AI and LLM applications,
+                RAG pipelines and agentic systems that do real work rather than demos.
               </p>
               <p className="text-muted">
-                My research is in deep learning: causal-attention architectures for time-series
-                prediction, and multimodal fusion of speech and skeletal landmarks. Alongside it
-                I write full-stack software — MERN and Next.js on the web, Flutter on mobile.
+                My projects run from multi-agent research assistants and retrieval-grounded
+                tools to computer vision, speech and time-series models. I ship them as
+                full-stack products — MERN and Next.js on the web, Flutter on mobile — so the
+                model reaches the person who needs it.
               </p>
             </div>
 
