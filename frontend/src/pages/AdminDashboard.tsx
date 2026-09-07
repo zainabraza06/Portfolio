@@ -29,12 +29,12 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'messages',     label: 'Messages',       icon: '📬' },
 ];
 
-const emptyProject = { title: '', description: '', techStack: '', problem: '', outcome: '', liveUrl: '', githubUrl: '', imageUrl: '', featured: false, order: 0 };
+const emptyProject = { title: '', description: '', techStack: '', problem: '', solution: '', outcome: '', liveUrl: '', githubUrl: '', imageUrl: '', featured: false, order: 0 };
 const emptyCert    = { title: '', issuer: '', date: '', credentialUrl: '', linkedInUrl: '', imageUrl: '', order: 0 };
 const emptyHack    = { title: '', description: '', date: '', projectUrl: '', certificateUrl: '', imageUrl: '', order: 0 };
 const emptyKaggle  = { title: '', description: '', competitionUrl: '', rank: '', date: '', imageUrl: '', order: 0 };
 const emptyExp     = { company: '', role: '', duration: '', description: '', logo: '', type: 'work', order: 0 };
-const emptyResearch = { title: '', context: '', period: '', status: 'ongoing', summary: '', method: '', results: '', tags: '', link: '', featured: false, order: 0 };
+const emptyResearch = { title: '', context: '', period: '', status: 'ongoing', summary: '', architecture: '', novelty: '', method: '', results: '', tags: '', link: '', featured: false, order: 0 };
 
 // ── Generic Modal ────────────────────────────────────────────────
 function Modal({ title, onClose, onSave, children, loading }: {
@@ -103,7 +103,8 @@ function ProjectsTab() {
   const openEdit = (p: Item) => {
     setForm({ title: p.title as string, description: p.description as string,
       techStack: (p.techStack as string[]).join(', '),
-      problem: (p.problem as string) ?? '', outcome: (p.outcome as string) ?? '',
+      problem: (p.problem as string) ?? '', solution: (p.solution as string) ?? '',
+      outcome: (p.outcome as string) ?? '',
       liveUrl: p.liveUrl as string,
       githubUrl: p.githubUrl as string, imageUrl: p.imageUrl as string,
       featured: p.featured as boolean, order: p.order as number });
@@ -153,6 +154,7 @@ function ProjectsTab() {
       <Field label="Description *" id="p-desc"><textarea id="p-desc" className="form-input resize-none" rows={3} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Project description" /></Field>
       <Field label="Tech Stack (comma separated)" id="p-tech"><input id="p-tech" className="form-input" value={form.techStack} onChange={e => set('techStack', e.target.value)} placeholder="React, Node.js, MongoDB" /></Field>
       <Field label="Problem solved (optional)" id="p-problem"><textarea id="p-problem" className="form-input resize-none" rows={2} value={form.problem} onChange={e => set('problem', e.target.value)} placeholder="What was broken or missing?" /></Field>
+      <Field label="Solution (optional)" id="p-solution"><textarea id="p-solution" className="form-input resize-none" rows={3} value={form.solution} onChange={e => set('solution', e.target.value)} placeholder="What you built, and how it works." /></Field>
       <Field label="Outcome / result (optional)" id="p-outcome"><textarea id="p-outcome" className="form-input resize-none" rows={2} value={form.outcome} onChange={e => set('outcome', e.target.value)} placeholder="What changed once it shipped?" /></Field>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Field label="GitHub URL" id="p-gh"><input id="p-gh" className="form-input" value={form.githubUrl} onChange={e => set('githubUrl', e.target.value)} placeholder="https://github.com/..." /></Field>
@@ -233,6 +235,7 @@ function ResearchTab() {
     setForm({
       title: r.title as string, context: (r.context as string) ?? '', period: (r.period as string) ?? '',
       status: (r.status as string) ?? 'ongoing', summary: (r.summary as string) ?? '',
+      architecture: (r.architecture as string) ?? '', novelty: (r.novelty as string) ?? '',
       method: (r.method as string) ?? '', results: (r.results as string) ?? '',
       tags: ((r.tags as string[]) ?? []).join(', '), link: (r.link as string) ?? '',
       featured: Boolean(r.featured), order: (r.order as number) ?? 0,
@@ -302,7 +305,9 @@ function ResearchTab() {
               </select>
             </Field>
             <Field label="Summary *" id="r-sum"><textarea id="r-sum" className="form-input resize-none" rows={3} value={form.summary} onChange={e => set('summary', e.target.value)} placeholder="One or two sentences on what the work is." /></Field>
-            <Field label="Method" id="r-method"><textarea id="r-method" className="form-input resize-none" rows={3} value={form.method} onChange={e => set('method', e.target.value)} placeholder="Architecture, data, benchmarks." /></Field>
+            <Field label="Architecture" id="r-arch"><textarea id="r-arch" className="form-input resize-none" rows={3} value={form.architecture} onChange={e => set('architecture', e.target.value)} placeholder="What the model or system is." /></Field>
+            <Field label="Novel contribution" id="r-novel"><textarea id="r-novel" className="form-input resize-none" rows={3} value={form.novelty} onChange={e => set('novelty', e.target.value)} placeholder="What had not been done before." /></Field>
+            <Field label="Method" id="r-method"><textarea id="r-method" className="form-input resize-none" rows={3} value={form.method} onChange={e => set('method', e.target.value)} placeholder="Data, benchmarks, evaluation protocol." /></Field>
             <Field label="Results (one per line)" id="r-results"><textarea id="r-results" className="form-input resize-none" rows={4} value={form.results} onChange={e => set('results', e.target.value)} placeholder="One result per line" /></Field>
             <Field label="Tags (comma separated)" id="r-tags"><input id="r-tags" className="form-input" value={form.tags} onChange={e => set('tags', e.target.value)} placeholder="Multimodal, Whisper, Cross-attention" /></Field>
             <Field label="Link" id="r-link"><input id="r-link" className="form-input" value={form.link} onChange={e => set('link', e.target.value)} placeholder="https://" /></Field>

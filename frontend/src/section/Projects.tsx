@@ -9,6 +9,7 @@ interface Project {
   description: string;
   techStack: string[];
   problem?: string;
+  solution?: string;
   outcome?: string;
   liveUrl: string;
   githubUrl: string;
@@ -99,12 +100,18 @@ const Case = ({ project, index }: { project: Project; index: number }) => {
 
         <p className="mt-4 text-[15px] leading-relaxed text-muted">{project.description}</p>
 
-        {(project.problem || project.outcome) && (
-          <dl className="mt-6 space-y-3 border-t border-line pt-5">
+        {(project.problem || project.solution || project.outcome) && (
+          <dl className="mt-6 space-y-4 border-t border-line pt-5">
             {project.problem && (
               <div>
                 <dt className="label text-[10px] mb-1">Problem</dt>
                 <dd className="text-sm text-muted leading-relaxed">{project.problem}</dd>
+              </div>
+            )}
+            {project.solution && (
+              <div>
+                <dt className="label text-[10px] mb-1">Solution</dt>
+                <dd className="text-sm text-muted leading-relaxed">{project.solution}</dd>
               </div>
             )}
             {project.outcome && (

@@ -5,8 +5,10 @@ const researchSchema = new mongoose.Schema({
   context:  { type: String, default: '' },   // where the work happened, e.g. "NESCOM"
   period:   { type: String, default: '' },   // e.g. "2025" or "2026 – present"
   status:   { type: String, enum: ['ongoing', 'complete'], default: 'ongoing' },
-  summary:  { type: String, required: true },
-  method:   { type: String, default: '' },
+  summary:      { type: String, required: true },
+  architecture: { type: String, default: '' },
+  novelty:      { type: String, default: '' },
+  method:       { type: String, default: '' },
   // One result per line; the site renders them as bullets.
   results:  { type: String, default: '' },
   tags:     [{ type: String }],

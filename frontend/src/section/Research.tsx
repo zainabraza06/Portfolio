@@ -10,6 +10,8 @@ interface ResearchItem {
   period: string;
   status: 'ongoing' | 'complete';
   summary: string;
+  architecture: string;
+  novelty: string;
   method: string;
   results: string;
   tags: string[];
@@ -20,7 +22,12 @@ interface ResearchItem {
 const Entry = ({ item, index }: { item: ResearchItem; index: number }) => {
   const [open, setOpen] = useState(false);
   const results = item.results.split('\n').map(l => l.trim()).filter(Boolean);
-  const hasDetail = results.length > 0 || Boolean(item.method);
+  const blocks = [
+    { k: 'Architecture', v: item.architecture },
+    { k: 'Novel contribution', v: item.novelty },
+    { k: 'Method', v: item.method },
+  ].filter(b => Boolean(b.v));
+  const hasDetail = results.length > 0 || blocks.length > 0;
 
   return (
     <article
@@ -66,12 +73,12 @@ const Entry = ({ item, index }: { item: ResearchItem; index: number }) => {
               >
                 <div className="overflow-hidden">
                   <div className="pt-5 space-y-5 max-w-3xl">
-                    {item.method && (
-                      <div>
-                        <p className="label text-[10px] mb-1.5">Method</p>
-                        <p className="text-[15px] leading-relaxed text-muted">{item.method}</p>
+                    {blocks.map(b => (
+                      <div key={b.k}>
+                        <p className="label text-[10px] mb-1.5">{b.k}</p>
+                        <p className="text-[15px] leading-relaxed text-muted">{b.v}</p>
                       </div>
-                    )}
+                    ))}
                     {results.length > 0 && (
                       <div>
                         <p className="label text-[10px] mb-1.5">Results</p>
@@ -94,7 +101,7 @@ const Entry = ({ item, index }: { item: ResearchItem; index: number }) => {
                 aria-expanded={open}
                 className="mt-4 label text-[10px] label-accent hover:underline"
               >
-                {open ? '— Less' : '+ Method & results'}
+                {open ? '— Less' : '+ Detail'}
               </button>
             </>
           )}
