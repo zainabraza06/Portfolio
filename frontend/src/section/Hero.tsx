@@ -145,53 +145,67 @@ export const Hero = () => {
       <PointField />
 
       <div className="shell relative z-10 pb-10">
-        <p
-          className="label label-accent mb-8 sm:mb-10"
-          style={{ animation: 'fadeIn 0.8s var(--ease-out-expo) both' }}
-        >
-          AI Student · Builder · Creative Technologist
-        </p>
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-end">
+          {/* Statement */}
+          <div className="lg:col-span-7">
+            <p
+              className="label label-accent mb-8 sm:mb-10"
+              style={{ animation: 'fadeIn 0.8s var(--ease-out-expo) both' }}
+            >
+              AI Student · Builder · Creative Technologist
+            </p>
 
-        <h1 className="display-hero max-w-[16ch]">
-          <span className="line-mask">
-            <span style={{ animationDelay: '0.05s' }}>Building</span>
-          </span>
-          <span className="line-mask">
-            <span style={{ animationDelay: '0.15s' }} className="text-accent accent-italic pr-2">
-              intelligent
-            </span>
-          </span>
-          <span className="line-mask">
-            <span style={{ animationDelay: '0.25s' }}>things for</span>
-          </span>
-          <span className="line-mask">
-            <span style={{ animationDelay: '0.35s' }}>the real world.</span>
-          </span>
-        </h1>
+            <h1 className="display-hero max-w-[16ch]">
+              <span className="line-mask">
+                <span style={{ animationDelay: '0.05s' }}>Building</span>
+              </span>
+              <span className="line-mask">
+                <span style={{ animationDelay: '0.15s' }} className="text-accent accent-italic pr-2">
+                  intelligent
+                </span>
+              </span>
+              <span className="line-mask">
+                <span style={{ animationDelay: '0.25s' }}>things for</span>
+              </span>
+              <span className="line-mask">
+                <span style={{ animationDelay: '0.35s' }}>the real world.</span>
+              </span>
+            </h1>
+          </div>
 
-        <div className="mt-10 sm:mt-14 grid lg:grid-cols-12 gap-8 lg:gap-12 items-end">
-          <p
-            className="lede lg:col-span-5 max-w-xl"
-            style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.5s both' }}
-          >
-            AI student at NUST. I build deep learning systems for{' '}
-            <span className="mark">engines, speech and vision</span> — and the software
-            that delivers them.
-          </p>
+          {/* Beside it, not beneath it */}
+          <div className="lg:col-span-5 lg:pb-3">
+            <p
+              className="lede max-w-md"
+              style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.5s both' }}
+            >
+              AI student at NUST. I build deep learning systems for{' '}
+              <span className="mark">engines, speech and vision</span> — and the software
+              that delivers them.
+            </p>
 
-          <div
-            className="lg:col-span-4 flex flex-wrap gap-3"
-            style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.6s both' }}
-          >
-            <button onClick={() => go('projects')} className="btn-primary">
-              View my work
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </button>
-            <button onClick={() => go('contact')} className="btn-outline">
-              Let's connect
-            </button>
+            <p
+              className="mt-6 flex items-center gap-2.5 label text-[10px]"
+              style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.55s both' }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              Currently AI/ML intern at NESCOM
+            </p>
+
+            <div
+              className="mt-8 flex flex-wrap gap-3"
+              style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.6s both' }}
+            >
+              <button onClick={() => go('projects')} className="btn-primary">
+                View my work
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </button>
+              <button onClick={() => go('contact')} className="btn-outline">
+                Let's connect
+              </button>
+            </div>
           </div>
         </div>
       </div>
