@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   fetchProjects, fetchCertificates, fetchHackathons, fetchKaggle, fetchTestimonials,
+  fetchExperience, fetchResearch,
 } from '../api/services';
 
 /**
@@ -84,11 +85,31 @@ const VOICE_KEY = 'portfolio_guide_voice';
 const AUTO_COLLAPSE_MS = 9000;
 const TYPE_MS = 18;
 
-interface Titled { title?: string; name?: string; issuer?: string }
+interface Entry {
+  title?: string;
+  name?: string;
+  issuer?: string;
+  techStack?: string[];
+  featured?: boolean;
+  role?: string;
+  company?: string;
+  type?: string;
+  order?: number;
+}
 
-/** "Healix – Hospital Management System" → "Healix" */
+interface LiveData {
+  projects: Entry[];
+  certificates: Entry[];
+  hackathons: Entry[];
+  kaggle: Entry[];
+  testimonials: Entry[];
+  experience: Entry[];
+  research: Entry[];
+}
+
+/** "Healix – Hospital Management System" → "Healix"; "Jolly_Phonics" → "Jolly Phonics" */
 const shortTitle = (raw: string) =>
-  raw.split(/[–—:(-]/)[0].trim() || raw.trim();
+  (raw.split(/[–—:(-]/)[0].trim() || raw.trim()).replace(/_/g, ' ');
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
@@ -100,19 +121,50 @@ const listOf = (values: string[], limit = 3) => {
   return `${head.slice(0, -1).join(', ')} and ${head[head.length - 1]}`;
 };
 
-/** Rewrites the collection lines from live data; anything that fails keeps its written line. */
-const withLiveCounts = (
-  data: { projects: Titled[]; certificates: Titled[]; hackathons: Titled[]; kaggle: Titled[]; testimonials: Titled[] }
-): Record<string, string> => {
+/**
+ * Rewrites the lines from live data, so the guide keeps describing the site as
+ * it actually is — new featured project, new role, new research — without an
+ * edit here. Anything that fails to load keeps its written line.
+ */
+const withLiveCounts = (data: LiveData): Record<string, string> => {
   const out: Record<string, string> = {};
 
   if (data.projects.length > 0) {
-    const names = listOf(data.projects.map(p => shortTitle(p.title ?? '')));
-    const rest = data.projects.length - Math.min(3, data.projects.length);
+    // Speak about what the section actually leads with.
+    const featured = data.projects.filter(p => p.featured);
+    const shown = featured.length > 0 ? featured : data.projects;
+    const names = listOf(shown.map(p => shortTitle(p.title ?? '')));
+    const stack = listOf(
+      shown.flatMap(p => p.techStack ?? []).filter(t => t.length < 14),
+      2
+    );
+
     out.projects =
-      `She has ${plural(data.projects.length, 'project', 'projects')} here — ${names}` +
-      (rest > 0 ? `, and ${rest} more.` : '.') +
-      '';
+      (featured.length > 0
+        ? `Featured work: ${names}`
+        : `Her work: ${names}`) +
+      (data.projects.length > shown.length
+        ? `, out of ${plural(data.projects.length, 'project', 'projects')} in total.`
+        : '.') +
+      (stack ? ` Mostly ${stack}.` : '');
+  }
+
+  const work = data.experience
+    .filter(e => e.type === 'work')
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+  if (work.length > 0) {
+    // The timeline renders reversed, so the lowest order is the most recent.
+    const [current, ...rest] = work;
+    out.experience =
+      `Most recently ${current.role} at ${current.company}.` +
+      (rest.length > 0 ? ` Before that: ${listOf(rest.map(r => r.company ?? ''))}.` : '');
+  }
+
+  if (data.research.length > 0) {
+    out.research =
+      `Independent research, separate from the internships: ` +
+      `${listOf(data.research.map(r => shortTitle(r.title ?? '')))}.`;
   }
 
   if (data.certificates.length > 0) {
@@ -173,9 +225,13 @@ export const AiGuide = () => {
       fetchHackathons().catch(() => []),
       fetchKaggle().catch(() => []),
       fetchTestimonials().catch(() => []),
-    ]).then(([projects, certificates, hackathons, kaggle, testimonials]) => {
+      fetchExperience().catch(() => []),
+      fetchResearch().catch(() => []),
+    ]).then(([projects, certificates, hackathons, kaggle, testimonials, experience, research]) => {
       if (cancelled) return;
-      setLive(withLiveCounts({ projects, certificates, hackathons, kaggle, testimonials }));
+      setLive(withLiveCounts({
+        projects, certificates, hackathons, kaggle, testimonials, experience, research,
+      }));
     });
     return () => { cancelled = true; };
   }, []);
