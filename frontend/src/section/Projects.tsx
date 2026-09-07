@@ -16,7 +16,8 @@ interface Project {
   featured: boolean;
 }
 
-const FILTERS = ['All', 'Featured', 'ML', 'Python', 'MERN', 'Next.js'];
+const FILTERS = ['Featured', 'All', 'Python', 'TypeScript', 'JavaScript'];
+const PREVIEW_COUNT = 5;
 
 /** Stands in for a screenshot: a quiet plotted field keyed to the project index. */
 const CoverFallback = ({ index, tech }: { index: number; tech: string[] }) => (
@@ -144,9 +145,9 @@ const Case = ({ project, index }: { project: Project; index: number }) => {
 
 export const Projects = () => {
   const { data: projects, loading, error } = useApi<Project[]>(fetchProjects);
-  const [filter, setFilter] = useState('All');
-  const [visibleCount, setVisibleCount] = useState(4);
-  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [projects, visibleCount, filter]);
+  const [filter, setFilter] = useState('Featured');
+  const [expanded, setExpanded] = useState(false);
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [projects, expanded, filter]);
 
   const all = projects ?? [];
   const filtered = all.filter(p => {
@@ -154,7 +155,8 @@ export const Projects = () => {
     if (filter === 'Featured') return p.featured;
     return p.techStack?.some(t => t.toLowerCase().includes(filter.toLowerCase()));
   });
-  const shown = filtered.slice(0, visibleCount);
+  // Featured leads; the rest of the repos sit behind one click.
+  const shown = expanded ? filtered : filtered.slice(0, PREVIEW_COUNT);
 
   return (
     <section id="projects" className="section border-t border-line">
@@ -186,7 +188,7 @@ export const Projects = () => {
             return (
               <button
                 key={f}
-                onClick={() => { setFilter(f); setVisibleCount(4); }}
+                onClick={() => { setFilter(f); setExpanded(false); }}
                 aria-pressed={filter === f}
                 className={`text-sm font-medium transition-colors duration-300 ${
                   filter === f ? 'text-accent' : 'text-muted hover:text-text'
@@ -217,15 +219,12 @@ export const Projects = () => {
           <Case key={project._id} project={project} index={i} />
         ))}
 
-        {filtered.length > 4 && (
+        {filtered.length > PREVIEW_COUNT && (
           <div className="pt-10 flex justify-center reveal">
-            <button
-              onClick={() => setVisibleCount(v => (v >= filtered.length ? 4 : filtered.length))}
-              className="btn-outline"
-            >
-              {visibleCount >= filtered.length
+            <button onClick={() => setExpanded(e => !e)} className="btn-outline">
+              {expanded
                 ? 'Show less'
-                : `Show ${filtered.length - visibleCount} more`}
+                : `Show all ${filtered.length} projects`}
             </button>
           </div>
         )}

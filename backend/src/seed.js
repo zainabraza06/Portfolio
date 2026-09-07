@@ -2,7 +2,6 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import User from './models/User.js';
-import Project from './models/Project.js';
 import Experience from './models/Experience.js';
 import Certificate from './models/Certificate.js';
 import Research from './models/Research.js';
@@ -20,56 +19,12 @@ const seed = async () => {
   }
 
   // Clear existing data to avoid duplicates on re-run
-  await Project.deleteMany({});
   await Experience.deleteMany({});
   await Certificate.deleteMany({});
 
   // ── Projects ───────────────────────────────────────────
-  await Project.insertMany([
-    {
-      title: 'Healix – Hospital Management System',
-      description: 'Full-stack MERN application for remote patient-doctor consultations with real-time chat, appointment scheduling, medical records management, and secure payment processing.',
-      techStack: ['MERN Stack', 'TypeScript', 'Tailwind CSS'],
-      featured: true,
-      order: 1,
-    },
-    {
-      title: 'EpiVirus – Pandemic Simulation Platform',
-      description: 'Network-based disease spread simulator built with Python and React to model outbreaks and test intervention strategies. Includes demographic modeling and visualization modules.',
-      techStack: ['FastAPI', 'React', 'Python'],
-      featured: true,
-      order: 2,
-    },
-    {
-      title: 'Gesture Web',
-      description: 'Interactive web application using webcam gesture recognition via MediaPipe to control website UI elements with 8 gestures.',
-      techStack: ['React', 'MERN', 'MediaPipe'],
-      featured: true,
-      order: 3,
-    },
-    {
-      title: 'NUST Hostel Management System (NHMS)',
-      description: 'Digitized hostel operations with role-driven dashboards for admins, managers, staff, and hostelites. Features task automation, resource requests, and optimized workflows.',
-      techStack: ['MERN Stack', 'TypeScript'],
-      featured: true,
-      order: 4,
-    },
-    {
-      title: 'Early Care Monitoring System (Ongoing)',
-      description: 'AI-based human activity and fall detection system. Uses Mobiact, UHR, and gait recognition datasets. Classifies activities and detects falls using a meta-classifier.',
-      techStack: ['React Native', 'FastAPI', 'Python', 'ML'],
-      featured: true,
-      order: 5,
-    },
-    {
-      title: 'AI Fashion Stylist (Ongoing)',
-      description: 'Intelligent fashion recommendation system. Users input clothing preferences via text, scrapes top Pakistani fashion brands and suggests best matches.',
-      techStack: ['MERN Stack', 'TypeScript'],
-      featured: true,
-      order: 6,
-    },
-  ]);
-  console.log('📁  Projects seeded');
+  // Projects come from the GitHub sync (POST /api/projects/sync), not from
+  // this file. Seeding them here would duplicate the synced repos.
 
   // ── Experience & Education ─────────────────────────────
   await Experience.insertMany([
