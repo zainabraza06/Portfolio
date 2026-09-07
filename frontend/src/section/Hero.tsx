@@ -131,7 +131,7 @@ export const Hero = () => {
   const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section id="hero" className="relative min-h-[100svh] flex flex-col justify-end overflow-hidden pt-32">
+    <section id="hero" className="relative min-h-[100svh] flex flex-col justify-end overflow-hidden pt-28">
       {/* Grid + field */}
       <div
         className="absolute inset-0 opacity-[0.035]"

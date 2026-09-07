@@ -123,10 +123,16 @@
 @layer components {
   .display-hero {
     font-family: var(--font-display);
-    font-size: clamp(2.9rem, 9.5vw, 8.5rem);
+    /* min() against vh keeps four lines inside a short viewport */
+    font-size: clamp(2.6rem, min(8.2vw, 12.5vh), 7rem);
     font-weight: 600;
-    line-height: 0.93;
+    line-height: 0.94;
     letter-spacing: -0.045em;
+  }
+
+  /* Section headings are width-bound only — they are never four lines tall */
+  .display-hero--flow {
+    font-size: clamp(2.6rem, 8vw, 7rem);
   }
 
   .display-xl {

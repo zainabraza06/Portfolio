@@ -41,7 +41,7 @@ export const Contact = () => {
           <span className="label">Contact</span>
         </div>
 
-        <h2 className="display-hero max-w-[13ch] reveal">
+        <h2 className="display-hero display-hero--flow max-w-[13ch] reveal">
           Have an idea?
           <br />
           Let's build something{' '}

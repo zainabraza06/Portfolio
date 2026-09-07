@@ -145,7 +145,8 @@ const prefersReducedMotion = () =>
 
 export const AiGuide = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [open, setOpen] = useState(true);
+  // Stays shut over the hero; introduces itself once the reader scrolls.
+  const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState('');
   const [voice, setVoice] = useState(() => {
     try {
@@ -202,7 +203,7 @@ export const AiGuide = () => {
 
   // ── Reopen on a new section unless the reader closed it ──────────────
   useEffect(() => {
-    if (!silenced.current) setOpen(true);
+    if (!silenced.current && activeIndex > 0) setOpen(true);
   }, [activeIndex]);
 
   // ── Type the line out ────────────────────────────────────────────────

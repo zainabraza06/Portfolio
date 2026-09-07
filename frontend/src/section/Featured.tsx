@@ -20,7 +20,7 @@ export const Featured = () => {
 
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
           <div className="lg:col-span-7">
-            <h2 className="display-hero text-paper-ink max-w-[9ch]">
+            <h2 className="display-hero display-hero--flow text-paper-ink max-w-[9ch]">
               GAUGE
               <span className="accent-italic">-Net</span>
             </h2>
