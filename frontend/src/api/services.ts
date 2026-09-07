@@ -51,3 +51,9 @@ export const fetchKaggle = () => api.get('/kaggle').then(r => r.data);
 export const createKaggle = (data: FormData | object) => api.post('/kaggle', data).then(r => r.data);
 export const updateKaggle = (id: string, data: FormData | object) => api.put(`/kaggle/${id}`, data).then(r => r.data);
 export const deleteKaggle = (id: string) => api.delete(`/kaggle/${id}`).then(r => r.data);
+
+// ── Research ──────────────────────────────────────────────────────
+export const fetchResearch = () => api.get('/research').then(r => r.data);
+export const createResearch = (data: object) => api.post('/research', data).then(r => r.data);
+export const updateResearch = (id: string, data: object) => api.put(`/research/${id}`, data).then(r => r.data);
+export const deleteResearch = (id: string) => api.delete(`/research/${id}`).then(r => r.data);

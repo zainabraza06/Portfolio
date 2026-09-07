@@ -11,6 +11,7 @@ import contactRoutes     from './routes/contact.js';
 import certificateRoutes from './routes/certificates.js';
 import hackathonRoutes   from './routes/hackathons.js';
 import kaggleRoutes      from './routes/kaggle.js';
+import researchRoutes   from './routes/research.js';
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use('/api/contact',      contactRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/hackathons',   hackathonRoutes);
 app.use('/api/kaggle',       kaggleRoutes);
+app.use('/api/research',     researchRoutes);
 
 // ── Health check ────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date() }));
