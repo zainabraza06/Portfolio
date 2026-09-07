@@ -27,7 +27,7 @@ export const Testimonials = () => {
     <section id="testimonials" className="section border-t border-line">
       <div className="shell">
         <div className="section-head reveal">
-          <span className="label label-accent">07</span>
+          <span className="label label-accent">08</span>
           <span className="label">In their words</span>
         </div>
 

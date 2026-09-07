@@ -84,7 +84,7 @@ export const Experience = () => {
     <section id="experience" className="section border-t border-line">
       <div className="shell">
         <div className="section-head reveal">
-          <span className="label label-accent">05</span>
+          <span className="label label-accent">06</span>
           <span className="label">Experience &amp; education</span>
         </div>
 

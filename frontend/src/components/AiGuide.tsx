@@ -59,6 +59,11 @@ const LINES: Line[] = [
     text: 'Her flagship: GAUGE-Net, a turbofan life-prediction model that runs unmodified on all four NASA C-MAPSS subsets.',
   },
   {
+    id: 'research',
+    label: 'Research',
+    text: 'Her other research: multimodal learning, activity recognition and prediction on real sensor data.',
+  },
+  {
     id: 'experience',
     label: 'Experience',
     text: 'NESCOM: turbofan life and fuel-consumption prediction. Murrabi: a Whisper and MediaPipe multimodal classifier.',

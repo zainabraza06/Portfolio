@@ -39,7 +39,7 @@ export const Contact = () => {
     <section id="contact" className="section border-t border-line">
       <div className="shell">
         <div className="section-head reveal">
-          <span className="label label-accent">08</span>
+          <span className="label label-accent">09</span>
           <span className="label">Contact</span>
         </div>
 

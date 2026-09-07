@@ -15,6 +15,7 @@ import { Kaggle } from './section/Kaggle';
 import { Testimonials } from './section/Testimonials';
 import { Contact } from './section/Contact';
 import { Featured } from './section/Featured';
+import { Research } from './section/Research';
 import { AiGuide } from './components/AiGuide';
 
 // Admin Pages
@@ -39,6 +40,7 @@ function Portfolio() {
         <Skills />
         <Projects />
         <Featured />
+        <Research />
         <Experience />
         <Certificates />
         <Hackathons />

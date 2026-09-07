@@ -24,7 +24,7 @@ export const Certificates = () => {
     <section id="certificates" className="section border-t border-line pb-0">
       <div className="shell">
         <div className="section-head reveal">
-          <span className="label label-accent">06</span>
+          <span className="label label-accent">07</span>
           <span className="label">Archive</span>
         </div>
 
