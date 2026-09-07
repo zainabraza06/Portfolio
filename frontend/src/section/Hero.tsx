@@ -1,131 +1,223 @@
 import { useEffect, useRef } from 'react';
-import { useTypewriter } from '../hooks/useTypewriter';
+import { useMagnetic } from '../hooks/useMagnetic';
 
-const roles = [
-  'BS Artificial Intelligence @ NUST',
-  'Gen AI & LLM Engineer',
-  'Deep Learning Researcher',
-  'MERN + Flutter Developer',
+/**
+ * A drifting field of data points that thickens around the cursor. Deliberately
+ * cheap: ~70 points, one rAF loop, paused when the hero leaves the viewport.
+ */
+const PointField = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const points: { x: number; y: number; vx: number; vy: number; r: number }[] = [];
+    const pointer = { x: -999, y: -999 };
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    let running = true;
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const target = width < 700 ? 34 : 72;
+      points.length = 0;
+      for (let i = 0; i < target; i += 1) {
+        points.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.14,
+          vy: (Math.random() - 0.5) * 0.14,
+          r: Math.random() * 1.1 + 0.5,
+        });
+      }
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      for (const p of points) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        const d = Math.hypot(p.x - pointer.x, p.y - pointer.y);
+        const near = Math.max(0, 1 - d / 220);
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r + near * 1.3, 0, Math.PI * 2);
+        ctx.fillStyle = near > 0.05
+          ? `rgba(212, 244, 78, ${0.16 + near * 0.6})`
+          : 'rgba(190, 190, 200, 0.16)';
+        ctx.fill();
+
+        if (near > 0.25) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(pointer.x, pointer.y);
+          ctx.strokeStyle = `rgba(212, 244, 78, ${(near - 0.25) * 0.28})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+
+      frame = requestAnimationFrame(draw);
+    };
+
+    const onPointer = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - rect.left;
+      pointer.y = e.clientY - rect.top;
+    };
+
+    const onLeave = () => {
+      pointer.x = -999;
+      pointer.y = -999;
+    };
+
+    resize();
+    frame = requestAnimationFrame(draw);
+
+    // Stop the loop entirely once the hero is scrolled past.
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        frame = requestAnimationFrame(draw);
+      } else if (!entry.isIntersecting && running) {
+        running = false;
+        cancelAnimationFrame(frame);
+      }
+    }, { threshold: 0 });
+    observer.observe(canvas);
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', onPointer, { passive: true });
+    window.addEventListener('pointerleave', onLeave);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('pointermove', onPointer);
+      window.removeEventListener('pointerleave', onLeave);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />;
+};
+
+const META = [
+  { k: 'Studying', v: 'BS Artificial Intelligence, NUST SEECS' },
+  { k: 'Focus', v: 'Generative AI · Deep Learning' },
+  { k: 'Based in', v: 'Pakistan' },
+  { k: 'Status', v: 'Open to internships' },
 ];
 
 export const Hero = () => {
-  const typed = useTypewriter(roles, 75, 2200);
-  const heroRef = useRef<HTMLElement>(null);
+  const primaryRef = useMagnetic<HTMLButtonElement>();
+  const secondaryRef = useMagnetic<HTMLButtonElement>();
 
-  // Parallax orbs on mouse move
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const handleMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const dx = (clientX - cx) / cx;
-      const dy = (clientY - cy) / cy;
-      hero.querySelectorAll<HTMLElement>('.parallax-orb').forEach((orb, i) => {
-        const factor = (i + 1) * 12;
-        orb.style.transform = `translate(${dx * factor}px, ${dy * factor}px)`;
-      });
-    };
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
-  }, []);
+  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section
-      id="hero"
-      ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
-      {/* Background gradient mesh */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#080d12] via-[#0a1520] to-[#080d12]" />
-      <div className="absolute inset-0"
+    <section id="hero" className="relative min-h-[100svh] flex flex-col justify-end overflow-hidden pt-32">
+      {/* Grid + field */}
+      <div
+        className="absolute inset-0 opacity-[0.035]"
         style={{
-          backgroundImage: `radial-gradient(ellipse 80% 50% at 50% -10%, rgba(32,178,166,0.15), transparent)`,
+          backgroundImage:
+            'linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px)',
+          backgroundSize: '88px 88px',
+          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 40%, #000 40%, transparent 100%)',
         }}
       />
+      <PointField />
 
-      {/* Parallax orbs */}
-      <div
-        className="parallax-orb orb w-[320px] h-[320px] sm:w-[500px] sm:h-[500px] top-[-120px] sm:top-[-100px] left-[-120px] sm:left-[-100px] transition-transform duration-300 ease-out"
-        style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.18) 0%, transparent 70%)' }}
-      />
-      <div
-        className="parallax-orb orb w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] bottom-[-120px] sm:bottom-[-80px] right-[-100px] sm:right-[-60px] transition-transform duration-300 ease-out"
-        style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%)' }}
-      />
-      <div
-        className="parallax-orb orb w-[220px] h-[220px] sm:w-[300px] sm:h-[300px] top-[30%] right-[5%] animate-float2 transition-transform duration-500 ease-out"
-        style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.1) 0%, transparent 70%)' }}
-      />
-
-      {/* Grid overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(32,178,166,1) 1px, transparent 1px), linear-gradient(90deg, rgba(32,178,166,1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-24 text-center">
-        {/* Main heading */}
-        <h1
-          className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] mb-6"
-          style={{ animation: 'fadeInUp 0.7s 0.1s ease both' }}
-        >
-          Hi, I'm{' '}
-          <span className="gradient-text">Zainab</span>
-          <br />
-          <span className="text-[#e8edf2]">Raza Malik</span>
-        </h1>
-
-        {/* Typewriter */}
-        <div
-          className="h-12 flex items-center justify-center mb-8"
-          style={{ animation: 'fadeInUp 0.7s 0.2s ease both' }}
-        >
-          <p className="text-xl sm:text-2xl text-[#20b2a6] font-mono font-medium">
-            {typed}
-            <span className="cursor-blink" />
-          </p>
-        </div>
-
-        {/* Description */}
+      <div className="shell relative z-10 pb-10">
         <p
-          className="max-w-2xl mx-auto text-[#6b7fa3] text-lg leading-relaxed mb-10"
-          style={{ animation: 'fadeInUp 0.7s 0.3s ease both' }}
+          className="label label-accent mb-8 sm:mb-10"
+          style={{ animation: 'fadeIn 0.8s var(--ease-out-expo) both' }}
         >
-          I turn <span className="text-[#e8edf2] font-medium">machine learning research</span> into software people can actually use — LLMs and agentic systems, computer vision and speech — shipped as full-stack MERN and Flutter apps.
+          AI Student · Builder · Creative Technologist
         </p>
 
-        {/* CTA buttons */}
-        <div
-          className="flex flex-wrap items-center justify-center gap-4"
-          style={{ animation: 'fadeInUp 0.7s 0.4s ease both' }}
-        >
-          <button
-            onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-            className="btn-primary w-full sm:w-auto justify-center"
-          >
-            <span>View My Work</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-          <button
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="btn-outline w-full sm:w-auto justify-center"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
-            </svg>
-            Contact Me
-          </button>
-        </div>
+        <h1 className="display-hero max-w-[16ch]">
+          <span className="line-mask">
+            <span style={{ animationDelay: '0.05s' }}>Building</span>
+          </span>
+          <span className="line-mask">
+            <span style={{ animationDelay: '0.15s' }} className="text-accent accent-italic pr-2">
+              intelligent
+            </span>
+          </span>
+          <span className="line-mask">
+            <span style={{ animationDelay: '0.25s' }}>things for</span>
+          </span>
+          <span className="line-mask">
+            <span style={{ animationDelay: '0.35s' }}>the real world.</span>
+          </span>
+        </h1>
 
+        <div className="mt-10 sm:mt-14 grid lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+          <p
+            className="lede lg:col-span-5 max-w-xl"
+            style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.5s both' }}
+          >
+            I'm Zainab — an artificial intelligence student at NUST who trains models
+            for <span className="mark">engines, speech and vision</span>, then builds the
+            software that puts them in someone's hands.
+          </p>
+
+          <div
+            className="lg:col-span-4 flex flex-wrap gap-3"
+            style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.6s both' }}
+          >
+            <button ref={primaryRef} onClick={() => go('projects')} className="btn-primary">
+              View my work
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </button>
+            <button ref={secondaryRef} onClick={() => go('contact')} className="btn-outline">
+              Let's connect
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Metadata rail */}
+      <div
+        className="relative z-10 border-t border-line"
+        style={{ animation: 'fadeIn 1s var(--ease-out-expo) 0.8s both' }}
+      >
+        <dl className="shell grid grid-cols-2 lg:grid-cols-4 divide-line">
+          {META.map((m, i) => (
+            <div
+              key={m.k}
+              className={`py-5 lg:py-6 lg:px-6 ${i > 0 ? 'lg:border-l lg:border-line' : ''} ${
+                i % 2 === 1 ? 'pl-5 border-l border-line lg:pl-6' : ''
+              } ${i < 2 ? 'border-b border-line lg:border-b-0' : ''}`}
+            >
+              <dt className="label text-[10px] mb-1.5">{m.k}</dt>
+              <dd className="text-[13px] sm:text-sm text-text leading-snug">{m.v}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );
