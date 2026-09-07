@@ -54,6 +54,11 @@ const LINES: Line[] = [
     text: 'The coursework behind the projects.',
   },
   {
+    id: 'featured',
+    label: 'Featured',
+    text: 'This one is her flagship: GAUGE-Net, an architecture that predicts turbofan engine life across all four NASA C-MAPSS subsets without being rebuilt for each.',
+  },
+  {
     id: 'experience',
     label: 'Experience',
     text: 'At NESCOM she designed GAUGE-Net for turbofan engine life prediction and now works on fuel-consumption models. At Murrabi she built a Whisper and MediaPipe multimodal classifier.',
@@ -266,15 +271,13 @@ export const AiGuide = () => {
     <div className="fixed bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end gap-3 pointer-events-none">
       {open && (
         <div
-          className="glass-card pointer-events-auto w-[min(20rem,calc(100vw-2.5rem))] p-4"
+          className="panel pointer-events-auto w-[min(21rem,calc(100vw-2.5rem))] p-4"
           style={{ animation: 'fadeInUp 0.3s ease both' }}
         >
           <div className="flex items-center gap-2 mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#20b2a6]">
-              AI Guide
-            </span>
-            <span className="text-[10px] text-[#6b7fa3] truncate">· {line.label}</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span className="label text-[10px] label-accent">AI Guide</span>
+            <span className="label text-[10px] truncate">· {line.label}</span>
 
             <div className="ml-auto flex items-center gap-1">
               <button
@@ -283,7 +286,7 @@ export const AiGuide = () => {
                 aria-label={voice ? 'Turn voice off' : 'Read this aloud'}
                 title={voice ? 'Voice on' : 'Read aloud'}
                 className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
-                  voice ? 'text-[#20b2a6] bg-[#20b2a6]/15' : 'text-[#6b7fa3] hover:text-[#e8edf2]'
+                  voice ? 'text-accent bg-accent/12' : 'text-faint hover:text-text'
                 }`}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -301,7 +304,7 @@ export const AiGuide = () => {
               <button
                 onClick={close}
                 aria-label="Hide the guide"
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-[#6b7fa3] hover:text-[#e8edf2] transition-colors"
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-faint hover:text-text transition-colors"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6L6 18M6 6l12 12" />
@@ -310,7 +313,7 @@ export const AiGuide = () => {
             </div>
           </div>
 
-          <p className="text-[#6b7fa3] text-[13px] leading-relaxed" aria-live="polite">
+          <p className="text-muted text-[13.5px] leading-relaxed" aria-live="polite">
             {typed}
             {typed.length < line.text.length && <span className="cursor-blink" />}
           </p>
@@ -321,21 +324,14 @@ export const AiGuide = () => {
         onClick={openFromAvatar}
         aria-label={open ? 'Hide the AI guide' : 'Ask the AI guide about this section'}
         aria-expanded={open}
-        className="relative pointer-events-auto w-14 h-14 rounded-full flex items-center justify-center transition-transform duration-300 hover:-translate-y-1 animate-float"
-        style={{
-          background: 'linear-gradient(135deg, rgba(32,178,166,0.9), rgba(167,139,250,0.85))',
-          boxShadow: '0 8px 30px rgba(32,178,166,0.35)',
-        }}
+        className="relative pointer-events-auto w-12 h-12 rounded-full bg-accent text-accent-ink flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-105"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#08131a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="4" y="8" width="16" height="12" rx="4" />
-          <path d="M12 8V4" />
-          <circle cx="12" cy="3" r="1.4" fill="#08131a" />
-          <circle cx="9.5" cy="14" r="1.2" fill="#08131a" stroke="none" />
-          <circle cx="14.5" cy="14" r="1.2" fill="#08131a" stroke="none" />
+        {/* A spark, not a robot */}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2c.5 4.6 2.4 6.5 7 7-4.6.5-6.5 2.4-7 7-.5-4.6-2.4-6.5-7-7 4.6-.5 6.5-2.4 7-7z" />
         </svg>
         {!open && (
-          <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-[#22c55e] border-2 border-[#080d12]" />
+          <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-accent border-2 border-ink animate-pulse" />
         )}
       </button>
     </div>

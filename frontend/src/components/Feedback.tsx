@@ -37,8 +37,8 @@ export const useConfirm = (): ConfirmFn => {
 const TOAST_MS = 4000;
 
 const toneStyles: Record<Tone, { accent: string; icon: string }> = {
-  success: { accent: '#20b2a6', icon: '✓' },
-  error: { accent: '#ef4444', icon: '!' },
+  success: { accent: '#D4F44E', icon: '✓' },
+  error: { accent: '#E8756B', icon: '!' },
 };
 
 export function FeedbackProvider({ children }: { children: React.ReactNode }) {
@@ -105,7 +105,7 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
                   >
                     {icon}
                   </span>
-                  <span className="text-[#e8edf2] text-sm leading-snug flex-1">{t.message}</span>
+                  <span className="text-text text-sm leading-snug flex-1">{t.message}</span>
                 </button>
               );
             })}
@@ -126,9 +126,9 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
               onClick={e => e.stopPropagation()}
               style={{ animation: 'fadeInUp 0.25s ease both' }}
             >
-              <h3 className="text-[#e8edf2] font-bold text-lg">{pending.options.title}</h3>
+              <h3 className="text-text font-bold text-lg">{pending.options.title}</h3>
               {pending.options.message && (
-                <p className="text-[#6b7fa3] text-sm mt-2 leading-relaxed">{pending.options.message}</p>
+                <p className="text-muted text-sm mt-2 leading-relaxed">{pending.options.message}</p>
               )}
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <button
@@ -140,7 +140,7 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
                 <button
                   autoFocus
                   onClick={() => settle(true)}
-                  className="w-full sm:flex-1 py-2 text-sm font-medium rounded-full border border-[#ef4444]/50 text-[#ef4444] hover:bg-[#ef4444]/15 transition-colors"
+                  className="w-full sm:flex-1 py-2 text-sm font-medium rounded-full border border-bad/50 text-bad hover:bg-bad/15 transition-colors"
                 >
                   {pending.options.confirmLabel ?? 'Delete'}
                 </button>
