@@ -47,7 +47,7 @@ function CountUp({ target, suffix = '', decimals = 0 }: { target: number; suffix
 
 const NOTES = [
   { k: 'Currently building', v: 'Agentic AI systems, RAG pipelines and LLM-powered tools.' },
-  { k: 'Working with', v: 'Python, PyTorch and LangGraph · MERN, Next.js and Flutter.' },
+  { k: 'Working with', v: 'Python, PyTorch, FastAPI and LangGraph · MERN, Next.js and Flutter.' },
   { k: 'Focused on', v: 'Generative AI, applied ML, and shipping models as products.' },
 ];
 
@@ -114,8 +114,8 @@ export const About = () => {
               <p className="text-muted">
                 My projects run from multi-agent research assistants and retrieval-grounded
                 tools to computer vision, speech and time-series models. I ship them as
-                full-stack products — MERN and Next.js on the web, Flutter on mobile — so the
-                model reaches the person who needs it.
+                full-stack products — MERN and Next.js on the web, FastAPI for the Python
+                services, Flutter on mobile — so the model reaches the person who needs it.
               </p>
             </div>
 

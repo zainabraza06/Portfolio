@@ -33,6 +33,7 @@ export const skillGroups: SkillGroup[] = [
       { name: 'RAG Pipelines', note: 'Retrieval over private corpora — chunking, embeddings, grounding.' },
       { name: 'Agentic AI', note: 'Tool-using loops that plan, act and verify.' },
       { name: 'Generative AI', note: 'Text and multimodal generation.' },
+      { name: 'LangGraph', note: 'Multi-agent pipelines — planning, retrieval, synthesis.' },
       { name: 'Transformers', note: 'Whisper encoders in research; attention internals by hand.' },
       { name: 'Prompt Engineering', note: 'Structured prompting and output contracts.' },
     ],
@@ -72,6 +73,20 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
+    category: 'Backend & APIs',
+    kicker: 'Roughly half Python, half Node',
+    skills: [
+      { name: 'FastAPI', note: 'Python services for ML-backed and document tooling.' },
+      { name: 'Node.js', note: 'APIs, authentication, file handling.' },
+      { name: 'Express', note: 'The REST layer behind this site.' },
+      { name: 'REST API Design', note: 'Resource modelling, versioning, error contracts.' },
+      { name: 'JWT Auth', note: 'Token auth and route protection.' },
+      { name: 'WebSockets', note: 'Real-time delivery with Socket.io.' },
+      { name: 'MongoDB', note: 'Schema design with Mongoose.' },
+      { name: 'SQLite', note: 'Embedded storage and full-text search.' },
+    ],
+  },
+  {
     category: 'Web & Mobile',
     kicker: 'Getting it in front of people',
     skills: [
@@ -79,9 +94,6 @@ export const skillGroups: SkillGroup[] = [
       { name: 'Next.js', note: 'Server rendering and routing for production apps.' },
       { name: 'Flutter', note: 'Cross-platform mobile from a single Dart codebase.' },
       { name: 'React', note: 'Component architecture, hooks, interaction.' },
-      { name: 'Node.js', note: 'APIs, authentication, file handling.' },
-      { name: 'Express', note: 'The REST layer behind this site.' },
-      { name: 'MongoDB', note: 'Schema design with Mongoose.' },
       { name: 'Tailwind CSS', note: 'Design systems in markup.' },
     ],
   },

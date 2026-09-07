@@ -27,12 +27,12 @@ const LINES: Line[] = [
   {
     id: 'about',
     label: 'About',
-    text: 'Her focus: generative AI, RAG and agentic systems — and the full-stack development that ships them, on MERN, Next.js and Flutter.',
+    text: 'Her focus: generative AI, RAG and agentic systems — and the full-stack development that ships them, on MERN, FastAPI and Flutter.',
   },
   {
     id: 'skills',
     label: 'Skills',
-    text: 'PyTorch and TensorFlow for the models; MERN, Next.js and Flutter for shipping them.',
+    text: 'PyTorch and TensorFlow for the models; MERN, FastAPI and Flutter for shipping them.',
   },
   {
     id: 'projects',
