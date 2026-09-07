@@ -38,7 +38,7 @@ function Modal({ title, onClose, onSave, children, loading }: {
   title: string; onClose: () => void; onSave: () => void; children: React.ReactNode; loading?: boolean;
 }) {
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-text/40 backdrop-blur-sm" onClick={onClose}>
       <div className="glass-card w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}
         style={{ animation: 'fadeInUp 0.3s ease both' }}>
         <div className="flex items-center justify-between mb-5">
@@ -667,7 +667,7 @@ function MessagesTab() {
                 </div>
               </div>
               {expanded === m._id && (
-                <div className="px-4 pb-4 border-t border-white/5 pt-3">
+                <div className="px-4 pb-4 border-t border-line pt-3">
                   <p className="text-muted text-sm leading-relaxed">{m.message as string}</p>
                   <a href={`mailto:${m.email as string}?subject=Re: ${m.subject as string}`}
                     className="btn-outline inline-flex mt-3 py-1.5 px-4 text-xs">Reply via Email</a>
@@ -755,7 +755,7 @@ export default function AdminDashboard() {
     <FeedbackProvider>
       <div className="min-h-screen bg-ink">
       {/* Top bar */}
-      <header className="glass border-b border-white/5 sticky top-0 z-40">
+      <header className="glass border-b border-line sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center text-accent-ink font-bold text-xs">ZR</div>

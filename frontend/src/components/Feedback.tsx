@@ -37,8 +37,8 @@ export const useConfirm = (): ConfirmFn => {
 const TOAST_MS = 4000;
 
 const toneStyles: Record<Tone, { accent: string; icon: string }> = {
-  success: { accent: '#9B8CFF', icon: '✓' },
-  error: { accent: '#E8756B', icon: '!' },
+  success: { accent: '#5B4BC4', icon: '✓' },
+  error: { accent: '#C2453C', icon: '!' },
 };
 
 export function FeedbackProvider({ children }: { children: React.ReactNode }) {
@@ -96,7 +96,7 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
                   onClick={() => dismiss(t.id)}
                   role="status"
                   aria-live="polite"
-                  className="pointer-events-auto glass-card w-full text-left p-3.5 flex items-start gap-3 hover:border-white/20 transition-colors"
+                  className="pointer-events-auto glass-card w-full text-left p-3.5 flex items-start gap-3 hover:border-line transition-colors"
                   style={{ animation: 'fadeInUp 0.25s ease both', borderLeft: `3px solid ${accent}` }}
                 >
                   <span
@@ -115,7 +115,7 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
 
         {pending && createPortal(
           <div
-            className="fixed inset-0 z-[210] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[210] flex items-center justify-center p-4 bg-text/40 backdrop-blur-sm"
             onClick={() => settle(false)}
           >
             <div

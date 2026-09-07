@@ -62,15 +62,15 @@ const PointField = () => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r + near * 1.3, 0, Math.PI * 2);
         ctx.fillStyle = near > 0.05
-          ? `rgba(155, 140, 255, ${0.18 + near * 0.62})`
-          : 'rgba(190, 190, 200, 0.16)';
+          ? `rgba(91, 75, 196, ${0.25 + near * 0.6})`
+          : 'rgba(90, 92, 105, 0.22)';
         ctx.fill();
 
         if (near > 0.25) {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(pointer.x, pointer.y);
-          ctx.strokeStyle = `rgba(155, 140, 255, ${(near - 0.25) * 0.3})`;
+          ctx.strokeStyle = `rgba(91, 75, 196, ${(near - 0.25) * 0.32})`;
           ctx.lineWidth = 0.6;
           ctx.stroke();
         }
