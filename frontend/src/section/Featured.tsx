@@ -14,7 +14,7 @@ export const Featured = () => {
       <div className="shell">
         <div className="flex items-baseline gap-4 pb-5 border-b border-paper-ink/15 mb-10 sm:mb-16 reveal">
           <span className="label text-paper-ink/70">04</span>
-          <span className="label">Featured research</span>
+          <span className="label">Best work to date</span>
           <span className="label ml-auto hidden sm:block">NESCOM · 2026</span>
         </div>
 

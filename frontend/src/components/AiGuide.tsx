@@ -61,7 +61,7 @@ const LINES: Line[] = [
   {
     id: 'research',
     label: 'Research',
-    text: 'Her other research: multimodal learning, activity recognition and prediction on real sensor data.',
+    text: 'Independent research, separate from her internship work: subject-independent activity and fall recognition.',
   },
   {
     id: 'experience',

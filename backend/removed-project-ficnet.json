@@ -1,0 +1,17 @@
+{
+  "_id": "6a989c03f773d5dc9982f9b5",
+  "title": "FICNet HAR",
+  "description": "Official code for \"Revisiting Subject-Independent Evaluation for Smartphone-Based Fall and Activity Recognition\". This repository quantifies the CV-to-LOSO generalization gap on the MobiAct dataset and introduces Feature-Invariance-Conditioned (FIC) pooling with SAM to improve cross-subject HAR performance.",
+  "techStack": [
+    "Python"
+  ],
+  "liveUrl": "",
+  "githubUrl": "https://github.com/zainabraza06/FICNet-HAR",
+  "githubId": "1329924277",
+  "imageUrl": "",
+  "featured": true,
+  "order": 1,
+  "createdAt": "2026-09-02T21:58:27.927Z",
+  "updatedAt": "2026-09-07T19:15:06.262Z",
+  "__v": 0
+}

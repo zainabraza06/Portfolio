@@ -133,16 +133,16 @@ export const Research = () => {
         <div className="section-head reveal">
           <span className="label label-accent">05</span>
           <span className="label">Research</span>
-          <span className="label ml-auto">{items.length} projects</span>
+          <span className="label ml-auto">{items.length} {items.length === 1 ? 'entry' : 'entries'}</span>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8 mb-8 sm:mb-12 reveal">
           <h2 className="display-xl lg:col-span-6 max-w-[13ch]">
-            Other <span className="accent-italic text-accent">work</span> in progress.
+            Independent <span className="accent-italic text-accent">research</span>.
           </h2>
           <p className="lede lg:col-span-6 self-end max-w-md">
-            Alongside GAUGE-Net: multimodal learning, activity recognition and
-            prediction on real sensor data.
+            Work taken on outside the internships. The engine and speech research
+            is detailed under Experience.
           </p>
         </div>
 
