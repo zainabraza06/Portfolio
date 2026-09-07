@@ -8,6 +8,8 @@ interface Project {
   title: string;
   description: string;
   techStack: string[];
+  problem?: string;
+  outcome?: string;
   liveUrl: string;
   githubUrl: string;
   imageUrl: string;
@@ -16,180 +18,217 @@ interface Project {
 
 const FILTERS = ['All', 'Featured', 'ML', 'Python', 'MERN', 'Next.js'];
 
+/** Stands in for a screenshot: a quiet plotted field keyed to the project index. */
+const CoverFallback = ({ index, tech }: { index: number; tech: string[] }) => (
+  <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] border border-line bg-ink-2">
+    <div
+      className="absolute inset-0 opacity-[0.5]"
+      style={{
+        backgroundImage: 'radial-gradient(var(--color-line) 1px, transparent 1px)',
+        backgroundSize: '22px 22px',
+      }}
+    />
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">
+      <polyline
+        points={Array.from({ length: 9 }, (_, i) => {
+          const x = (i / 8) * 400;
+          const y = 210 - Math.sin(i * 0.8 + index) * 46 - i * 9;
+          return `${x},${y}`;
+        }).join(' ')}
+        fill="none"
+        stroke="var(--color-accent)"
+        strokeWidth="1.5"
+        opacity="0.75"
+      />
+    </svg>
+    <span className="absolute top-5 left-5 label text-[10px]">{tech.slice(0, 3).join(' / ')}</span>
+    <span className="absolute bottom-4 right-6 font-[family-name:var(--font-display)] text-[5rem] leading-none text-line select-none">
+      {String(index + 1).padStart(2, '0')}
+    </span>
+  </div>
+);
+
+const Case = ({ project, index }: { project: Project; index: number }) => {
+  const flip = index % 2 === 1;
+
+  return (
+    <article
+      className={`group grid lg:grid-cols-12 gap-8 lg:gap-14 items-center py-12 sm:py-16 border-b border-line reveal reveal-d${
+        Math.min(index + 1, 6)
+      }`}
+    >
+      {/* Visual */}
+      <div className={`lg:col-span-7 ${flip ? 'lg:order-2' : ''}`}>
+        <a
+          href={project.liveUrl || project.githubUrl || undefined}
+          target={project.liveUrl || project.githubUrl ? '_blank' : undefined}
+          rel="noopener noreferrer"
+          className="block overflow-hidden rounded-[var(--radius-md)]"
+          tabIndex={project.liveUrl || project.githubUrl ? 0 : -1}
+          aria-label={project.liveUrl || project.githubUrl ? `Open ${project.title}` : undefined}
+        >
+          {project.imageUrl ? (
+            <div className="overflow-hidden rounded-[var(--radius-md)] border border-line bg-ink-2">
+              <img
+                src={project.imageUrl}
+                alt={project.title}
+                loading="lazy"
+                className="w-full aspect-[4/3] object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+              />
+            </div>
+          ) : (
+            <div className="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]">
+              <CoverFallback index={index} tech={project.techStack} />
+            </div>
+          )}
+        </a>
+      </div>
+
+      {/* Copy */}
+      <div className={`lg:col-span-5 ${flip ? 'lg:order-1' : ''}`}>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="label text-[10px] label-accent">{String(index + 1).padStart(2, '0')}</span>
+          <span className="h-px flex-1 bg-line transition-colors duration-500 group-hover:bg-accent/60" />
+          {project.featured && <span className="label text-[10px]">Featured</span>}
+        </div>
+
+        <h3 className="display-lg text-text transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1">
+          {project.title}
+        </h3>
+
+        <p className="mt-4 text-[15px] leading-relaxed text-muted">{project.description}</p>
+
+        {(project.problem || project.outcome) && (
+          <dl className="mt-6 space-y-3 border-t border-line pt-5">
+            {project.problem && (
+              <div>
+                <dt className="label text-[10px] mb-1">Problem</dt>
+                <dd className="text-sm text-muted leading-relaxed">{project.problem}</dd>
+              </div>
+            )}
+            {project.outcome && (
+              <div>
+                <dt className="label text-[10px] mb-1">Outcome</dt>
+                <dd className="text-sm text-text leading-relaxed">{project.outcome}</dd>
+              </div>
+            )}
+          </dl>
+        )}
+
+        {project.techStack?.length > 0 && (
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {project.techStack.map(t => (
+              <li key={t} className="tag">{t}</li>
+            ))}
+          </ul>
+        )}
+
+        {(project.liveUrl || project.githubUrl) && (
+          <div className="mt-7 flex flex-wrap items-center gap-6">
+            {project.liveUrl && (
+              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="link-underline text-sm font-medium">
+                Live demo ↗
+              </a>
+            )}
+            {project.githubUrl && (
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="link-underline text-sm font-medium">
+                Source ↗
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+};
+
 export const Projects = () => {
   const { data: projects, loading, error } = useApi<Project[]>(fetchProjects);
   const [filter, setFilter] = useState('All');
-  const [visibleCount, setVisibleCount] = useState(6);
-  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [projects, visibleCount]);
+  const [visibleCount, setVisibleCount] = useState(4);
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [projects, visibleCount, filter]);
 
-  const filtered = (projects ?? []).filter(p => {
+  const all = projects ?? [];
+  const filtered = all.filter(p => {
     if (filter === 'All') return true;
     if (filter === 'Featured') return p.featured;
-    return p.techStack.some(t => t.toLowerCase().includes(filter.toLowerCase()));
+    return p.techStack?.some(t => t.toLowerCase().includes(filter.toLowerCase()));
   });
+  const shown = filtered.slice(0, visibleCount);
 
   return (
-    <section id="projects" className="relative py-20 sm:py-28 px-4 sm:px-6">
-      <div
-        className="orb w-[450px] h-[450px] bottom-0 left-[-150px] opacity-25"
-        style={{ background: 'radial-gradient(circle, rgba(32,178,166,0.2) 0%, transparent 70%)' }}
-      />
-      <div className="max-w-6xl mx-auto">
-        {/* Heading */}
-        <div className="text-center mb-12 reveal">
-          <div className="section-tag">🛠 Portfolio</div>
-          <h2 className="section-title">
-            Featured <span className="gradient-text">Projects</span>
+    <section id="projects" className="section border-t border-line">
+      <div className="shell">
+        <div className="section-head reveal">
+          <span className="label label-accent">03</span>
+          <span className="label">Selected work</span>
+          <span className="label ml-auto">{all.length} projects</span>
+        </div>
+
+        <div className="grid lg:grid-cols-12 gap-8 mb-6 reveal">
+          <h2 className="display-xl lg:col-span-7 max-w-[14ch]">
+            Things I've <span className="accent-italic text-accent">actually</span> built.
           </h2>
-          <p className="text-[#6b7fa3] max-w-xl mx-auto">
-            A selection of projects spanning AI/ML research and the full-stack systems built around it.
+          <p className="lede lg:col-span-5 self-end max-w-md">
+            Research that shipped, and products that had to survive real users — not
+            screenshots of tutorials.
           </p>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12 reveal">
-          {FILTERS.map(f => (
-            <button
-              key={f}
-              onClick={() => { setFilter(f); setVisibleCount(6); }}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-250 ${
-                filter === f
-                  ? 'bg-[#20b2a6] text-white shadow-lg shadow-[#20b2a6]/30'
-                  : 'glass text-[#6b7fa3] hover:text-[#e8edf2] hover:border-[#20b2a6]/40'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-x-6 gap-y-2 py-5 border-y border-line mb-2 reveal">
+          {FILTERS.map(f => {
+            const count = f === 'All'
+              ? all.length
+              : f === 'Featured'
+                ? all.filter(p => p.featured).length
+                : all.filter(p => p.techStack?.some(t => t.toLowerCase().includes(f.toLowerCase()))).length;
+
+            return (
+              <button
+                key={f}
+                onClick={() => { setFilter(f); setVisibleCount(4); }}
+                aria-pressed={filter === f}
+                className={`text-sm font-medium transition-colors duration-300 ${
+                  filter === f ? 'text-accent' : 'text-muted hover:text-text'
+                }`}
+              >
+                {f}
+                <sup className="ml-1 label text-[9px] tracking-normal">{count}</sup>
+              </button>
+            );
+          })}
         </div>
 
-        {/* States */}
         {loading && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1,2,3].map(i => (
-              <div key={i} className="glass-card p-6 h-72 animate-pulse">
-                <div className="h-4 bg-white/5 rounded mb-3 w-3/4" />
-                <div className="h-3 bg-white/5 rounded mb-2 w-full" />
-                <div className="h-3 bg-white/5 rounded mb-2 w-5/6" />
-                <div className="h-3 bg-white/5 rounded w-4/6" />
-              </div>
-            ))}
-          </div>
+          <div className="py-24 text-center label">Loading work…</div>
         )}
 
         {error && (
-          <div className="glass-card p-8 text-center text-[#ef4444] max-w-md mx-auto">
-            <p className="text-4xl mb-3">⚠️</p>
-            <p>Failed to load projects. Please try again later.</p>
+          <div className="py-24 text-center text-bad text-sm">
+            Could not load projects right now.
           </div>
         )}
 
         {!loading && !error && filtered.length === 0 && (
-          <div className="glass-card p-12 text-center max-w-md mx-auto reveal">
-            <p className="text-4xl mb-3">📭</p>
-            <p className="text-[#6b7fa3]">No projects found for this filter.</p>
-            <button onClick={() => setFilter('All')} className="btn-outline mt-4 text-sm py-2 px-4">
-              Show All
-            </button>
-          </div>
+          <div className="py-24 text-center label">Nothing under this filter yet.</div>
         )}
 
-        {!loading && !error && (
-          <>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.slice(0, visibleCount).map((p, i) => (
-                <div key={p._id} className={`glass-card flex flex-col overflow-hidden reveal reveal-d${Math.min(i % 3 + 1, 6)}`}>
-                {/* Image / Placeholder */}
-                <div className="h-44 relative overflow-hidden bg-gradient-to-br from-[#0d1520] to-[#1a2535]">
-                  {p.imageUrl ? (
-                    <img src={p.imageUrl} alt={p.title} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-5xl opacity-20">🖥️</div>
-                      <div
-                        className="absolute inset-0 opacity-30"
-                        style={{
-                          background: `linear-gradient(135deg, rgba(32,178,166,0.3) 0%, rgba(167,139,250,0.2) 100%)`,
-                        }}
-                      />
-                    </div>
-                  )}
-                  {p.featured && (
-                    <div className="absolute top-3 right-3 bg-[#f5a623] text-black text-xs font-bold px-2 py-0.5 rounded-full">
-                      ⭐ Featured
-                    </div>
-                  )}
-                </div>
+        {shown.map((project, i) => (
+          <Case key={project._id} project={project} index={i} />
+        ))}
 
-                {/* Content */}
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="font-bold text-[#e8edf2] text-lg mb-2">{p.title}</h3>
-                  <p className="text-[#6b7fa3] text-sm leading-relaxed flex-1 mb-4 line-clamp-3">
-                    {p.description}
-                  </p>
-
-                  {/* Tech stack */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {p.techStack.slice(0, 5).map(t => (
-                      <span key={t} className="skill-tag text-[11px] px-2 py-0.5">{t}</span>
-                    ))}
-                    {p.techStack.length > 5 && (
-                      <span className="skill-tag text-[11px] px-2 py-0.5 text-[#6b7fa3]">
-                        +{p.techStack.length - 5}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Links */}
-                  <div className="flex gap-2 mt-auto">
-                    {p.githubUrl && (
-                      <a
-                        href={p.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-outline flex-1 justify-center py-2 text-xs"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-                        </svg>
-                        Code
-                      </a>
-                    )}
-                    {p.liveUrl && (
-                      <a
-                        href={p.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-primary flex-1 justify-center py-2 text-xs"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                          <polyline points="15 3 21 3 21 9"/>
-                          <line x1="10" y1="14" x2="21" y2="3"/>
-                        </svg>
-                        <span>Live</span>
-                      </a>
-                    )}
-                    {!p.githubUrl && !p.liveUrl && (
-                      <span className="text-xs text-[#6b7fa3] py-2">Links coming soon</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-            </div>
-            
-            {filtered.length > 6 && (
-              <div className="flex justify-center mt-12">
-                <button
-                  onClick={() => setVisibleCount(prev => prev >= filtered.length ? 6 : filtered.length)}
-                  className="btn-outline px-8 py-3 text-sm font-medium hover:bg-[#20b2a6] hover:text-white transition-all duration-300"
-                >
-                  {visibleCount >= filtered.length ? 'View Less' : 'View More'}
-                </button>
-              </div>
-            )}
-          </>
+        {filtered.length > 4 && (
+          <div className="pt-10 flex justify-center reveal">
+            <button
+              onClick={() => setVisibleCount(v => (v >= filtered.length ? 4 : filtered.length))}
+              className="btn-outline"
+            >
+              {visibleCount >= filtered.length
+                ? 'Show less'
+                : `Show ${filtered.length - visibleCount} more`}
+            </button>
+          </div>
         )}
       </div>
     </section>

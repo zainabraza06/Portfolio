@@ -27,7 +27,7 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'messages',     label: 'Messages',       icon: '📬' },
 ];
 
-const emptyProject = { title: '', description: '', techStack: '', liveUrl: '', githubUrl: '', imageUrl: '', featured: false, order: 0 };
+const emptyProject = { title: '', description: '', techStack: '', problem: '', outcome: '', liveUrl: '', githubUrl: '', imageUrl: '', featured: false, order: 0 };
 const emptyCert    = { title: '', issuer: '', date: '', credentialUrl: '', linkedInUrl: '', imageUrl: '', order: 0 };
 const emptyHack    = { title: '', description: '', date: '', projectUrl: '', certificateUrl: '', imageUrl: '', order: 0 };
 const emptyKaggle  = { title: '', description: '', competitionUrl: '', rank: '', date: '', imageUrl: '', order: 0 };
@@ -99,7 +99,9 @@ function ProjectsTab() {
   const openAdd  = () => { setForm({ ...emptyProject }); setFile(null); setModal('add'); };
   const openEdit = (p: Item) => {
     setForm({ title: p.title as string, description: p.description as string,
-      techStack: (p.techStack as string[]).join(', '), liveUrl: p.liveUrl as string,
+      techStack: (p.techStack as string[]).join(', '),
+      problem: (p.problem as string) ?? '', outcome: (p.outcome as string) ?? '',
+      liveUrl: p.liveUrl as string,
       githubUrl: p.githubUrl as string, imageUrl: p.imageUrl as string,
       featured: p.featured as boolean, order: p.order as number });
     setFile(null);
@@ -147,6 +149,8 @@ function ProjectsTab() {
       <Field label="Title *" id="p-title"><input id="p-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder="Project title" /></Field>
       <Field label="Description *" id="p-desc"><textarea id="p-desc" className="form-input resize-none" rows={3} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Project description" /></Field>
       <Field label="Tech Stack (comma separated)" id="p-tech"><input id="p-tech" className="form-input" value={form.techStack} onChange={e => set('techStack', e.target.value)} placeholder="React, Node.js, MongoDB" /></Field>
+      <Field label="Problem solved (optional)" id="p-problem"><textarea id="p-problem" className="form-input resize-none" rows={2} value={form.problem} onChange={e => set('problem', e.target.value)} placeholder="What was broken or missing?" /></Field>
+      <Field label="Outcome / result (optional)" id="p-outcome"><textarea id="p-outcome" className="form-input resize-none" rows={2} value={form.outcome} onChange={e => set('outcome', e.target.value)} placeholder="What changed once it shipped?" /></Field>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Field label="GitHub URL" id="p-gh"><input id="p-gh" className="form-input" value={form.githubUrl} onChange={e => set('githubUrl', e.target.value)} placeholder="https://github.com/..." /></Field>
         <Field label="Live URL" id="p-live"><input id="p-live" className="form-input" value={form.liveUrl} onChange={e => set('liveUrl', e.target.value)} placeholder="https://..." /></Field>
