@@ -92,7 +92,7 @@ export const About = () => {
                 </div>
                 <figcaption className="flex items-center gap-2 mt-4">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                  <span className="label text-[10px]">Islamabad · Open to internships</span>
+                  <span className="label text-[10px]">Islamabad · Open to roles</span>
                 </figcaption>
               </figure>
             </div>

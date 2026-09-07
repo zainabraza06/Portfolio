@@ -81,7 +81,7 @@ export const Contact = () => {
             ))}
 
             <p className="mt-8 text-sm text-muted leading-relaxed max-w-sm">
-              Open to AI/ML internships, research collaborations and full-stack work.
+              Open to AI/ML and full-stack roles, research collaborations and freelance work.
             </p>
           </div>
 
@@ -103,7 +103,7 @@ export const Contact = () => {
             <div className="mt-5">
               <label htmlFor="contact-subject" className="field-label">Subject *</label>
               <input id="contact-subject" name="subject" type="text" required value={form.subject}
-                onChange={handleChange} placeholder="Internship, collaboration, question…" className="form-input" />
+                onChange={handleChange} placeholder="Role, collaboration, question…" className="form-input" />
             </div>
 
             <div className="mt-5">

@@ -93,7 +93,7 @@ export const Experience = () => {
             The <span className="accent-italic text-accent">path</span> so far.
           </h2>
           <p className="lede lg:col-span-6 self-end max-w-md">
-            Two AI internships and a degree in progress.
+            Three AI and engineering roles, and a degree in progress.
           </p>
         </div>
 
