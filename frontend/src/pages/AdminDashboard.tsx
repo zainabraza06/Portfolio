@@ -82,6 +82,13 @@ const buildFormData = (form: Record<string, any>, file: File | null) => {
   return fd;
 };
 
+/** Turns an API failure into a sentence, calling out an expired login plainly. */
+const errorMessage = (err: unknown, fallback: string) => {
+  const e = err as { response?: { status?: number; data?: { message?: string } } };
+  if (e.response?.status === 401) return 'Your session has expired. Please log in again.';
+  return e.response?.data?.message || fallback;
+};
+
 // ── Projects Tab ─────────────────────────────────────────────────
 function ProjectsTab() {
   const toast = useToast();
@@ -94,7 +101,12 @@ function ProjectsTab() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const load = async () => { setLoading(true); setItems(await fetchProjects()); setLoading(false); };
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchProjects()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -122,7 +134,7 @@ function ProjectsTab() {
       load();
       toast('Project saved.');
     } catch (err) {
-      toast('Failed to save project.', 'error');
+      toast(errorMessage(err, 'Failed to save project.'), 'error');
     } finally {
       setSaving(false);
     }
@@ -131,9 +143,13 @@ function ProjectsTab() {
   const remove = async (id: string) => {
     const ok = await askConfirm({ title: 'Delete project?', message: 'This removes it from your portfolio permanently.' });
     if (!ok) return;
-    await deleteProject(id);
-    load();
-    toast('Project deleted.');
+    try {
+      await deleteProject(id);
+      load();
+      toast('Project deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
   };
 
   const handleSync = async () => {
@@ -148,7 +164,9 @@ function ProjectsTab() {
     }
   };
 
-  const FormFields = () => (
+  // A JSX value, not a component: a component declared here would be a new
+  // type on every render, remounting the inputs and dropping focus per keystroke.
+  const formFields = (
     <div className="space-y-3">
       <Field label="Title *" id="p-title"><input id="p-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder="Project title" /></Field>
       <Field label="Description *" id="p-desc"><textarea id="p-desc" className="form-input resize-none" rows={3} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Project description" /></Field>
@@ -209,7 +227,7 @@ function ProjectsTab() {
       )}
       {modal && (
         <Modal title={modal === 'add' ? 'Add Project' : 'Edit Project'} onClose={() => setModal(null)} onSave={save} loading={saving}>
-          <FormFields />
+          {formFields}
         </Modal>
       )}
     </div>
@@ -226,7 +244,12 @@ function ResearchTab() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const load = async () => { setLoading(true); setItems(await fetchResearch()); setLoading(false); };
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchResearch()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -249,15 +272,19 @@ function ResearchTab() {
       if (modal === 'add') await createResearch(form);
       else await updateResearch(editId, form);
       setModal(null); load(); toast('Research saved.');
-    } catch (err) { toast('Failed to save.', 'error'); } finally { setSaving(false); }
+    } catch (err) { toast(errorMessage(err, 'Failed to save.'), 'error'); } finally { setSaving(false); }
   };
 
   const remove = async (id: string) => {
     const ok = await askConfirm({ title: 'Delete research entry?', message: 'This removes it from the site permanently.' });
     if (!ok) return;
-    await deleteResearch(id);
-    load();
-    toast('Research entry deleted.');
+    try {
+      await deleteResearch(id);
+      load();
+      toast('Research entry deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
   };
 
   return (
@@ -337,7 +364,12 @@ function HackathonsTab() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const load = async () => { setLoading(true); setItems(await fetchHackathons()); setLoading(false); };
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchHackathons()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -355,14 +387,18 @@ function HackathonsTab() {
       if (modal === 'add') await createHackathon(payload);
       else await updateHackathon(editId, payload);
       setModal(null); load(); toast('Saved.');
-    } catch (err) { toast('Failed to save.', 'error'); } finally { setSaving(false); }
+    } catch (err) { toast(errorMessage(err, 'Failed to save.'), 'error'); } finally { setSaving(false); }
   };
   const remove = async (id: string) => {
     const ok = await askConfirm({ title: 'Delete hackathon?', message: 'This removes the hackathon entry permanently.' });
     if (!ok) return;
-    await deleteHackathon(id);
-    load();
-    toast('Hackathon deleted.');
+    try {
+      await deleteHackathon(id);
+      load();
+      toast('Hackathon deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
   };
 
   return (
@@ -421,7 +457,12 @@ function KaggleTab() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const load = async () => { setLoading(true); setItems(await fetchKaggle()); setLoading(false); };
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchKaggle()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -439,14 +480,18 @@ function KaggleTab() {
       if (modal === 'add') await createKaggle(payload);
       else await updateKaggle(editId, payload);
       setModal(null); load(); toast('Saved.');
-    } catch (err) { toast('Failed to save.', 'error'); } finally { setSaving(false); }
+    } catch (err) { toast(errorMessage(err, 'Failed to save.'), 'error'); } finally { setSaving(false); }
   };
   const remove = async (id: string) => {
     const ok = await askConfirm({ title: 'Delete entry?', message: 'This removes the Kaggle entry permanently.' });
     if (!ok) return;
-    await deleteKaggle(id);
-    load();
-    toast('Entry deleted.');
+    try {
+      await deleteKaggle(id);
+      load();
+      toast('Entry deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
   };
 
   return (
@@ -505,7 +550,12 @@ function CertificatesTab() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const load = async () => { setLoading(true); setItems(await fetchCertificates()); setLoading(false); };
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchCertificates()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -523,14 +573,18 @@ function CertificatesTab() {
       if (modal === 'add') await createCertificate(payload);
       else await updateCertificate(editId, payload);
       setModal(null); load(); toast('Saved.');
-    } catch (err) { toast('Failed to save.', 'error'); } finally { setSaving(false); }
+    } catch (err) { toast(errorMessage(err, 'Failed to save.'), 'error'); } finally { setSaving(false); }
   };
   const remove = async (id: string) => {
     const ok = await askConfirm({ title: 'Delete certificate?', message: 'This removes the certificate permanently.' });
     if (!ok) return;
-    await deleteCertificate(id);
-    load();
-    toast('Certificate deleted.');
+    try {
+      await deleteCertificate(id);
+      load();
+      toast('Certificate deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
   };
 
   return (
@@ -599,7 +653,12 @@ function ExperienceTab() {
   const [editId, setEditId] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const load = async () => { setLoading(true); setItems(await fetchExperience()); setLoading(false); };
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchExperience()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -610,16 +669,24 @@ function ExperienceTab() {
     setEditId(e._id); setModal('edit');
   };
   const save = async () => {
-    if (modal === 'add') await createExperience(form);
-    else await updateExperience(editId, form);
-    setModal(null); load(); toast('Saved.');
+    try {
+      if (modal === 'add') await createExperience(form);
+      else await updateExperience(editId, form);
+      setModal(null); load(); toast('Saved.');
+    } catch (err) {
+      toast(errorMessage(err, 'Failed to save.'), 'error');
+    }
   };
   const remove = async (id: string) => {
     const ok = await askConfirm({ title: 'Delete entry?', message: 'This removes the experience entry permanently.' });
     if (!ok) return;
-    await deleteExperience(id);
-    load();
-    toast('Entry deleted.');
+    try {
+      await deleteExperience(id);
+      load();
+      toast('Entry deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
   };
 
   const typeColors: Record<string, string> = { work: '#9B8CFF', education: '#94949C' };
@@ -685,16 +752,28 @@ function TestimonialsTab() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const load = async () => { setLoading(true); setItems(await fetchAllTestimonials()); setLoading(false); };
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchAllTestimonials()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
   useEffect(() => { load(); }, []);
 
-  const approve = async (id: string) => { await approveTestimonial(id); load(); };
+  const approve = async (id: string) => {
+    try { await approveTestimonial(id); load(); toast('Testimonial approved.'); }
+    catch (err) { toast(errorMessage(err, 'Could not approve.'), 'error'); }
+  };
   const remove  = async (id: string) => {
     const ok = await askConfirm({ title: 'Delete testimonial?', message: 'The person who wrote it will not be notified.' });
     if (!ok) return;
-    await deleteTestimonial(id);
-    load();
-    toast('Testimonial deleted.');
+    try {
+      await deleteTestimonial(id);
+      load();
+      toast('Testimonial deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
   };
 
   return (
@@ -737,16 +816,28 @@ function MessagesTab() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  const load = async () => { setLoading(true); setItems(await fetchMessages()); setLoading(false); };
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchMessages()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
   useEffect(() => { load(); }, []);
 
-  const markRead = async (id: string) => { await markMessageRead(id); load(); };
+  const markRead = async (id: string) => {
+    try { await markMessageRead(id); load(); }
+    catch (err) { toast(errorMessage(err, 'Could not update the message.'), 'error'); }
+  };
   const remove   = async (id: string) => {
     const ok = await askConfirm({ title: 'Delete message?', message: 'This removes the message from your inbox for good.' });
     if (!ok) return;
-    await deleteMessage(id);
-    load();
-    toast('Message deleted.');
+    try {
+      await deleteMessage(id);
+      load();
+      toast('Message deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
   };
 
   const unread = items.filter(m => !m.read).length;
@@ -797,6 +888,58 @@ function MessagesTab() {
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────
+// ── Change password ─────────────────────────────────────────────
+function PasswordModal({ onClose }: { onClose: () => void }) {
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async () => {
+    setError('');
+    if (newPassword !== confirmPassword) return setError('New passwords do not match');
+    if (newPassword.length < 6) return setError('Password must be at least 6 characters');
+    setLoading(true);
+    try {
+      await changePassword(currentPassword, newPassword);
+      setSuccess(true);
+      setTimeout(() => onClose(), 2000);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to change password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Modal title="Change Password" onClose={() => onClose()} onSave={handleSubmit}>
+      <div className="space-y-4">
+        {success ? (
+          <div className="p-4 bg-ok/10 border border-ok/30 text-ok rounded-xl text-center">
+            ✅ Password updated successfully!
+          </div>
+        ) : (
+          <>
+            <Field label="Current Password" id="pwd-curr">
+              <input id="pwd-curr" type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="form-input" />
+            </Field>
+            <Field label="New Password" id="pwd-new">
+              <input id="pwd-new" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="form-input" />
+            </Field>
+            <Field label="Confirm New Password" id="pwd-conf">
+              <input id="pwd-conf" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="form-input" />
+            </Field>
+            {error && <p className="text-bad text-sm bg-bad/10 p-2 rounded">{error}</p>}
+            {loading && <p className="text-muted text-sm">Updating password...</p>}
+          </>
+        )}
+      </div>
+    </Modal>
+  );
+}
+
 export default function AdminDashboard() {
   const [tab, setTab] = useState<Tab>('projects');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -813,57 +956,6 @@ export default function AdminDashboard() {
   };
 
   const user = JSON.parse(localStorage.getItem('portfolio_user') ?? '{}');
-
-  const PasswordModal = () => {
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
-
-    const handleSubmit = async () => {
-      setError('');
-      if (newPassword !== confirmPassword) return setError('New passwords do not match');
-      if (newPassword.length < 6) return setError('Password must be at least 6 characters');
-      setLoading(true);
-      try {
-        await changePassword(currentPassword, newPassword);
-        setSuccess(true);
-        setTimeout(() => setShowPasswordModal(false), 2000);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to change password');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    return (
-      <Modal title="Change Password" onClose={() => setShowPasswordModal(false)} onSave={handleSubmit}>
-        <div className="space-y-4">
-          {success ? (
-            <div className="p-4 bg-ok/10 border border-ok/30 text-ok rounded-xl text-center">
-              ✅ Password updated successfully!
-            </div>
-          ) : (
-            <>
-              <Field label="Current Password" id="pwd-curr">
-                <input id="pwd-curr" type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="form-input" />
-              </Field>
-              <Field label="New Password" id="pwd-new">
-                <input id="pwd-new" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="form-input" />
-              </Field>
-              <Field label="Confirm New Password" id="pwd-conf">
-                <input id="pwd-conf" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="form-input" />
-              </Field>
-              {error && <p className="text-bad text-sm bg-bad/10 p-2 rounded">{error}</p>}
-              {loading && <p className="text-muted text-sm">Updating password...</p>}
-            </>
-          )}
-        </div>
-      </Modal>
-    );
-  };
 
   return (
     <FeedbackProvider>
@@ -886,7 +978,7 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {showPasswordModal && <PasswordModal />}
+      {showPasswordModal && <PasswordModal onClose={() => setShowPasswordModal(false)} />}
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Tabs */}

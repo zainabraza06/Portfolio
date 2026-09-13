@@ -43,7 +43,10 @@ const toneStyles: Record<Tone, { accent: string; icon: string }> = {
 
 export function FeedbackProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
-  const [pending, setPending] = useState<{ options: ConfirmOptions; resolve: (ok: boolean) => void } | null>(null);
+  const [pending, setPending] = useState<ConfirmOptions | null>(null);
+  // The resolver lives in a ref: calling it inside a setState updater is a side
+  // effect React may run twice, and Enter on the focused button fires twice too.
+  const resolver = useRef<((ok: boolean) => void) | null>(null);
   const nextId = useRef(1);
   const timers = useRef<number[]>([]);
 
@@ -58,17 +61,21 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
   }, [dismiss]);
 
   const confirm = useCallback<ConfirmFn>(
-    options => new Promise<boolean>(resolve => setPending({ options, resolve })),
+    options => new Promise<boolean>(resolve => {
+      resolver.current?.(false);
+      resolver.current = resolve;
+      setPending(options);
+    }),
     []
   );
 
   useEffect(() => () => { timers.current.forEach(clearTimeout); }, []);
 
   const settle = useCallback((ok: boolean) => {
-    setPending(current => {
-      current?.resolve(ok);
-      return null;
-    });
+    const resolve = resolver.current;
+    resolver.current = null;
+    setPending(null);
+    resolve?.(ok);
   }, []);
 
   useEffect(() => {
@@ -121,28 +128,28 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
             <div
               role="alertdialog"
               aria-modal="true"
-              aria-label={pending.options.title}
+              aria-label={pending.title}
               className="glass-card w-full max-w-sm p-6"
               onClick={e => e.stopPropagation()}
               style={{ animation: 'fadeInUp 0.25s ease both' }}
             >
-              <h3 className="text-text font-bold text-lg">{pending.options.title}</h3>
-              {pending.options.message && (
-                <p className="text-muted text-sm mt-2 leading-relaxed">{pending.options.message}</p>
+              <h3 className="text-text font-bold text-lg">{pending.title}</h3>
+              {pending.message && (
+                <p className="text-muted text-sm mt-2 leading-relaxed">{pending.message}</p>
               )}
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <button
                   onClick={() => settle(false)}
                   className="btn-outline w-full sm:flex-1 justify-center py-2 text-sm"
                 >
-                  {pending.options.cancelLabel ?? 'Cancel'}
+                  {pending.cancelLabel ?? 'Cancel'}
                 </button>
                 <button
                   autoFocus
                   onClick={() => settle(true)}
                   className="w-full sm:flex-1 py-2 text-sm font-medium rounded-full border border-bad/50 text-bad hover:bg-bad/15 transition-colors"
                 >
-                  {pending.options.confirmLabel ?? 'Delete'}
+                  {pending.confirmLabel ?? 'Delete'}
                 </button>
               </div>
             </div>
