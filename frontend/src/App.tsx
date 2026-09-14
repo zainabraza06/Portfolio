@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
 // Layout & Sections
@@ -62,6 +62,8 @@ function App() {
         <Route path="/" element={<Portfolio />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        {/* Every URL reaches the app now (see vercel.json); send unknown ones home. */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
