@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { FeedbackProvider, useToast, useConfirm } from '../components/Feedback';
@@ -103,6 +103,46 @@ function useReorder(
 ) {
   const [dragId, setDragId] = useState<string | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
+
+  // Native drag and drop only scrolls the page in some browsers, so a long list
+  // could not be dragged past the edge of the screen. While a drag is active,
+  // scroll whenever the pointer is near the top or bottom of the viewport.
+  const pointerY = useRef<number | null>(null);
+  const lastMove = useRef(0);
+  useEffect(() => {
+    if (!dragId) return;
+    const EDGE = 120;      // px from either edge; clears the 64px sticky header
+    const MAX_SPEED = 26;  // px per frame at the very edge
+
+    const onDragOver = (e: DragEvent) => {
+      pointerY.current = e.clientY;
+      lastMove.current = performance.now();
+    };
+
+    let frame = 0;
+    const tick = () => {
+      const y = pointerY.current;
+      // dragover stops firing once the pointer leaves the window; stop with it
+      // rather than scrolling on by ourselves.
+      if (y !== null && performance.now() - lastMove.current < 200) {
+        const h = window.innerHeight;
+        if (y < EDGE) {
+          window.scrollBy(0, -MAX_SPEED * (1 - Math.max(y, 0) / EDGE));
+        } else if (y > h - EDGE) {
+          window.scrollBy(0, MAX_SPEED * (1 - Math.max(h - y, 0) / EDGE));
+        }
+      }
+      frame = requestAnimationFrame(tick);
+    };
+
+    document.addEventListener('dragover', onDragOver);
+    frame = requestAnimationFrame(tick);
+    return () => {
+      document.removeEventListener('dragover', onDragOver);
+      cancelAnimationFrame(frame);
+      pointerY.current = null;
+    };
+  }, [dragId]);
 
   const move = async (from: number, to: number) => {
     if (from === to || from < 0 || to < 0 || to >= items.length) return;
