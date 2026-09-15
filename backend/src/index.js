@@ -43,7 +43,17 @@ app.use('/api/kaggle',       kaggleRoutes);
 app.use('/api/research',     researchRoutes);
 
 // ── Health check ────────────────────────────────────────────────────────────
-app.get('/api/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date() }));
+app.get('/api/health', (_req, res) => res.json({
+  status: 'ok',
+  timestamp: new Date(),
+  // Presence only, never values: lets a deploy be checked for upload config
+  // without anyone reading the dashboard.
+  uploads: {
+    cloudName: Boolean(process.env.CLOUDINARY_CLOUD_NAME),
+    apiKey: Boolean(process.env.CLOUDINARY_API_KEY),
+    apiSecret: Boolean(process.env.CLOUDINARY_API_SECRET),
+  },
+}));
 
 // ── Global error handler ────────────────────────────────────────────────────
 app.use((err, _req, res, _next) => {

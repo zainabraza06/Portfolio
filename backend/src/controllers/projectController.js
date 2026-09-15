@@ -31,7 +31,7 @@ export const updateProject = async (req, res) => {
     if (typeof data.techStack === 'string') {
       data.techStack = data.techStack.split(',').map(s => s.trim()).filter(Boolean);
     }
-    const updated = await Project.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });
+    const updated = await Project.findByIdAndUpdate(req.params.id, data, { returnDocument: 'after', runValidators: true });
     if (!updated) return res.status(404).json({ message: 'Project not found' });
     res.json(updated);
   } catch (err) {

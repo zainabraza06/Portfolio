@@ -31,7 +31,7 @@ export const createTestimonial = async (req, res) => {
 
 export const updateTestimonial = async (req, res) => {
   try {
-    const updated = await Testimonial.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updated = await Testimonial.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (!updated) return res.status(404).json({ message: 'Testimonial not found' });
     res.json(updated);
   } catch (err) {
@@ -44,7 +44,7 @@ export const approveTestimonial = async (req, res) => {
     const updated = await Testimonial.findByIdAndUpdate(
       req.params.id,
       { approved: true },
-      { new: true }
+      { returnDocument: 'after' }
     );
     if (!updated) return res.status(404).json({ message: 'Testimonial not found' });
     res.json(updated);

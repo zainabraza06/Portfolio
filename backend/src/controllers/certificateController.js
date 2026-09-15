@@ -25,7 +25,7 @@ export const updateCertificate = async (req, res) => {
   try {
     const data = { ...req.body };
     if (req.file) data.imageUrl = req.file.path;
-    const updated = await Certificate.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });
+    const updated = await Certificate.findByIdAndUpdate(req.params.id, data, { returnDocument: 'after', runValidators: true });
     if (!updated) return res.status(404).json({ message: 'Certificate not found' });
     res.json(updated);
   } catch (err) {

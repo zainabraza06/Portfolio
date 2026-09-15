@@ -29,7 +29,7 @@ export const createResearch = async (req, res) => {
 export const updateResearch = async (req, res) => {
   try {
     const updated = await Research.findByIdAndUpdate(req.params.id, normalise(req.body), {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     });
     if (!updated) return res.status(404).json({ message: 'Research entry not found' });

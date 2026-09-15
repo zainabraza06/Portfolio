@@ -25,7 +25,7 @@ export const updateKaggle = async (req, res) => {
   try {
     const data = { ...req.body };
     if (req.file) data.imageUrl = req.file.path;
-    const updated = await Kaggle.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });
+    const updated = await Kaggle.findByIdAndUpdate(req.params.id, data, { returnDocument: 'after', runValidators: true });
     if (!updated) return res.status(404).json({ message: 'Kaggle competition not found' });
     res.json(updated);
   } catch (err) {

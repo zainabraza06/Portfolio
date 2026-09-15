@@ -21,7 +21,7 @@ export const createExperience = async (req, res) => {
 
 export const updateExperience = async (req, res) => {
   try {
-    const updated = await Experience.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const updated = await Experience.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
     if (!updated) return res.status(404).json({ message: 'Experience not found' });
     res.json(updated);
   } catch (err) {
