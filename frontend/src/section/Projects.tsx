@@ -107,7 +107,7 @@ const Case = ({ project, index }: { project: Project; index: number }) => {
                 src={project.imageUrl}
                 alt={project.title}
                 loading="lazy"
-                className="w-full aspect-[4/3] object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                className="block w-full h-auto max-h-[640px] object-contain transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
               />
             </div>
           ) : (
