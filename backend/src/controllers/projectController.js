@@ -1,4 +1,5 @@
 import Project from '../models/Project.js';
+import { reorderHandler } from '../utils/reorder.js';
 
 export const getProjects = async (req, res) => {
   try {
@@ -57,6 +58,9 @@ export const syncGitHub = async (req, res) => {
     
     let added = 0;
     let updated = 0;
+    // New repos join the end of the arrangement instead of jumping to the top.
+    const last = await Project.findOne().sort({ order: -1 }).select('order').lean();
+    let nextOrder = (last?.order ?? 0) + 1;
 
     for (const repo of repos) {
       if (repo.fork) continue; // skip forks
@@ -79,7 +83,8 @@ export const syncGitHub = async (req, res) => {
           techStack: repo.language ? [repo.language] : [],
           githubUrl: repo.html_url,
           liveUrl: liveUrl,
-          githubId: repo.id.toString()
+          githubId: repo.id.toString(),
+          order: nextOrder++,
         });
         added++;
       }
@@ -89,3 +94,5 @@ export const syncGitHub = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const reorderProjects = reorderHandler(Project);

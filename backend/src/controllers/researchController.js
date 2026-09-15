@@ -1,4 +1,5 @@
 import Research from '../models/Research.js';
+import { reorderHandler } from '../utils/reorder.js';
 
 const normalise = (body) => {
   const data = { ...body };
@@ -48,3 +49,5 @@ export const deleteResearch = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const reorderResearch = reorderHandler(Research);
