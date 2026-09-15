@@ -48,7 +48,7 @@ function CountUp({ target, suffix = '', decimals = 0 }: { target: number; suffix
 const NOTES = [
   { k: 'Currently building', v: 'Agentic AI systems, RAG pipelines and LLM-powered tools.' },
   { k: 'Working with', v: 'Python, PyTorch, FastAPI and LangGraph · MERN, Next.js and Flutter.' },
-  { k: 'Focused on', v: 'Generative AI, applied ML, and shipping models as products.' },
+  { k: 'Focused on', v: 'Generative AI systems and deep learning research, shipped as products.' },
 ];
 
 export const About = () => {
@@ -108,14 +108,14 @@ export const About = () => {
             <div className="mt-8 sm:mt-10 space-y-6 max-w-2xl">
               <p className="lede">
                 I'm a <span className="mark">BS Artificial Intelligence student at NUST, SEECS</span>,
-                building AI/ML solutions end to end — generative AI and LLM applications,
-                RAG pipelines and agentic systems that do real work rather than demos.
+                and my work runs on two tracks: generative AI systems — agentic pipelines, RAG
+                and LLM applications — and deep learning research in vision, speech and time-series.
               </p>
               <p className="text-muted">
-                My projects run from multi-agent research assistants and retrieval-grounded
-                tools to computer vision, speech and time-series models. I ship them as
-                full-stack products — MERN and Next.js on the web, FastAPI for the Python
-                services, Flutter on mobile — so the model reaches the person who needs it.
+                In research: GAUGE-Net for turbofan life prediction, and multimodal
+                speech-and-gesture models. In generative AI: multi-agent assistants and
+                retrieval-grounded tools. Both ship as full-stack products on MERN, Next.js,
+                FastAPI and Flutter.
               </p>
             </div>
 

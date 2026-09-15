@@ -152,7 +152,7 @@ export const Hero = () => {
               className="label label-accent mb-8 sm:mb-10"
               style={{ animation: 'fadeIn 0.8s var(--ease-out-expo) both' }}
             >
-              AI Student · Builder · Creative Technologist
+              AI Student · Researcher · Builder
             </p>
 
             <h1 className="display-hero max-w-[16ch]">
@@ -179,9 +179,9 @@ export const Hero = () => {
               className="lede max-w-md"
               style={{ animation: 'fadeInUp 0.8s var(--ease-out-expo) 0.5s both' }}
             >
-              AI student at NUST. I build deep learning systems for{' '}
-              <span className="mark">engines, speech and vision</span> — and the software
-              that delivers them.
+              AI student at NUST, working on two fronts:{' '}
+              <span className="mark">generative AI</span> — agents, RAG and LLM tools — and{' '}
+              <span className="mark">deep learning research</span> in vision, speech and time-series.
             </p>
 
             <p
