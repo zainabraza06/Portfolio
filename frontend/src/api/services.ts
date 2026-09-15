@@ -13,6 +13,7 @@ export const createProject = (data: FormData | object) => api.post('/projects', 
 export const updateProject = (id: string, data: FormData | object) => api.put(`/projects/${id}`, data).then(r => r.data);
 export const deleteProject = (id: string) => api.delete(`/projects/${id}`).then(r => r.data);
 export const syncProjects = () => api.post('/projects/sync').then(r => r.data);
+export const reorderProjects = (ids: string[]) => api.patch('/projects/reorder', { ids }).then(r => r.data);
 
 // ── Experience ────────────────────────────────────────────────────
 export const fetchExperience = () => api.get('/experience').then(r => r.data);
@@ -57,3 +58,4 @@ export const fetchResearch = () => api.get('/research').then(r => r.data);
 export const createResearch = (data: object) => api.post('/research', data).then(r => r.data);
 export const updateResearch = (id: string, data: object) => api.put(`/research/${id}`, data).then(r => r.data);
 export const deleteResearch = (id: string) => api.delete(`/research/${id}`).then(r => r.data);
+export const reorderResearch = (ids: string[]) => api.patch('/research/reorder', { ids }).then(r => r.data);

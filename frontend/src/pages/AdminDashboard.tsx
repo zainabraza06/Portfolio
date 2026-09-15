@@ -11,6 +11,7 @@ import {
   fetchHackathons, createHackathon, updateHackathon, deleteHackathon,
   fetchKaggle, createKaggle, updateKaggle, deleteKaggle,
   fetchResearch, createResearch, updateResearch, deleteResearch,
+  reorderProjects, reorderResearch,
   changePassword
 } from '../api/services';
 
@@ -89,6 +90,97 @@ const errorMessage = (err: unknown, fallback: string) => {
   return e.response?.data?.message || fallback;
 };
 
+// ── Drag-and-drop ordering ──────────────────────────────────────
+/**
+ * Native drag-and-drop reordering for an admin list. Each move is applied
+ * optimistically, saved as a single request, and rolled back if that fails.
+ */
+function useReorder(
+  items: Item[],
+  setItems: React.Dispatch<React.SetStateAction<Item[]>>,
+  persist: (ids: string[]) => Promise<unknown>,
+  toast: (message: string, tone?: 'success' | 'error') => void,
+) {
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [overId, setOverId] = useState<string | null>(null);
+
+  const move = async (from: number, to: number) => {
+    if (from === to || from < 0 || to < 0 || to >= items.length) return;
+    const previous = items;
+    const next = [...items];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    // Keep each row's stored order in step: reopening Edit would otherwise save
+    // the old number back and undo the arrangement.
+    setItems(next.map((item, index) => ({ ...item, order: index + 1 })));
+    try {
+      await persist(next.map(item => item._id));
+      toast('Order saved.');
+    } catch (err) {
+      setItems(previous);
+      toast(errorMessage(err, 'Could not save the new order.'), 'error');
+    }
+  };
+
+  const rowProps = (id: string, index: number) => ({
+    draggable: true,
+    onDragStart: (e: React.DragEvent) => {
+      setDragId(id);
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', id);
+    },
+    onDragOver: (e: React.DragEvent) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (overId !== id) setOverId(id);
+    },
+    onDrop: (e: React.DragEvent) => {
+      e.preventDefault();
+      const from = items.findIndex(item => item._id === dragId);
+      setDragId(null);
+      setOverId(null);
+      if (from !== -1) move(from, index);
+    },
+    onDragEnd: () => {
+      setDragId(null);
+      setOverId(null);
+    },
+  });
+
+  const rowClass = (id: string) =>
+    `${dragId === id ? 'opacity-40' : ''} ${overId === id && dragId && dragId !== id ? 'ring-2 ring-accent' : ''}`;
+
+  return { rowProps, rowClass, move };
+}
+
+function DragHandle() {
+  return (
+    <span className="cursor-grab active:cursor-grabbing text-faint hover:text-muted pt-1 select-none" aria-hidden="true" title="Drag to reorder">
+      <svg width="12" height="16" viewBox="0 0 12 16" fill="currentColor">
+        <circle cx="3" cy="3" r="1.5" /><circle cx="9" cy="3" r="1.5" />
+        <circle cx="3" cy="8" r="1.5" /><circle cx="9" cy="8" r="1.5" />
+        <circle cx="3" cy="13" r="1.5" /><circle cx="9" cy="13" r="1.5" />
+      </svg>
+    </span>
+  );
+}
+
+/** Keyboard and touch alternative to dragging. */
+function MoveButtons({ index, count, onMove, label }: {
+  index: number; count: number; onMove: (from: number, to: number) => void; label: string;
+}) {
+  return (
+    <div className="flex flex-col justify-center">
+      <button type="button" onClick={() => onMove(index, index - 1)} disabled={index === 0}
+        aria-label={`Move ${label} up`}
+        className="px-1.5 text-[10px] leading-none text-muted hover:text-accent disabled:opacity-25">▲</button>
+      <button type="button" onClick={() => onMove(index, index + 1)} disabled={index === count - 1}
+        aria-label={`Move ${label} down`}
+        className="px-1.5 text-[10px] leading-none text-muted hover:text-accent disabled:opacity-25">▼</button>
+    </div>
+  );
+}
+
 // ── Projects Tab ─────────────────────────────────────────────────
 function ProjectsTab() {
   const toast = useToast();
@@ -107,6 +199,7 @@ function ProjectsTab() {
     catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
     finally { setLoading(false); }
   };
+  const reorder = useReorder(items, setItems, reorderProjects, toast);
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -204,8 +297,14 @@ function ProjectsTab() {
       </div>
       {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
-          {items.map(p => (
-            <div key={p._id} className="glass-card p-4 flex items-start justify-between gap-4">
+          {items.length > 1 && <p className="text-muted text-xs">Drag a row, or use ▲▼, to set the order the site shows.</p>}
+          {items.map((p, i) => (
+            <div
+              key={p._id}
+              {...reorder.rowProps(p._id, i)}
+              className={`glass-card p-4 flex items-start justify-between gap-4 transition-opacity ${reorder.rowClass(p._id)}`}
+            >
+              <DragHandle />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="text-text font-semibold truncate">{p.title as string}</h3>
@@ -217,6 +316,7 @@ function ProjectsTab() {
                 </div>
               </div>
               <div className="flex gap-2 shrink-0">
+                <MoveButtons index={i} count={items.length} onMove={reorder.move} label={String(p.title)} />
                 <button onClick={() => openEdit(p)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
                 <button onClick={() => remove(p._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
@@ -250,6 +350,7 @@ function ResearchTab() {
     catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
     finally { setLoading(false); }
   };
+  const reorder = useReorder(items, setItems, reorderResearch, toast);
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -296,9 +397,15 @@ function ResearchTab() {
 
       {loading ? <p className="text-muted">Loading...</p> : (
         <div className="space-y-3">
-          {items.map(r => (
-            <div key={r._id} className="glass-card p-4 flex items-start justify-between gap-4">
-              <div className="min-w-0">
+          {items.length > 1 && <p className="text-muted text-xs">Drag a row, or use ▲▼, to set the order the site shows.</p>}
+          {items.map((r, i) => (
+            <div
+              key={r._id}
+              {...reorder.rowProps(r._id, i)}
+              className={`glass-card p-4 flex items-start justify-between gap-4 transition-opacity ${reorder.rowClass(r._id)}`}
+            >
+              <DragHandle />
+              <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="text-text font-semibold">{r.title as string}</p>
                   {r.featured ? <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent text-accent-ink">Featured</span> : null}
@@ -308,6 +415,7 @@ function ResearchTab() {
                 <p className="text-muted text-sm line-clamp-2 mt-1">{r.summary as string}</p>
               </div>
               <div className="flex gap-2 shrink-0">
+                <MoveButtons index={i} count={items.length} onMove={reorder.move} label={String(r.title)} />
                 <button onClick={() => openEdit(r)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
                 <button onClick={() => remove(r._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
