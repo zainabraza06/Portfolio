@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import { useApi } from '../hooks/useApi';
 import { fetchProjects } from '../api/services';
@@ -52,9 +52,41 @@ const CoverFallback = ({ index, tech }: { index: number; tech: string[] }) => (
 
 const Case = ({ project, index }: { project: Project; index: number }) => {
   const flip = index % 2 === 1;
+  const [expanded, setExpanded] = useState(false);
+  const [overflowing, setOverflowing] = useState(false);
+  const articleRef = useRef<HTMLElement>(null);
+  const copyRef = useRef<HTMLDivElement>(null);
+
+  // Offer the toggle only when a clamped block is actually cut off — a short
+  // description should not grow a pointless "View more".
+  useEffect(() => {
+    const root = copyRef.current;
+    if (!root || expanded) return;
+    const measure = () => {
+      const blocks = root.querySelectorAll<HTMLElement>('[data-clamp]');
+      setOverflowing(Array.from(blocks).some(el => el.scrollHeight > el.clientHeight + 1));
+    };
+    measure();
+    document.fonts?.ready.then(measure);
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [expanded, project.description, project.problem, project.solution, project.outcome]);
+
+  const toggle = () => {
+    setExpanded(was => {
+      // Collapsing a tall card can leave the reader below it; bring its top back.
+      if (was && articleRef.current && articleRef.current.getBoundingClientRect().top < 0) {
+        articleRef.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
+      return !was;
+    });
+  };
+
+  const clamp = (lines: 'line-clamp-3' | 'line-clamp-4') => (expanded ? '' : lines);
 
   return (
     <article
+      ref={articleRef}
       className={`group grid lg:grid-cols-12 gap-8 lg:gap-14 items-center py-12 sm:py-16 border-b border-line reveal reveal-d${
         Math.min(index + 1, 6)
       }`}
@@ -87,7 +119,7 @@ const Case = ({ project, index }: { project: Project; index: number }) => {
       </div>
 
       {/* Copy */}
-      <div className={`lg:col-span-5 ${flip ? 'lg:order-1' : ''}`}>
+      <div ref={copyRef} className={`lg:col-span-5 ${flip ? 'lg:order-1' : ''}`}>
         <div className="flex items-center gap-3 mb-4">
           <span className="label text-[10px] label-accent">{String(index + 1).padStart(2, '0')}</span>
           <span className="h-px flex-1 bg-line transition-colors duration-500 group-hover:bg-accent/60" />
@@ -98,29 +130,42 @@ const Case = ({ project, index }: { project: Project; index: number }) => {
           {project.title}
         </h3>
 
-        <p className="mt-4 text-[15px] leading-relaxed text-muted">{project.description}</p>
+        <p data-clamp="" className={`mt-4 text-[15px] leading-relaxed text-muted ${clamp('line-clamp-4')}`}>
+          {project.description}
+        </p>
 
         {(project.problem || project.solution || project.outcome) && (
           <dl className="mt-6 space-y-4 border-t border-line pt-5">
             {project.problem && (
               <div>
                 <dt className="label text-[10px] mb-1">Problem</dt>
-                <dd className="text-sm text-muted leading-relaxed">{project.problem}</dd>
+                <dd data-clamp="" className={`text-sm text-muted leading-relaxed ${clamp('line-clamp-3')}`}>{project.problem}</dd>
               </div>
             )}
             {project.solution && (
               <div>
                 <dt className="label text-[10px] mb-1">Solution</dt>
-                <dd className="text-sm text-muted leading-relaxed">{project.solution}</dd>
+                <dd data-clamp="" className={`text-sm text-muted leading-relaxed ${clamp('line-clamp-3')}`}>{project.solution}</dd>
               </div>
             )}
             {project.outcome && (
               <div>
                 <dt className="label text-[10px] mb-1">Outcome</dt>
-                <dd className="text-sm text-text leading-relaxed">{project.outcome}</dd>
+                <dd data-clamp="" className={`text-sm text-text leading-relaxed ${clamp('line-clamp-3')}`}>{project.outcome}</dd>
               </div>
             )}
           </dl>
+        )}
+
+        {(overflowing || expanded) && (
+          <button
+            type="button"
+            onClick={toggle}
+            aria-expanded={expanded}
+            className="mt-4 label text-[10px] label-accent hover:underline"
+          >
+            {expanded ? '— Show less' : '+ View more'}
+          </button>
         )}
 
         {project.techStack?.length > 0 && (
