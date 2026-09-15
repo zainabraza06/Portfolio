@@ -112,10 +112,9 @@ export const About = () => {
                 and LLM applications — and deep learning research in vision, speech and time-series.
               </p>
               <p className="text-muted">
-                In research: GAUGE-Net for turbofan life prediction, and multimodal
-                speech-and-gesture models. In generative AI: multi-agent assistants and
-                retrieval-grounded tools. Both ship as full-stack products on MERN, Next.js,
-                FastAPI and Flutter.
+                My work spans new model architectures, multimodal learning, agentic systems
+                and retrieval-grounded tools — built end to end and shipped as full-stack
+                products on MERN, Next.js, FastAPI and Flutter.
               </p>
             </div>
 
