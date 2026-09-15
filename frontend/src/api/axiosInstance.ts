@@ -4,10 +4,10 @@ import axios from 'axios';
 const baseURL =
   (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim().replace(/\/+$/, '') || '/api';
 
-const api = axios.create({
-  baseURL,
-  headers: { 'Content-Type': 'application/json' },
-});
+// No default Content-Type. axios sets application/json for plain objects on its
+// own; forcing it here made axios serialise FormData to JSON, which silently
+// dropped every uploaded image before the request left the browser.
+const api = axios.create({ baseURL });
 
 // Attach JWT token to every request if present
 api.interceptors.request.use((config) => {
