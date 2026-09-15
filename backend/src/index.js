@@ -12,6 +12,7 @@ import certificateRoutes from './routes/certificates.js';
 import hackathonRoutes   from './routes/hackathons.js';
 import kaggleRoutes      from './routes/kaggle.js';
 import researchRoutes   from './routes/research.js';
+import { cloudinary }   from './config/cloudinary.js';
 
 const app = express();
 
@@ -54,6 +55,26 @@ app.get('/api/health', (_req, res) => res.json({
     apiSecret: Boolean(process.env.CLOUDINARY_API_SECRET),
   },
 }));
+
+// Validates the Cloudinary credentials on the host itself, so they never need
+// to be copied anywhere to be checked. Cached, because the Admin API is
+// rate-limited; key numbers are scrubbed from any error before it is returned.
+let uploadCheck = { at: 0, result: null };
+app.get('/api/health/uploads', async (_req, res) => {
+  if (!uploadCheck.result || Date.now() - uploadCheck.at > 10 * 60 * 1000) {
+    try {
+      await cloudinary.api.ping();
+      uploadCheck.result = { ok: true };
+    } catch (err) {
+      const detail = err?.error ?? err;
+      const reason = String(detail?.message ?? 'Cloudinary rejected the credentials')
+        .replace(/\d{8,}/g, '[key]');
+      uploadCheck.result = { ok: false, reason };
+    }
+    uploadCheck.at = Date.now();
+  }
+  res.json({ ...uploadCheck.result, checkedAt: new Date(uploadCheck.at) });
+});
 
 // ── Global error handler ────────────────────────────────────────────────────
 app.use((err, _req, res, _next) => {
