@@ -33,9 +33,10 @@ const seed = async () => {
       role: 'AI Automation Developer',
       duration: 'August 2026',
       description: [
-        'Built a customer support AI agent on the MERN stack handling support and order management for client businesses — channel-aware across WhatsApp, Instagram and the client website via MCP (Model Context Protocol).',
-        "Integrated a customer reward and loyalty system into a client's production MERN e-commerce codebase.",
-        'Ran a comparative analysis of client websites to inform the automation and integration approach.',
+        'Built an AI customer-support agent for a client store - 12 tools exposed over the Model Context Protocol, so one tool layer serves the website, WhatsApp and Instagram.',
+        'Enforced security in code rather than prompts: identity taken from the auth token, orders requiring explicit confirmation and a tamper-proof quote token, and a human escalation queue behind every handover promise.',
+        'Integrated WhatsApp Cloud API and Instagram Messaging webhooks with HMAC-SHA256 validation, message-id deduplication and OTP phone verification - built and tested, pending Meta business credentials.',
+        'Shipped a loyalty programme of 15 config-driven earning rules with a unique-index ledger against double-crediting, and a measurement-based size recommendation engine.',
       ].join('\n'),
       type: 'work',
       order: 0,
