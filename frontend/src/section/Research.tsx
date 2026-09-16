@@ -145,11 +145,11 @@ export const Research = () => {
 
         <div className="grid lg:grid-cols-12 gap-8 mb-8 sm:mb-12 reveal">
           <h2 className="display-xl lg:col-span-6 max-w-[13ch]">
-            Independent <span className="accent-italic text-accent">research</span>.
+            Every <span className="accent-italic text-accent">research</span> project.
           </h2>
           <p className="lede lg:col-span-6 self-end max-w-md">
-            Work taken on outside the internships. The engine and speech research
-            is detailed under Experience.
+            Internship work, coursework and independent projects â€” each labelled with
+            where it came from, and opening to its method and results.
           </p>
         </div>
 

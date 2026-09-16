@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import { useApi } from '../hooks/useApi';
-import { fetchExperience } from '../api/services';
+import { fetchExperience, fetchResearch } from '../api/services';
 
 interface Exp {
   _id: string;
@@ -15,7 +15,7 @@ interface Exp {
 
 const PREVIEW_BULLETS = 2;
 
-const Entry = ({ exp, index }: { exp: Exp; index: number }) => {
+const Entry = ({ exp, index, hasResearch }: { exp: Exp; index: number; hasResearch: boolean }) => {
   const [expanded, setExpanded] = useState(false);
   const bullets = exp.description.split('\n').map(l => l.trim()).filter(Boolean);
   const visible = expanded ? bullets : bullets.slice(0, PREVIEW_BULLETS);
@@ -69,6 +69,15 @@ const Entry = ({ exp, index }: { exp: Exp; index: number }) => {
         ) : (
           <p className="mt-3 text-[15px] leading-relaxed text-muted max-w-3xl">{exp.description}</p>
         )}
+
+        {hasResearch && (
+          <a
+            href="#research"
+            className="mt-4 inline-flex items-center gap-2 label text-[10px] label-accent hover:underline"
+          >
+            Research from this role â†“
+          </a>
+        )}
       </div>
     </div>
   );
@@ -76,9 +85,16 @@ const Entry = ({ exp, index }: { exp: Exp; index: number }) => {
 
 export const Experience = () => {
   const { data, loading, error } = useApi<Exp[]>(fetchExperience);
-  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [data]);
+  const { data: research } = useApi<{ context: string }[]>(fetchResearch);
+  useScrollRevealAll('.reveal, .reveal-left, .reveal-right', [data, research]);
 
   const entries = [...(data ?? [])].reverse();
+
+  // A role links to Research when an entry there names it as its context, so
+  // adding research from a new employer wires up the link on its own.
+  const contexts = (research ?? []).map(r => (r.context ?? '').toLowerCase());
+  const hasResearch = (company: string) =>
+    Boolean(company) && contexts.some(c => c.includes(company.toLowerCase()));
 
   return (
     <section id="experience" className="section border-t border-line">
@@ -93,7 +109,8 @@ export const Experience = () => {
             The <span className="accent-italic text-accent">path</span> so far.
           </h2>
           <p className="lede lg:col-span-6 self-end max-w-md">
-            Three AI and engineering roles, and a degree in progress.
+            Three AI and engineering roles, and a degree in progress. The research
+            behind each role sits in the section above.
           </p>
         </div>
 
@@ -103,7 +120,7 @@ export const Experience = () => {
         {!loading && !error && entries.length > 0 && (
           <div className="border-t border-line">
             {entries.map((exp, i) => (
-              <Entry key={exp._id} exp={exp} index={i} />
+              <Entry key={exp._id} exp={exp} index={i} hasResearch={hasResearch(exp.company)} />
             ))}
           </div>
         )}
