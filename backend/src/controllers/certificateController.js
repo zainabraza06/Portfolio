@@ -1,4 +1,5 @@
 import Certificate from '../models/Certificate.js';
+import { reorderHandler } from '../utils/reorder.js';
 
 export const getCertificates = async (req, res) => {
   try {
@@ -38,3 +39,5 @@ export const deleteCertificate = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const reorderCertificates = reorderHandler(Certificate);

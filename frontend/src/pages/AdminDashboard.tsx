@@ -11,7 +11,7 @@ import {
   fetchHackathons, createHackathon, updateHackathon, deleteHackathon,
   fetchKaggle, createKaggle, updateKaggle, deleteKaggle,
   fetchResearch, createResearch, updateResearch, deleteResearch,
-  reorderProjects, reorderResearch,
+  reorderProjects, reorderResearch, reorderCertificates,
   changePassword
 } from '../api/services';
 
@@ -703,6 +703,7 @@ function CertificatesTab() {
     catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
     finally { setLoading(false); }
   };
+  const reorder = useReorder(items, setItems, reorderCertificates, toast);
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -747,8 +748,14 @@ function CertificatesTab() {
       </div>
       {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
-          {items.map(c => (
-            <div key={c._id} className="glass-card p-4 flex items-start justify-between gap-4">
+          {items.length > 1 && <p className="text-muted text-xs">Drag a row, or use ▲▼, to set the order the site shows.</p>}
+          {items.map((c, i) => (
+            <div
+              key={c._id}
+              {...reorder.rowProps(c._id, i)}
+              className={`glass-card p-4 flex items-start justify-between gap-4 transition-opacity ${reorder.rowClass(c._id)}`}
+            >
+              <DragHandle />
               <div className="flex-1 min-w-0">
                 <h3 className="text-text font-semibold">{c.title as string}</h3>
                 <p className="text-accent text-sm">{c.issuer as string} · {c.date as string}</p>
@@ -764,6 +771,7 @@ function CertificatesTab() {
                 )}
               </div>
               <div className="flex gap-2 shrink-0">
+                <MoveButtons index={i} count={items.length} onMove={reorder.move} label={String(c.title)} />
                 <button onClick={() => openEdit(c)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
                 <button onClick={() => remove(c._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>

@@ -40,6 +40,7 @@ export const fetchCertificates = () => api.get('/certificates').then(r => r.data
 export const createCertificate = (data: FormData | object) => api.post('/certificates', data).then(r => r.data);
 export const updateCertificate = (id: string, data: FormData | object) => api.put(`/certificates/${id}`, data).then(r => r.data);
 export const deleteCertificate = (id: string) => api.delete(`/certificates/${id}`).then(r => r.data);
+export const reorderCertificates = (ids: string[]) => api.patch('/certificates/reorder', { ids }).then(r => r.data);
 
 // ── Hackathons ────────────────────────────────────────────────────
 export const fetchHackathons = () => api.get('/hackathons').then(r => r.data);
