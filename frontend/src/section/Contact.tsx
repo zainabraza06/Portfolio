@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
-import { submitContact } from '../api/services';
+import { useApi } from '../hooks/useApi';
+import { submitContact, fetchFreelance } from '../api/services';
 
 export const EMAIL = 'zainabraza1960@gmail.com';
 
@@ -9,8 +10,19 @@ export const SOCIALS = [
   { label: 'LinkedIn', handle: 'Zainab Raza Malik', href: 'https://www.linkedin.com/in/zainab-raza-malik-9b9a42219/' },
 ];
 
+interface FreelanceLink {
+  _id: string;
+  platform: string;
+  url: string;
+  handle?: string;
+  active?: boolean;
+}
+
 export const Contact = () => {
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', []);
+  const { data: freelanceData } = useApi<FreelanceLink[]>(fetchFreelance);
+  const activeFreelance = (freelanceData ?? []).filter(item => item.active !== false);
+
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [msg, setMsg] = useState('');
@@ -79,6 +91,34 @@ export const Contact = () => {
                 </span>
               </a>
             ))}
+
+            {/* Freelance Profiles (conditionally rendered only if present) */}
+            {activeFreelance.length > 0 && (
+              <div className="border-t border-line pt-5 mt-2">
+                <span className="label text-[10px] text-accent font-bold uppercase tracking-wider block mb-3">
+                  💼 Freelance Profiles
+                </span>
+                <div className="space-y-3">
+                  {activeFreelance.map(f => (
+                    <a
+                      key={f._id}
+                      href={f.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-between p-3 rounded-xl border border-line bg-ink-2/40 hover:bg-ink-2 hover:border-accent/40 transition-all duration-300"
+                    >
+                      <div>
+                        <span className="text-sm font-semibold text-text group-hover:text-accent transition-colors">
+                          {f.platform}
+                        </span>
+                        {f.handle && <p className="text-[11px] text-muted">{f.handle}</p>}
+                      </div>
+                      <span className="text-xs text-faint group-hover:text-accent transition-colors">↗</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <p className="mt-8 text-sm text-muted leading-relaxed max-w-sm">
               Open to AI/ML and full-stack roles, research collaborations and freelance work.

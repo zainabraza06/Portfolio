@@ -1,4 +1,5 @@
 import Hackathon from '../models/Hackathon.js';
+import { reorderHandler } from '../utils/reorder.js';
 
 export const getHackathons = async (req, res) => {
   try {
@@ -42,3 +43,5 @@ export const deleteHackathon = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const reorderHackathons = reorderHandler(Hackathon);

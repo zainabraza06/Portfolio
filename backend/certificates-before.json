@@ -1,0 +1,102 @@
+[
+  {
+    "_id": "69f74ef9317ef79212fd5e7f",
+    "title": "IBM JavaScript Backend Developer",
+    "issuer": "IBM",
+    "date": "Recent",
+    "linkedInUrl": "",
+    "imageUrl": "",
+    "order": 0,
+    "__v": 0,
+    "createdAt": "2026-05-03T13:34:49.078Z",
+    "updatedAt": "2026-09-17T09:49:43.656Z"
+  },
+  {
+    "_id": "69f74ef9317ef79212fd5e80",
+    "title": "Machine Learning Specialization",
+    "issuer": "DeepLearning.AI · Stanford Online",
+    "date": "Dec 2025",
+    "linkedInUrl": "",
+    "imageUrl": "",
+    "order": 2,
+    "__v": 0,
+    "createdAt": "2026-05-03T13:34:49.078Z",
+    "updatedAt": "2026-09-17T09:49:46.525Z",
+    "credentialId": "NIO29VDJY3VW",
+    "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/NIO29VDJY3VW"
+  },
+  {
+    "_id": "69f74ef9317ef79212fd5e81",
+    "title": "Microsoft AI & ML Engineering",
+    "issuer": "Microsoft",
+    "date": "Recent",
+    "linkedInUrl": "",
+    "imageUrl": "",
+    "order": 0,
+    "__v": 0,
+    "createdAt": "2026-05-03T13:34:49.078Z",
+    "updatedAt": "2026-09-17T09:49:43.656Z"
+  },
+  {
+    "_id": "69f74ef9317ef79212fd5e82",
+    "title": "Meta Front-End Developer",
+    "issuer": "Meta",
+    "date": "Aug 2025",
+    "linkedInUrl": "",
+    "imageUrl": "",
+    "order": 6,
+    "__v": 0,
+    "createdAt": "2026-05-03T13:34:49.078Z",
+    "updatedAt": "2026-09-17T09:49:49.705Z",
+    "credentialId": "O061412S2TM4",
+    "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/O061412S2TM4"
+  },
+  {
+    "_id": "6aabb7b9b48670bda0830b98",
+    "title": "Apache Kafka Specialization",
+    "issuer": "LearnKartS",
+    "date": "Oct 2025",
+    "credentialId": "7DN6PYYKX9H2",
+    "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/7DN6PYYKX9H2",
+    "order": 1,
+    "createdAt": "2026-09-17T09:49:45.273Z",
+    "updatedAt": "2026-09-17T09:49:45.273Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aabb7bbb48670bda0830b9f",
+    "title": "Microsoft AI & ML Engineering Professional Certificate",
+    "issuer": "Microsoft",
+    "date": "Dec 2025",
+    "credentialId": "52EEGDGTG0ZJ",
+    "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/52EEGDGTG0ZJ",
+    "order": 3,
+    "createdAt": "2026-09-17T09:49:47.361Z",
+    "updatedAt": "2026-09-17T09:49:47.361Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aabb7bcb48670bda0830ba3",
+    "title": "GraphQL Mastery: From Fundamentals to Production Specialization",
+    "issuer": "Board Infinity",
+    "date": "Sep 2025",
+    "credentialId": "61MHDJ3OBMVB",
+    "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/61MHDJ3OBMVB",
+    "order": 4,
+    "createdAt": "2026-09-17T09:49:48.169Z",
+    "updatedAt": "2026-09-17T09:49:48.169Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aabb7bcb48670bda0830ba7",
+    "title": "IBM JavaScript Backend Specialization",
+    "issuer": "IBM",
+    "date": "Sep 2025",
+    "credentialId": "NMUIPX5CWE2X",
+    "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/NMUIPX5CWE2X",
+    "order": 5,
+    "createdAt": "2026-09-17T09:49:48.925Z",
+    "updatedAt": "2026-09-17T09:49:48.925Z",
+    "__v": 0
+  }
+]

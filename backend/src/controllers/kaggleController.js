@@ -1,4 +1,5 @@
 import Kaggle from '../models/Kaggle.js';
+import { reorderHandler } from '../utils/reorder.js';
 
 export const getKaggle = async (req, res) => {
   try {
@@ -42,3 +43,5 @@ export const deleteKaggle = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const reorderKaggle = reorderHandler(Kaggle);

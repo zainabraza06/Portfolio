@@ -47,12 +47,14 @@ export const fetchHackathons = () => api.get('/hackathons').then(r => r.data);
 export const createHackathon = (data: FormData | object) => api.post('/hackathons', data).then(r => r.data);
 export const updateHackathon = (id: string, data: FormData | object) => api.put(`/hackathons/${id}`, data).then(r => r.data);
 export const deleteHackathon = (id: string) => api.delete(`/hackathons/${id}`).then(r => r.data);
+export const reorderHackathons = (ids: string[]) => api.patch('/hackathons/reorder', { ids }).then(r => r.data);
 
 // ── Kaggle ────────────────────────────────────────────────────────
 export const fetchKaggle = () => api.get('/kaggle').then(r => r.data);
 export const createKaggle = (data: FormData | object) => api.post('/kaggle', data).then(r => r.data);
 export const updateKaggle = (id: string, data: FormData | object) => api.put(`/kaggle/${id}`, data).then(r => r.data);
 export const deleteKaggle = (id: string) => api.delete(`/kaggle/${id}`).then(r => r.data);
+export const reorderKaggle = (ids: string[]) => api.patch('/kaggle/reorder', { ids }).then(r => r.data);
 
 // ── Research ──────────────────────────────────────────────────────
 export const fetchResearch = () => api.get('/research').then(r => r.data);
@@ -60,3 +62,10 @@ export const createResearch = (data: object) => api.post('/research', data).then
 export const updateResearch = (id: string, data: object) => api.put(`/research/${id}`, data).then(r => r.data);
 export const deleteResearch = (id: string) => api.delete(`/research/${id}`).then(r => r.data);
 export const reorderResearch = (ids: string[]) => api.patch('/research/reorder', { ids }).then(r => r.data);
+
+// ── Freelance ─────────────────────────────────────────────────────
+export const fetchFreelance = () => api.get('/freelance').then(r => r.data);
+export const createFreelance = (data: object) => api.post('/freelance', data).then(r => r.data);
+export const updateFreelance = (id: string, data: object) => api.put(`/freelance/${id}`, data).then(r => r.data);
+export const deleteFreelance = (id: string) => api.delete(`/freelance/${id}`).then(r => r.data);
+export const reorderFreelance = (ids: string[]) => api.patch('/freelance/reorder', { ids }).then(r => r.data);

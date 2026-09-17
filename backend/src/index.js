@@ -12,6 +12,7 @@ import certificateRoutes from './routes/certificates.js';
 import hackathonRoutes   from './routes/hackathons.js';
 import kaggleRoutes      from './routes/kaggle.js';
 import researchRoutes   from './routes/research.js';
+import freelanceRoutes  from './routes/freelance.js';
 import { cloudinary }   from './config/cloudinary.js';
 
 const app = express();
@@ -42,6 +43,7 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/hackathons',   hackathonRoutes);
 app.use('/api/kaggle',       kaggleRoutes);
 app.use('/api/research',     researchRoutes);
+app.use('/api/freelance',    freelanceRoutes);
 
 // ── Health check ────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.json({

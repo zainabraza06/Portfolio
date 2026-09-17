@@ -5,17 +5,18 @@ import { FeedbackProvider, useToast, useConfirm } from '../components/Feedback';
 import {
   fetchProjects, createProject, updateProject, deleteProject,
   fetchExperience, createExperience, updateExperience, deleteExperience,
-  fetchAllTestimonials, approveTestimonial, deleteTestimonial,
+  fetchAllTestimonials, createTestimonial, updateTestimonial, approveTestimonial, deleteTestimonial,
   fetchMessages, markMessageRead, deleteMessage,
   fetchCertificates, createCertificate, updateCertificate, deleteCertificate, syncProjects,
   fetchHackathons, createHackathon, updateHackathon, deleteHackathon,
   fetchKaggle, createKaggle, updateKaggle, deleteKaggle,
   fetchResearch, createResearch, updateResearch, deleteResearch,
-  reorderProjects, reorderResearch, reorderCertificates,
+  fetchFreelance, createFreelance, updateFreelance, deleteFreelance,
+  reorderProjects, reorderResearch, reorderCertificates, reorderHackathons, reorderKaggle, reorderFreelance,
   changePassword
 } from '../api/services';
 
-type Tab = 'projects' | 'research' | 'hackathons' | 'kaggle' | 'certificates' | 'experience' | 'testimonials' | 'messages';
+type Tab = 'projects' | 'research' | 'hackathons' | 'kaggle' | 'certificates' | 'experience' | 'testimonials' | 'messages' | 'freelance';
 
 interface Item { _id: string; [key: string]: unknown; }
 
@@ -27,6 +28,7 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'certificates', label: 'Certificates',  icon: '🏆' },
   { id: 'experience',   label: 'Experience',     icon: '📅' },
   { id: 'testimonials', label: 'Testimonials',   icon: '💬' },
+  { id: 'freelance',    label: 'Freelance',      icon: '💼' },
   { id: 'messages',     label: 'Messages',       icon: '📬' },
 ];
 
@@ -36,6 +38,8 @@ const emptyHack    = { title: '', description: '', date: '', projectUrl: '', cer
 const emptyKaggle  = { title: '', description: '', competitionUrl: '', rank: '', date: '', imageUrl: '', order: 0 };
 const emptyExp     = { company: '', role: '', duration: '', description: '', logo: '', type: 'work', order: 0 };
 const emptyResearch = { title: '', context: '', period: '', status: 'ongoing', summary: '', architecture: '', novelty: '', method: '', results: '', tags: '', link: '', featured: false, order: 0 };
+const emptyTestimonial = { name: '', role: '', company: '', text: '', rating: 5, approved: true };
+const emptyFreelance   = { platform: '', url: '', handle: '', active: true, order: 0 };
 
 // ── Generic Modal ────────────────────────────────────────────────
 function Modal({ title, onClose, onSave, children, loading }: {
@@ -518,6 +522,7 @@ function HackathonsTab() {
     catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
     finally { setLoading(false); }
   };
+  const reorder = useReorder(items, setItems, reorderHackathons, toast);
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -557,13 +562,20 @@ function HackathonsTab() {
       </div>
       {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
-          {items.map(h => (
-            <div key={h._id} className="glass-card p-4 flex items-start justify-between gap-4">
+          {items.length > 1 && <p className="text-muted text-xs">Drag a row, or use ▲▼, to set the order the site shows.</p>}
+          {items.map((h, i) => (
+            <div
+              key={h._id}
+              {...reorder.rowProps(h._id, i)}
+              className={`glass-card p-4 flex items-start justify-between gap-4 transition-opacity ${reorder.rowClass(h._id)}`}
+            >
+              <DragHandle />
               <div className="flex-1 min-w-0">
                 <h3 className="text-text font-semibold">{h.title as string}</h3>
                 <p className="text-accent text-sm">{h.date as string}</p>
               </div>
               <div className="flex gap-2 shrink-0">
+                <MoveButtons index={i} count={items.length} onMove={reorder.move} label={String(h.title)} />
                 <button onClick={() => openEdit(h)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
                 <button onClick={() => remove(h._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
@@ -611,6 +623,7 @@ function KaggleTab() {
     catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
     finally { setLoading(false); }
   };
+  const reorder = useReorder(items, setItems, reorderKaggle, toast);
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -650,13 +663,20 @@ function KaggleTab() {
       </div>
       {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
-          {items.map(kItem => (
-            <div key={kItem._id} className="glass-card p-4 flex items-start justify-between gap-4">
+          {items.length > 1 && <p className="text-muted text-xs">Drag a row, or use ▲▼, to set the order the site shows.</p>}
+          {items.map((kItem, i) => (
+            <div
+              key={kItem._id}
+              {...reorder.rowProps(kItem._id, i)}
+              className={`glass-card p-4 flex items-start justify-between gap-4 transition-opacity ${reorder.rowClass(kItem._id)}`}
+            >
+              <DragHandle />
               <div className="flex-1 min-w-0">
                 <h3 className="text-text font-semibold">{kItem.title as string}</h3>
                 <p className="text-accent text-sm">{`${kItem.date as string}${kItem.rank ? ` - Rank: ${kItem.rank}` : ''}`}</p>
               </div>
               <div className="flex gap-2 shrink-0">
+                <MoveButtons index={i} count={items.length} onMove={reorder.move} label={String(kItem.title)} />
                 <button onClick={() => openEdit(kItem)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
                 <button onClick={() => remove(kItem._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
@@ -907,7 +927,11 @@ function TestimonialsTab() {
   const toast = useToast();
   const askConfirm = useConfirm();
   const [items, setItems] = useState<Item[]>([]);
+  const [modal, setModal] = useState<'add' | 'edit' | null>(null);
+  const [form, setForm]   = useState({ ...emptyTestimonial });
+  const [editId, setEditId] = useState('');
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -916,6 +940,34 @@ function TestimonialsTab() {
     finally { setLoading(false); }
   };
   useEffect(() => { load(); }, []);
+
+  const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
+  const openAdd  = () => { setForm({ ...emptyTestimonial }); setModal('add'); };
+  const openEdit = (t: Item) => {
+    setForm({
+      name: t.name as string,
+      role: t.role as string,
+      company: t.company as string,
+      text: t.text as string,
+      rating: (t.rating as number) || 5,
+      approved: Boolean(t.approved),
+    });
+    setEditId(t._id);
+    setModal('edit');
+  };
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      if (modal === 'add') await createTestimonial(form);
+      else await updateTestimonial(editId, form);
+      setModal(null); load(); toast('Saved.');
+    } catch (err) {
+      toast(errorMessage(err, 'Failed to save testimonial.'), 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const approve = async (id: string) => {
     try { await approveTestimonial(id); load(); toast('Testimonial approved.'); }
@@ -935,7 +987,10 @@ function TestimonialsTab() {
 
   return (
     <div>
-      <h2 className="text-text font-bold text-xl mb-6">Testimonials <span className="text-muted font-normal text-sm ml-2">{items.length} total</span></h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-text font-bold text-xl">Testimonials <span className="text-muted font-normal text-sm ml-2">{items.length} total</span></h2>
+        <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Testimonial</span></button>
+      </div>
       {loading ? <p className="text-muted">Loading…</p> : (
         <div className="space-y-3">
           {items.map(t => (
@@ -954,12 +1009,152 @@ function TestimonialsTab() {
               </div>
               <div className="flex gap-2 shrink-0">
                 {!t.approved && <button onClick={() => approve(t._id)} className="btn-primary py-1.5 px-3 text-xs"><span>Approve</span></button>}
+                <button onClick={() => openEdit(t)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
                 <button onClick={() => remove(t._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
               </div>
             </div>
           ))}
           {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No testimonials yet.</div>}
         </div>
+      )}
+      {modal && (
+        <Modal title={modal === 'add' ? 'Add Testimonial' : 'Edit Testimonial'} onClose={() => setModal(null)} onSave={save} loading={saving}>
+          <div className="space-y-3">
+            <Field label="Name *" id="t-name"><input id="t-name" className="form-input" value={form.name} onChange={e => set('name', e.target.value)} placeholder="Jane Doe" /></Field>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label="Role *" id="t-role"><input id="t-role" className="form-input" value={form.role} onChange={e => set('role', e.target.value)} placeholder="CTO / Founder" /></Field>
+              <Field label="Company *" id="t-comp"><input id="t-comp" className="form-input" value={form.company} onChange={e => set('company', e.target.value)} placeholder="Tech Corp" /></Field>
+            </div>
+            <Field label="Rating (1 to 5)" id="t-rate">
+              <select id="t-rate" className="form-input" value={form.rating} onChange={e => set('rating', Number(e.target.value))}>
+                <option value={5}>5 Stars ★★★★★</option>
+                <option value={4}>4 Stars ★★★★</option>
+                <option value={3}>3 Stars ★★★</option>
+                <option value={2}>2 Stars ★★</option>
+                <option value={1}>1 Star ★</option>
+              </select>
+            </Field>
+            <Field label="Testimonial Text *" id="t-text"><textarea id="t-text" className="form-input resize-none" rows={4} value={form.text} onChange={e => set('text', e.target.value)} placeholder="What did they say about working with you?" /></Field>
+            <div className="flex items-center gap-3 pt-2">
+              <input id="t-app" type="checkbox" checked={form.approved} onChange={e => set('approved', e.target.checked)} className="w-4 h-4 accent-[#9B8CFF]" />
+              <label htmlFor="t-app" className="text-sm text-muted font-medium">Approved (visible on portfolio)</label>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ── Freelance Tab ────────────────────────────────────────────────
+function FreelanceTab() {
+  const toast = useToast();
+  const askConfirm = useConfirm();
+  const [items, setItems] = useState<Item[]>([]);
+  const [modal, setModal] = useState<'add' | 'edit' | null>(null);
+  const [form, setForm]   = useState({ ...emptyFreelance });
+  const [editId, setEditId] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    try { setItems(await fetchFreelance()); }
+    catch (err) { toast(errorMessage(err, 'Could not load.'), 'error'); }
+    finally { setLoading(false); }
+  };
+  const reorder = useReorder(items, setItems, reorderFreelance, toast);
+  useEffect(() => { load(); }, []);
+
+  const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
+  const openAdd  = () => { setForm({ ...emptyFreelance }); setModal('add'); };
+  const openEdit = (fl: Item) => {
+    setForm({
+      platform: fl.platform as string,
+      url: fl.url as string,
+      handle: (fl.handle as string) || '',
+      active: fl.active !== false,
+      order: (fl.order as number) || 0
+    });
+    setEditId(fl._id);
+    setModal('edit');
+  };
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      if (modal === 'add') await createFreelance(form);
+      else await updateFreelance(editId, form);
+      setModal(null); load(); toast('Saved.');
+    } catch (err) {
+      toast(errorMessage(err, 'Failed to save.'), 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const remove = async (id: string) => {
+    const ok = await askConfirm({ title: 'Delete freelance profile link?', message: 'This removes the link permanently.' });
+    if (!ok) return;
+    try {
+      await deleteFreelance(id);
+      load();
+      toast('Link deleted.');
+    } catch (err) {
+      toast(errorMessage(err, 'Could not delete. Please try again.'), 'error');
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-text font-bold text-xl">Freelance URLs <span className="text-muted font-normal text-sm ml-2">{items.length} links</span></h2>
+        <button onClick={openAdd} className="btn-primary py-2 px-4 text-sm"><span>+ Add Freelance Link</span></button>
+      </div>
+      {loading ? <p className="text-muted">Loading…</p> : (
+        <div className="space-y-3">
+          {items.length > 1 && <p className="text-muted text-xs">Drag a row, or use ▲▼, to set the order the site shows.</p>}
+          {items.map((fl, i) => (
+            <div
+              key={fl._id}
+              {...reorder.rowProps(fl._id, i)}
+              className={`glass-card p-4 flex items-start justify-between gap-4 transition-opacity ${reorder.rowClass(fl._id)}`}
+            >
+              <DragHandle />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${fl.active !== false ? 'bg-ok/20 text-ok' : 'bg-faint/20 text-muted'}`}>
+                    {fl.active !== false ? '✓ Active' : 'Hidden'}
+                  </span>
+                  <h3 className="text-text font-semibold">{fl.platform as string}</h3>
+                </div>
+                <a href={String(fl.url)} target="_blank" rel="noreferrer" className="text-xs text-accent underline block truncate">
+                  {fl.url as string}
+                </a>
+                {Boolean(fl.handle) && <p className="text-muted text-xs mt-0.5">{fl.handle as string}</p>}
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <MoveButtons index={i} count={items.length} onMove={reorder.move} label={String(fl.platform)} />
+                <button onClick={() => openEdit(fl)} className="btn-outline py-1.5 px-3 text-xs">Edit</button>
+                <button onClick={() => remove(fl._id)} className="py-1.5 px-3 text-xs rounded-full border border-bad/40 text-bad hover:bg-bad/10 transition-all">Delete</button>
+              </div>
+            </div>
+          ))}
+          {items.length === 0 && <div className="glass-card p-8 text-center text-muted">No freelance URLs added yet. Add Upwork, Fiverr, Toptal or Contra profile links!</div>}
+        </div>
+      )}
+      {modal && (
+        <Modal title={modal === 'add' ? 'Add Freelance Profile' : 'Edit Freelance Profile'} onClose={() => setModal(null)} onSave={save} loading={saving}>
+          <div className="space-y-3">
+            <Field label="Platform Name *" id="fl-plat"><input id="fl-plat" className="form-input" value={form.platform} onChange={e => set('platform', e.target.value)} placeholder="e.g. Upwork, Fiverr, Toptal, Contra" /></Field>
+            <Field label="Profile URL *" id="fl-url"><input id="fl-url" className="form-input" value={form.url} onChange={e => set('url', e.target.value)} placeholder="https://www.upwork.com/freelancers/..." /></Field>
+            <Field label="Display Handle / Tagline (Optional)" id="fl-hand"><input id="fl-hand" className="form-input" value={form.handle} onChange={e => set('handle', e.target.value)} placeholder="e.g. Top Rated AI Developer" /></Field>
+            <div className="flex items-center gap-3 pt-2">
+              <input id="fl-act" type="checkbox" checked={form.active} onChange={e => set('active', e.target.checked)} className="w-4 h-4 accent-[#9B8CFF]" />
+              <label htmlFor="fl-act" className="text-sm text-muted font-medium">Show on portfolio website</label>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );
@@ -1165,6 +1360,7 @@ export default function AdminDashboard() {
           {tab === 'certificates' && <CertificatesTab />}
           {tab === 'experience'   && <ExperienceTab />}
           {tab === 'testimonials' && <TestimonialsTab />}
+          {tab === 'freelance'    && <FreelanceTab />}
           {tab === 'messages'     && <MessagesTab />}
         </div>
       </div>
