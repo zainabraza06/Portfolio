@@ -21,36 +21,8 @@ const FILTERS = ['Featured', 'All', 'Python', 'TypeScript', 'JavaScript'];
 const PREVIEW_COUNT = 5;
 
 /** Stands in for a screenshot: a quiet plotted field keyed to the project index. */
-const CoverFallback = ({ index, tech }: { index: number; tech: string[] }) => (
-  <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] border border-line bg-ink-2">
-    <div
-      className="absolute inset-0 opacity-[0.5]"
-      style={{
-        backgroundImage: 'radial-gradient(var(--color-line) 1px, transparent 1px)',
-        backgroundSize: '22px 22px',
-      }}
-    />
-    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">
-      <polyline
-        points={Array.from({ length: 9 }, (_, i) => {
-          const x = (i / 8) * 400;
-          const y = 210 - Math.sin(i * 0.8 + index) * 46 - i * 9;
-          return `${x},${y}`;
-        }).join(' ')}
-        fill="none"
-        stroke="var(--color-accent)"
-        strokeWidth="1.5"
-        opacity="0.75"
-      />
-    </svg>
-    <span className="absolute top-5 left-5 label text-[10px]">{tech.slice(0, 3).join(' / ')}</span>
-    <span className="absolute bottom-4 right-6 font-[family-name:var(--font-display)] text-[5rem] leading-none text-line select-none">
-      {String(index + 1).padStart(2, '0')}
-    </span>
-  </div>
-);
-
 const Case = ({ project, index }: { project: Project; index: number }) => {
+  const hasImage = Boolean(project.imageUrl);
   const flip = index % 2 === 1;
   const [expanded, setExpanded] = useState(false);
   const [overflowing, setOverflowing] = useState(false);
@@ -91,17 +63,17 @@ const Case = ({ project, index }: { project: Project; index: number }) => {
         Math.min(index + 1, 6)
       }`}
     >
-      {/* Visual */}
-      <div className={`lg:col-span-7 ${flip ? 'lg:order-2' : ''}`}>
-        <a
-          href={project.liveUrl || project.githubUrl || undefined}
-          target={project.liveUrl || project.githubUrl ? '_blank' : undefined}
-          rel="noopener noreferrer"
-          className="block overflow-hidden rounded-[var(--radius-md)]"
-          tabIndex={project.liveUrl || project.githubUrl ? 0 : -1}
-          aria-label={project.liveUrl || project.githubUrl ? `Open ${project.title}` : undefined}
-        >
-          {project.imageUrl ? (
+      {/* Visual (Only rendered if image is available) */}
+      {hasImage && (
+        <div className={`lg:col-span-7 ${flip ? 'lg:order-2' : ''}`}>
+          <a
+            href={project.liveUrl || project.githubUrl || undefined}
+            target={project.liveUrl || project.githubUrl ? '_blank' : undefined}
+            rel="noopener noreferrer"
+            className="block overflow-hidden rounded-[var(--radius-md)]"
+            tabIndex={project.liveUrl || project.githubUrl ? 0 : -1}
+            aria-label={project.liveUrl || project.githubUrl ? `Open ${project.title}` : undefined}
+          >
             <div className="overflow-hidden rounded-[var(--radius-md)] border border-line bg-ink-2">
               <img
                 src={project.imageUrl}
@@ -110,16 +82,12 @@ const Case = ({ project, index }: { project: Project; index: number }) => {
                 className="block w-full h-auto max-h-[640px] object-contain transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
               />
             </div>
-          ) : (
-            <div className="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]">
-              <CoverFallback index={index} tech={project.techStack} />
-            </div>
-          )}
-        </a>
-      </div>
+          </a>
+        </div>
+      )}
 
-      {/* Copy */}
-      <div ref={copyRef} className={`lg:col-span-5 ${flip ? 'lg:order-1' : ''}`}>
+      {/* Copy (Full width if no image) */}
+      <div ref={copyRef} className={hasImage ? `lg:col-span-5 ${flip ? 'lg:order-1' : ''}` : 'lg:col-span-12'}>
         <div className="flex items-center gap-3 mb-4">
           <span className="label text-[10px] label-accent">{String(index + 1).padStart(2, '0')}</span>
           <span className="h-px flex-1 bg-line transition-colors duration-500 group-hover:bg-accent/60" />
