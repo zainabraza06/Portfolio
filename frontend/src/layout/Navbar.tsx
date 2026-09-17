@@ -113,13 +113,6 @@ export const Navbar = () => {
                 />
               </button>
             ))}
-            <a
-              href="/CV.pdf"
-              download
-              className="ml-3 text-[13px] font-medium text-accent-ink bg-accent hover:bg-accent-2 transition-colors duration-300 rounded-full px-4 py-2"
-            >
-              Résumé
-            </a>
           </div>
 
           {/* Mobile trigger */}
@@ -174,10 +167,7 @@ export const Navbar = () => {
           ))}
 
           <div className="flex items-center gap-3 mt-10">
-            <a href="/CV.pdf" download className="btn-primary flex-1">
-              Résumé
-            </a>
-            <button onClick={() => go('contact')} className="btn-outline flex-1">
+            <button onClick={() => go('contact')} className="btn-primary w-full">
               Let's connect
             </button>
           </div>
