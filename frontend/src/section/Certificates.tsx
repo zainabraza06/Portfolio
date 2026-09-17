@@ -8,8 +8,8 @@ interface Certificate {
   title: string;
   issuer: string;
   date: string;
-  linkedInUrl: string;
-  imageUrl: string;
+  credentialId?: string;
+  credentialUrl?: string;
 }
 
 export const Certificates = () => {
@@ -45,12 +45,12 @@ export const Certificates = () => {
         {!loading && !error && (
           <div className="border-t border-line">
             {shown.map((cert, i) => {
-              const Row = cert.linkedInUrl ? 'a' : 'div';
+              const Row = cert.credentialUrl ? 'a' : 'div';
               return (
                 <Row
                   key={cert._id}
-                  {...(cert.linkedInUrl
-                    ? { href: cert.linkedInUrl, target: '_blank', rel: 'noopener noreferrer' }
+                  {...(cert.credentialUrl
+                    ? { href: cert.credentialUrl, target: '_blank', rel: 'noopener noreferrer' }
                     : {})}
                   className={`group grid sm:grid-cols-12 gap-1 sm:gap-6 items-baseline py-5 border-b border-line transition-colors duration-300 hover:bg-ink-2/60 reveal reveal-d${
                     Math.min(i + 1, 6)
@@ -63,7 +63,7 @@ export const Certificates = () => {
                   <span className="sm:col-span-3 text-sm text-muted">{cert.issuer}</span>
                   <span className="sm:col-span-2 flex items-center justify-between gap-2">
                     <span className="label text-[10px]">{cert.date}</span>
-                    {cert.linkedInUrl && (
+                    {cert.credentialUrl && (
                       <span className="text-faint transition-colors duration-300 group-hover:text-accent" aria-hidden="true">↗</span>
                     )}
                   </span>

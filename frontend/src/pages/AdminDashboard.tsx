@@ -31,7 +31,7 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
 ];
 
 const emptyProject = { title: '', description: '', techStack: '', problem: '', solution: '', outcome: '', liveUrl: '', githubUrl: '', imageUrl: '', featured: false, order: 0 };
-const emptyCert    = { title: '', issuer: '', date: '', credentialUrl: '', linkedInUrl: '', imageUrl: '', order: 0 };
+const emptyCert    = { title: '', issuer: '', date: '', credentialId: '', credentialUrl: '', order: 0 };
 const emptyHack    = { title: '', description: '', date: '', projectUrl: '', certificateUrl: '', imageUrl: '', order: 0 };
 const emptyKaggle  = { title: '', description: '', competitionUrl: '', rank: '', date: '', imageUrl: '', order: 0 };
 const emptyExp     = { company: '', role: '', duration: '', description: '', logo: '', type: 'work', order: 0 };
@@ -693,7 +693,6 @@ function CertificatesTab() {
   const [items, setItems] = useState<Item[]>([]);
   const [modal, setModal] = useState<'add' | 'edit' | null>(null);
   const [form, setForm]   = useState({ ...emptyCert });
-  const [file, setFile]   = useState<File | null>(null);
   const [editId, setEditId] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -707,19 +706,24 @@ function CertificatesTab() {
   useEffect(() => { load(); }, []);
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
-  const openAdd  = () => { setForm({ ...emptyCert }); setFile(null); setModal('add'); };
+  const openAdd  = () => { setForm({ ...emptyCert }); setModal('add'); };
   const openEdit = (c: Item) => {
-    setForm({ title: c.title as string, issuer: c.issuer as string, date: c.date as string,
-      linkedInUrl: c.linkedInUrl as string, credentialUrl: (c.credentialUrl as string) || '', imageUrl: c.imageUrl as string, order: c.order as number });
-    setFile(null);
-    setEditId(c._id); setModal('edit');
+    setForm({
+      title: c.title as string,
+      issuer: c.issuer as string,
+      date: c.date as string,
+      credentialId: (c.credentialId as string) || '',
+      credentialUrl: (c.credentialUrl as string) || '',
+      order: (c.order as number) || 0
+    });
+    setEditId(c._id);
+    setModal('edit');
   };
   const save = async () => {
     setSaving(true);
     try {
-      const payload = buildFormData(form, file);
-      if (modal === 'add') await createCertificate(payload);
-      else await updateCertificate(editId, payload);
+      if (modal === 'add') await createCertificate(form);
+      else await updateCertificate(editId, form);
       setModal(null); load(); toast('Saved.');
     } catch (err) { toast(errorMessage(err, 'Failed to save.'), 'error'); } finally { setSaving(false); }
   };
@@ -748,9 +752,9 @@ function CertificatesTab() {
               <div className="flex-1 min-w-0">
                 <h3 className="text-text font-semibold">{c.title as string}</h3>
                 <p className="text-accent text-sm">{c.issuer as string} · {c.date as string}</p>
-                {Boolean(c.credentialUrl || c.linkedInUrl) && (
+                {Boolean(c.credentialUrl) && (
                   <a
-                    href={String(c.credentialUrl || c.linkedInUrl)}
+                    href={String(c.credentialUrl)}
                     target="_blank"
                     rel="noreferrer"
                     className="text-xs text-muted hover:text-accent underline mt-1 block"
@@ -774,15 +778,12 @@ function CertificatesTab() {
             <Field label="Title *" id="c-title"><input id="c-title" className="form-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder="e.g. Meta Front-End Developer" /></Field>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Issuer *" id="c-iss"><input id="c-iss" className="form-input" value={form.issuer} onChange={e => set('issuer', e.target.value)} placeholder="e.g. Coursera" /></Field>
-              <Field label="Date" id="c-date"><input id="c-date" className="form-input" value={form.date} onChange={e => set('date', e.target.value)} placeholder="e.g. Aug 2024" /></Field>
+              <Field label="Date" id="c-date"><input id="c-date" className="form-input" value={form.date} onChange={e => set('date', e.target.value)} placeholder="e.g. Aug 2025" /></Field>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label="Credential ID" id="c-id"><input id="c-id" className="form-input" value={form.credentialId} onChange={e => set('credentialId', e.target.value)} placeholder="e.g. 7DN6PYYKX9H2" /></Field>
               <Field label="Credential URL" id="c-cred"><input id="c-cred" className="form-input" value={form.credentialUrl} onChange={e => set('credentialUrl', e.target.value)} placeholder="https://..." /></Field>
-              <Field label="LinkedIn Post URL" id="c-url"><input id="c-url" className="form-input" value={form.linkedInUrl} onChange={e => set('linkedInUrl', e.target.value)} placeholder="https://linkedin.com/..." /></Field>
             </div>
-            <Field label="Image Upload" id="c-img">
-              <input type="file" id="c-img" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="form-input py-2 text-sm text-muted file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-accent file:text-accent-ink" />
-            </Field>
             <Field label="Order" id="c-ord"><input id="c-ord" type="number" className="form-input w-24" value={form.order} onChange={e => set('order', Number(e.target.value))} /></Field>
           </div>
         </Modal>
