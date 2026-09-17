@@ -22,6 +22,12 @@ export const Contact = () => {
   useScrollRevealAll('.reveal, .reveal-left, .reveal-right', []);
   const { data: freelanceData } = useApi<FreelanceLink[]>(fetchFreelance);
   const activeFreelance = (freelanceData ?? []).filter(item => item.active !== false);
+  const [showAllFreelance, setShowAllFreelance] = useState(false);
+
+  const INITIAL_FREELANCE_COUNT = 2;
+  const visibleFreelance = showAllFreelance
+    ? activeFreelance
+    : activeFreelance.slice(0, INITIAL_FREELANCE_COUNT);
 
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -92,32 +98,38 @@ export const Contact = () => {
               </a>
             ))}
 
-            {/* Freelance Profiles (conditionally rendered only if present) */}
-            {activeFreelance.length > 0 && (
-              <div className="border-t border-line pt-5 mt-2">
-                <span className="label text-[10px] text-accent font-bold uppercase tracking-wider block mb-3">
-                  💼 Freelance Profiles
+            {/* Freelance platform links (rendered inline with social rows) */}
+            {visibleFreelance.map(f => (
+              <a
+                key={f._id}
+                href={f.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-baseline justify-between gap-4 border-t border-line py-5 transition-colors duration-300 hover:text-accent"
+              >
+                <span className="text-[17px] font-medium text-text group-hover:text-accent transition-colors duration-300">
+                  {f.platform}
                 </span>
-                <div className="space-y-3">
-                  {activeFreelance.map(f => (
-                    <a
-                      key={f._id}
-                      href={f.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center justify-between p-3 rounded-xl border border-line bg-ink-2/40 hover:bg-ink-2 hover:border-accent/40 transition-all duration-300"
-                    >
-                      <div>
-                        <span className="text-sm font-semibold text-text group-hover:text-accent transition-colors">
-                          {f.platform}
-                        </span>
-                        {f.handle && <p className="text-[11px] text-muted">{f.handle}</p>}
-                      </div>
-                      <span className="text-xs text-faint group-hover:text-accent transition-colors">↗</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
+                <span className="label text-[10px] flex items-center gap-2">
+                  {f.handle || 'Freelance'}
+                  <span className="text-faint group-hover:text-accent transition-colors duration-300">↗</span>
+                </span>
+              </a>
+            ))}
+
+            {/* Overflow "View more" toggle button */}
+            {activeFreelance.length > INITIAL_FREELANCE_COUNT && (
+              <button
+                type="button"
+                onClick={() => setShowAllFreelance(prev => !prev)}
+                className="mt-3 text-xs label label-accent hover:underline flex items-center gap-1.5"
+              >
+                {showAllFreelance
+                  ? '— Show less platforms'
+                  : `+ View ${activeFreelance.length - INITIAL_FREELANCE_COUNT} more freelance platform${
+                      activeFreelance.length - INITIAL_FREELANCE_COUNT > 1 ? 's' : ''
+                    }`}
+              </button>
             )}
 
             <p className="mt-8 text-sm text-muted leading-relaxed max-w-sm">
