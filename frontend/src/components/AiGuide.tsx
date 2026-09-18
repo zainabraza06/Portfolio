@@ -62,12 +62,12 @@ const LINES: Line[] = [
   {
     id: 'research',
     label: 'Research',
-    text: 'Independent research, separate from her internship work: subject-independent activity and fall recognition.',
+    text: 'GAUGE-Net (turbofan RUL), a multimodal phoneme-gesture classifier, subject-independent activity recognition, real-time CCTV threat detection, and fuel-consumption prediction.',
   },
   {
     id: 'experience',
     label: 'Experience',
-    text: 'NESCOM: turbofan life and fuel-consumption prediction. Murrabi: a Whisper and MediaPipe multimodal classifier.',
+    text: 'Most recently AI Automation Developer at Zyra. Before that: NESCOM (turbofan life prediction) and Murrabi (multimodal early-literacy classifier).',
   },
   {
     id: 'testimonials',
