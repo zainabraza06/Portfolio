@@ -4,13 +4,13 @@ import { useApi } from '../hooks/useApi';
 import { fetchProjects, fetchCertificates } from '../api/services';
 import { skillGroups } from './Skills';
 
-function CountUp({ target, suffix = '', decimals = 0 }: { target: number; suffix?: string; decimals?: number }) {
+function CountUp({ target, suffix = '', decimals = 0 }: { target: number | null; suffix?: string; decimals?: number }) {
   const [value, setValue] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || target === null) return;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setValue(target);
@@ -39,8 +39,8 @@ function CountUp({ target, suffix = '', decimals = 0 }: { target: number; suffix
 
   return (
     <span ref={ref}>
-      {value.toFixed(decimals)}
-      {suffix}
+      {target === null ? <span className="text-faint">—</span> : value.toFixed(decimals)}
+      {target === null ? '' : suffix}
     </span>
   );
 }
@@ -60,10 +60,10 @@ export const About = () => {
     .filter(g => g.category !== 'Soft Skills')
     .reduce((sum, g) => sum + g.skills.length, 0);
 
-  const stats = [
-    { value: projects?.length ?? 0, suffix: '', label: 'Projects shipped' },
+  const stats: { value: number | null; suffix: string; decimals?: number; label: string }[] = [
+    { value: projects ? projects.length : null, suffix: '', label: 'Projects shipped' },
     { value: techCount, suffix: '', label: 'Technologies' },
-    { value: certificates?.length ?? 0, suffix: '', label: 'Certifications' },
+    { value: certificates ? certificates.length : null, suffix: '', label: 'Certifications' },
     { value: 3.91, suffix: '', decimals: 2, label: 'CGPA at NUST' },
   ];
 
@@ -140,7 +140,9 @@ export const About = () => {
             >
               <p className="stat-value text-text">
                 <CountUp target={s.value} suffix={s.suffix} decimals={s.decimals ?? 0} />
-                {s.decimals === undefined && s.value > 0 && <span className="text-accent">+</span>}
+                {s.decimals === undefined && s.value !== null && s.value > 0 && (
+                  <span className="text-accent">+</span>
+                )}
               </p>
               <p className="label text-[10px] mt-3">{s.label}</p>
             </div>
