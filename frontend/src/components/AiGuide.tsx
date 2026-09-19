@@ -107,9 +107,17 @@ interface LiveData {
   research: Entry[];
 }
 
-/** "Healix – Hospital Management System" → "Healix"; "Jolly_Phonics" → "Jolly Phonics" */
-const shortTitle = (raw: string) =>
-  (raw.split(/[–—:(-]/)[0].trim() || raw.trim()).replace(/_/g, ' ');
+/**
+ * A title short enough to speak: cut at a spaced dash, a colon or a bracket —
+ * never inside a hyphenated word like GAUGE-Net — then cap the length so one
+ * paper title cannot swallow the sentence.
+ */
+const shortTitle = (raw: string) => {
+  const head = (raw.split(/\s[–—-]\s|:\s|\s\(/)[0].trim() || raw.trim()).replace(/_/g, ' ');
+  if (head.length <= 46) return head;
+  const clipped = head.slice(0, 46);
+  return clipped.slice(0, clipped.lastIndexOf(' ')).trim() + '…';
+};
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
@@ -210,6 +218,9 @@ export const AiGuide = () => {
   });
 
   const [live, setLive] = useState<Record<string, string>>({});
+  // Sections that render nothing when their collection is empty; narrating
+  // them would point the reader at a 1px gap.
+  const [hidden, setHidden] = useState<string[]>([]);
 
   // Set when the reader closes the bubble: stay quiet until they ask again.
   const silenced = useRef(false);
@@ -233,6 +244,10 @@ export const AiGuide = () => {
       setLive(withLiveCounts({
         projects, certificates, hackathons, kaggle, testimonials, experience, research,
       }));
+      setHidden([
+        ['kaggle', kaggle], ['hackathons', hackathons], ['research', research],
+        ['certificates', certificates], ['projects', projects],
+      ].filter(([, rows]) => (rows as unknown[]).length === 0).map(([id]) => id as string));
     });
     return () => { cancelled = true; };
   }, []);
@@ -243,6 +258,7 @@ export const AiGuide = () => {
       const marker = window.innerHeight * 0.35;
       let next = 0;
       LINES.forEach((l, i) => {
+        if (hidden.includes(l.id)) return;
         const el = document.getElementById(l.id);
         if (el && el.getBoundingClientRect().top <= marker) next = i;
       });
@@ -256,7 +272,7 @@ export const AiGuide = () => {
       window.removeEventListener('scroll', pick);
       window.removeEventListener('resize', pick);
     };
-  }, []);
+  }, [hidden]);
 
   // ── Reopen on a new section unless the reader closed it ──────────────
   useEffect(() => {
