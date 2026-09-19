@@ -7,6 +7,9 @@ const testimonialSchema = new mongoose.Schema({
   avatar:   { type: String, default: '' },
   text:     { type: String, required: true },
   rating:   { type: Number, min: 1, max: 5, default: 5 },
+  // Where it was left, e.g. "Upwork", and the profile or review it links to.
+  source:   { type: String, default: '' },
+  sourceUrl:{ type: String, default: '' },
   approved: { type: Boolean, default: false },
 }, { timestamps: true });
 

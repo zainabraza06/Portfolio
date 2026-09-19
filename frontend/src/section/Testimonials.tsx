@@ -10,6 +10,8 @@ interface Testimonial {
   avatar: string;
   text: string;
   rating: number;
+  source?: string;
+  sourceUrl?: string;
 }
 
 export const Testimonials = () => {
@@ -71,6 +73,23 @@ export const Testimonials = () => {
                     <span className="block label text-[10px] mt-0.5">
                       {[t.role, t.company].filter(Boolean).join(' · ')}
                     </span>
+                    {t.source && (
+                      <span className="block label text-[10px] mt-1">
+                        via{' '}
+                        {t.sourceUrl ? (
+                          <a
+                            href={t.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="link-underline text-accent"
+                          >
+                            {t.source} ↗
+                          </a>
+                        ) : (
+                          t.source
+                        )}
+                      </span>
+                    )}
                   </span>
                   {t.rating > 0 && (
                     <span className="ml-auto label text-[10px] label-accent" aria-label={`${t.rating} out of 5`}>

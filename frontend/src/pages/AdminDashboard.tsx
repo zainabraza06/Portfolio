@@ -38,7 +38,7 @@ const emptyHack    = { title: '', description: '', date: '', projectUrl: '', cer
 const emptyKaggle  = { title: '', description: '', competitionUrl: '', rank: '', date: '', imageUrl: '', order: 0 };
 const emptyExp     = { company: '', role: '', duration: '', description: '', logo: '', type: 'work', order: 0 };
 const emptyResearch = { title: '', context: '', period: '', status: 'ongoing', summary: '', architecture: '', novelty: '', method: '', results: '', tags: '', link: '', featured: false, order: 0 };
-const emptyTestimonial = { name: '', role: '', company: '', text: '', rating: 5, approved: true };
+const emptyTestimonial = { name: '', role: '', company: '', source: '', sourceUrl: '', text: '', rating: 5, approved: true };
 const emptyFreelance   = { platform: '', url: '', handle: '', active: true, order: 0 };
 
 // ── Generic Modal ────────────────────────────────────────────────
@@ -948,6 +948,8 @@ function TestimonialsTab() {
       name: t.name as string,
       role: t.role as string,
       company: t.company as string,
+      source: (t.source as string) ?? '',
+      sourceUrl: (t.sourceUrl as string) ?? '',
       text: t.text as string,
       rating: (t.rating as number) || 5,
       approved: Boolean(t.approved),
@@ -1024,6 +1026,10 @@ function TestimonialsTab() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Role *" id="t-role"><input id="t-role" className="form-input" value={form.role} onChange={e => set('role', e.target.value)} placeholder="CTO / Founder" /></Field>
               <Field label="Company *" id="t-comp"><input id="t-comp" className="form-input" value={form.company} onChange={e => set('company', e.target.value)} placeholder="Tech Corp" /></Field>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label="Source (optional)" id="t-src"><input id="t-src" className="form-input" value={form.source} onChange={e => set('source', e.target.value)} placeholder="Upwork, Fiverr, LinkedIn…" /></Field>
+              <Field label="Source URL (optional)" id="t-srcurl"><input id="t-srcurl" className="form-input" value={form.sourceUrl} onChange={e => set('sourceUrl', e.target.value)} placeholder="https://… (link to the review or profile)" /></Field>
             </div>
             <Field label="Rating (1 to 5)" id="t-rate">
               <select id="t-rate" className="form-input" value={form.rating} onChange={e => set('rating', Number(e.target.value))}>
