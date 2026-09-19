@@ -164,54 +164,12 @@ const seed = async () => {
 
   // ── Certificates ───────────────────────────────────────
   await Certificate.insertMany([
-    {
-      title: 'Apache Kafka Specialization',
-      issuer: 'LearnKartS',
-      date: 'Oct 2025',
-      credentialId: '7DN6PYYKX9H2',
-      credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/7DN6PYYKX9H2',
-      order: 1,
-    },
-    {
-      title: 'Machine Learning Specialization',
-      issuer: 'DeepLearning.AI · Stanford Online',
-      date: 'Dec 2025',
-      credentialId: 'NIO29VDJY3VW',
-      credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/NIO29VDJY3VW',
-      order: 2,
-    },
-    {
-      title: 'Microsoft AI & ML Engineering Professional Certificate',
-      issuer: 'Microsoft',
-      date: 'Dec 2025',
-      credentialId: '52EEGDGTG0ZJ',
-      credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/52EEGDGTG0ZJ',
-      order: 3,
-    },
-    {
-      title: 'GraphQL Mastery: From Fundamentals to Production Specialization',
-      issuer: 'Board Infinity',
-      date: 'Sep 2025',
-      credentialId: '61MHDJ3OBMVB',
-      credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/61MHDJ3OBMVB',
-      order: 4,
-    },
-    {
-      title: 'IBM JavaScript Backend Specialization',
-      issuer: 'IBM',
-      date: 'Sep 2025',
-      credentialId: 'NMUIPX5CWE2X',
-      credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/NMUIPX5CWE2X',
-      order: 5,
-    },
-    {
-      title: 'Meta Front-End Developer',
-      issuer: 'Meta',
-      date: 'Aug 2025',
-      credentialId: 'O061412S2TM4',
-      credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/O061412S2TM4',
-      order: 6,
-    },
+    { title: 'Apache Kafka Specialization', issuer: 'LearnKartS', date: 'Oct 2025', credentialId: '7DN6PYYKX9H2', credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/7DN6PYYKX9H2', order: 1 },
+    { title: 'Machine Learning Specialization', issuer: 'DeepLearning.AI · Stanford Online', date: 'Dec 2025', credentialId: 'NIO29VDJY3VW', credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/NIO29VDJY3VW', order: 2 },
+    { title: 'Microsoft AI & ML Engineering Professional Certificate', issuer: 'Microsoft', date: 'Dec 2025', credentialId: '52EEGDGTG0ZJ', credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/52EEGDGTG0ZJ', order: 3 },
+    { title: 'GraphQL Mastery: From Fundamentals to Production Specialization', issuer: 'Board Infinity', date: 'Sep 2025', credentialId: '61MHDJ3OBMVB', credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/61MHDJ3OBMVB', order: 4 },
+    { title: 'IBM JavaScript Backend Specialization', issuer: 'IBM', date: 'Sep 2025', credentialId: 'NMUIPX5CWE2X', credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/NMUIPX5CWE2X', order: 5 },
+    { title: 'Meta Front-End Developer', issuer: 'Meta', date: 'Aug 2025', credentialId: 'O061412S2TM4', credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/O061412S2TM4', order: 6 },
   ]);
   console.log('🏅  Certificates seeded');
 

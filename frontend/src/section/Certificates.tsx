@@ -57,8 +57,13 @@ export const Certificates = () => {
                   }`}
                 >
                   <span className="label text-[10px] sm:col-span-1">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="sm:col-span-6 text-[16px] font-medium text-text transition-transform duration-500 group-hover:translate-x-1">
-                    {cert.title}
+                  <span className="sm:col-span-6 transition-transform duration-500 group-hover:translate-x-1">
+                    <span className="block text-[16px] font-medium text-text">{cert.title}</span>
+                    {cert.credentialId && (
+                      <span className="block mt-0.5 font-[family-name:var(--font-mono)] text-[11px] text-faint">
+                        ID {cert.credentialId}
+                      </span>
+                    )}
                   </span>
                   <span className="sm:col-span-3 text-sm text-muted">{cert.issuer}</span>
                   <span className="sm:col-span-2 flex items-center justify-between gap-2">

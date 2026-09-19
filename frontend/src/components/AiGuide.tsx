@@ -32,7 +32,7 @@ const LINES: Line[] = [
   {
     id: 'skills',
     label: 'Skills',
-    text: 'PyTorch and TensorFlow for the models; MERN, FastAPI and Flutter for shipping them.',
+    text: 'PyTorch and TensorFlow for the models; agentic tooling over MCP; MERN, FastAPI and Flutter for shipping them.',
   },
   {
     id: 'projects',
@@ -163,8 +163,9 @@ const withLiveCounts = (data: LiveData): Record<string, string> => {
 
   if (data.research.length > 0) {
     out.research =
-      `Independent research, separate from the internships: ` +
-      `${listOf(data.research.map(r => shortTitle(r.title ?? '')))}.`;
+      `${plural(data.research.length, 'research project', 'research projects')} — ` +
+      `${listOf(data.research.map(r => shortTitle(r.title ?? '')))}, ` +
+      `each labelled with where it came from.`;
   }
 
   if (data.certificates.length > 0) {
