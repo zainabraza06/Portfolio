@@ -1,41 +1,17 @@
 [
   {
-    "_id": "69f74ef9317ef79212fd5e7f",
-    "title": "IBM JavaScript Backend Developer",
-    "issuer": "IBM",
-    "date": "Recent",
-    "linkedInUrl": "",
-    "imageUrl": "",
-    "order": 0,
-    "__v": 0,
-    "createdAt": "2026-05-03T13:34:49.078Z",
-    "updatedAt": "2026-09-17T09:49:43.656Z"
-  },
-  {
     "_id": "69f74ef9317ef79212fd5e80",
     "title": "Machine Learning Specialization",
     "issuer": "DeepLearning.AI · Stanford Online",
     "date": "Dec 2025",
     "linkedInUrl": "",
     "imageUrl": "",
-    "order": 2,
+    "order": 1,
     "__v": 0,
     "createdAt": "2026-05-03T13:34:49.078Z",
-    "updatedAt": "2026-09-17T09:49:46.525Z",
+    "updatedAt": "2026-09-17T10:17:55.872Z",
     "credentialId": "NIO29VDJY3VW",
     "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/NIO29VDJY3VW"
-  },
-  {
-    "_id": "69f74ef9317ef79212fd5e81",
-    "title": "Microsoft AI & ML Engineering",
-    "issuer": "Microsoft",
-    "date": "Recent",
-    "linkedInUrl": "",
-    "imageUrl": "",
-    "order": 0,
-    "__v": 0,
-    "createdAt": "2026-05-03T13:34:49.078Z",
-    "updatedAt": "2026-09-17T09:49:43.656Z"
   },
   {
     "_id": "69f74ef9317ef79212fd5e82",
@@ -44,10 +20,10 @@
     "date": "Aug 2025",
     "linkedInUrl": "",
     "imageUrl": "",
-    "order": 6,
+    "order": 4,
     "__v": 0,
     "createdAt": "2026-05-03T13:34:49.078Z",
-    "updatedAt": "2026-09-17T09:49:49.705Z",
+    "updatedAt": "2026-09-17T10:17:55.872Z",
     "credentialId": "O061412S2TM4",
     "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/O061412S2TM4"
   },
@@ -58,9 +34,9 @@
     "date": "Oct 2025",
     "credentialId": "7DN6PYYKX9H2",
     "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/7DN6PYYKX9H2",
-    "order": 1,
+    "order": 5,
     "createdAt": "2026-09-17T09:49:45.273Z",
-    "updatedAt": "2026-09-17T09:49:45.273Z",
+    "updatedAt": "2026-09-17T10:17:55.872Z",
     "__v": 0
   },
   {
@@ -70,9 +46,9 @@
     "date": "Dec 2025",
     "credentialId": "52EEGDGTG0ZJ",
     "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/52EEGDGTG0ZJ",
-    "order": 3,
+    "order": 2,
     "createdAt": "2026-09-17T09:49:47.361Z",
-    "updatedAt": "2026-09-17T09:49:47.361Z",
+    "updatedAt": "2026-09-17T10:17:55.872Z",
     "__v": 0
   },
   {
@@ -82,9 +58,9 @@
     "date": "Sep 2025",
     "credentialId": "61MHDJ3OBMVB",
     "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/61MHDJ3OBMVB",
-    "order": 4,
+    "order": 6,
     "createdAt": "2026-09-17T09:49:48.169Z",
-    "updatedAt": "2026-09-17T09:49:48.169Z",
+    "updatedAt": "2026-09-17T10:17:55.872Z",
     "__v": 0
   },
   {
@@ -94,9 +70,9 @@
     "date": "Sep 2025",
     "credentialId": "NMUIPX5CWE2X",
     "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/NMUIPX5CWE2X",
-    "order": 5,
+    "order": 3,
     "createdAt": "2026-09-17T09:49:48.925Z",
-    "updatedAt": "2026-09-17T09:49:48.925Z",
+    "updatedAt": "2026-09-17T10:17:55.872Z",
     "__v": 0
   }
 ]
